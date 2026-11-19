@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <!-- Bienvenue -->
+    <string name="onboarding_welcome_title">Bienvenue dans Tidemark</string>
+    <string name="onboarding_welcome_body">Tidemark affiche les données de santé enregistrées dans Connexion Santé : les tendances sur un tableau de bord, et chaque enregistrement brut dans un explorateur.</string>
+    <string name="onboarding_welcome_privacy">Vos données restent sur cet appareil. Tidemark n\'a pas accès au réseau et se contente de lire : il n\'écrit, ne modifie et ne supprime jamais rien.</string>
+    <string name="onboarding_action_get_started">Commencer</string>
+    <string name="onboarding_action_privacy_policy">Politique de confidentialité</string>
+
+    <!-- État de Connexion Santé -->
+    <string name="onboarding_not_installed_title">Installer Connexion Santé</string>
+    <string name="onboarding_not_installed_body">Tidemark lit vos données dans Connexion Santé, qui n\'est pas encore installé sur cet appareil. Installez-le depuis Google Play, puis revenez dans Tidemark.</string>
+    <string name="onboarding_action_install">Installer Connexion Santé</string>
+    <string name="onboarding_update_title">Mettre à jour Connexion Santé</string>
+    <string name="onboarding_update_body">La version de Connexion Santé installée sur cet appareil est trop ancienne pour Tidemark. Mettez-la à jour depuis Google Play, puis revenez dans Tidemark.</string>
+    <string name="onboarding_action_update">Mettre à jour Connexion Santé</string>
+    <string name="onboarding_unsupported_title">Connexion Santé n\'est pas disponible</string>
+    <string name="onboarding_unsupported_body">Connexion Santé ne peut pas fonctionner sur cet appareil, par exemple parce que Google Play est absent ou à cause des règles d\'un profil professionnel. Sans lui, Tidemark n\'a rien à afficher.</string>
+    <string name="onboarding_open_failed">Impossible d\'ouvrir Google Play ou Connexion Santé sur cet appareil.</string>
+
+    <!-- Autorisations -->
+    <string name="onboarding_permissions_title">Choisissez ce que Tidemark peut lire</string>
+    <string name="onboarding_permissions_body">Connexion Santé vous demandera votre accord pour chacun de ces types. Vous pouvez tous les autoriser ou seulement certains, et changer d\'avis plus tard dans Connexion Santé.</string>
+    <string name="onboarding_permissions_read_only">Accès en lecture seule. Tidemark ne peut ni modifier ni supprimer vos données.</string>
+    <string name="onboarding_permission_steps">Pas</string>
+    <string name="onboarding_permission_distance">Distance</string>
+    <string name="onboarding_permission_active_calories">Calories actives brûlées</string>
+    <string name="onboarding_permission_exercise">Séances d\'exercice</string>
+    <string name="onboarding_permission_sleep">Sommeil</string>
+    <string name="onboarding_permission_heart_rate">Fréquence cardiaque</string>
+    <string name="onboarding_permission_resting_heart_rate">Fréquence cardiaque au repos</string>
+    <string name="onboarding_permission_weight">Poids</string>
+    <string name="onboarding_permission_history">Données passées. Sans cette autorisation, Connexion Santé ne partage que les données à partir de 30 jours avant votre premier accord.</string>
+    <string name="onboarding_action_continue">Continuer</string>
+    <string name="onboarding_denied_title">Tidemark n\'a encore accès à rien</string>
+    <string name="onboarding_denied_body">Tidemark a besoin d\'au moins un type de données pour afficher quelque chose. Réessayez, ou autorisez l\'accès dans les paramètres de Connexion Santé. Après quelques refus, Android cesse d\'afficher la demande.</string>
+
+    <!-- Politique de confidentialité -->
+    <string name="privacy_policy_title">Politique de confidentialité</string>
+    <string name="privacy_policy_url">https://tidemark.reddevs.io/fr/privacy/</string>
+    <string name="privacy_policy_load_error">Impossible de charger la politique de confidentialité. Vous pouvez aussi la lire sur %1$s</string>
+</resources>

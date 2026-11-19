@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Onboarding, permissions and privacy policy strings, owned by T-003. -->
+<resources>
+    <!-- Welcome -->
+    <string name="onboarding_welcome_title">Welcome to Tidemark</string>
+    <string name="onboarding_welcome_body">Tidemark shows the health data stored in Health Connect: trends on a dashboard, and every raw record in an explorer.</string>
+    <string name="onboarding_welcome_privacy">Your data stays on this device. Tidemark has no network access, and it only reads: it never writes, changes or deletes anything.</string>
+    <string name="onboarding_action_get_started">Get started</string>
+    <string name="onboarding_action_privacy_policy">Privacy policy</string>
+
+    <!-- Health Connect status -->
+    <string name="onboarding_not_installed_title">Install Health Connect</string>
+    <string name="onboarding_not_installed_body">Tidemark reads your data from Health Connect, which isn\'t installed on this device yet. Install it from Google Play, then come back to Tidemark.</string>
+    <string name="onboarding_action_install">Install Health Connect</string>
+    <string name="onboarding_update_title">Update Health Connect</string>
+    <string name="onboarding_update_body">The version of Health Connect on this device is too old for Tidemark. Update it from Google Play, then come back to Tidemark.</string>
+    <string name="onboarding_action_update">Update Health Connect</string>
+    <string name="onboarding_unsupported_title">Health Connect isn\'t available</string>
+    <string name="onboarding_unsupported_body">Health Connect can\'t run on this device, for example because Google Play is missing or because of work profile rules. Tidemark has nothing to show without it.</string>
+    <string name="onboarding_open_failed">Couldn\'t open Google Play or Health Connect on this device.</string>
+
+    <!-- Permissions -->
+    <string name="onboarding_permissions_title">Choose what Tidemark can read</string>
+    <string name="onboarding_permissions_body">Health Connect will ask you about each of these. You can allow all of them or only some, and change your mind later in Health Connect.</string>
+    <string name="onboarding_permissions_read_only">Read access only. Tidemark can\'t change or delete your data.</string>
+    <string name="onboarding_permission_steps">Steps</string>
+    <string name="onboarding_permission_distance">Distance</string>
+    <string name="onboarding_permission_active_calories">Active calories burned</string>
+    <string name="onboarding_permission_exercise">Exercise sessions</string>
+    <string name="onboarding_permission_sleep">Sleep</string>
+    <string name="onboarding_permission_heart_rate">Heart rate</string>
+    <string name="onboarding_permission_resting_heart_rate">Resting heart rate</string>
+    <string name="onboarding_permission_weight">Weight</string>
+    <string name="onboarding_permission_history">Past data. Without it, Health Connect only shares data from 30 days before you first allow access.</string>
+    <string name="onboarding_action_continue">Continue</string>
+    <string name="onboarding_denied_title">Tidemark has no access yet</string>
+    <string name="onboarding_denied_body">Tidemark needs at least one data type to show anything. Try again, or allow access in Health Connect\'s settings. After a few refusals, Android stops showing the request.</string>
+
+    <!-- Privacy policy -->
+    <string name="privacy_policy_title">Privacy policy</string>
+    <string name="privacy_policy_url">https://tidemark.reddevs.io/privacy/</string>
+    <string name="privacy_policy_load_error">The privacy policy couldn\'t be loaded. You can also read it at %1$s</string>
+</resources>
