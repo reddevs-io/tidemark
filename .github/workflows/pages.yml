@@ -1,0 +1,80 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Publishes the privacy policy at https://tidemark.reddevs.io/privacy/ (PRIVACY.md) and
+# /fr/privacy/ (PRIVACY.fr.md). Pull requests that touch the policy only build the site, so
+# rendering problems show up before merge. The custom domain and HTTPS are repository settings;
+# docs/release.md lists the one-time setup.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - PRIVACY.md
+      - PRIVACY.fr.md
+      - scripts/build-pages.py
+      - .github/workflows/pages.yml
+  pull_request:
+    paths:
+      - PRIVACY.md
+      - PRIVACY.fr.md
+      - scripts/build-pages.py
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.event.pull_request.number || 'deploy' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build the policy site
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Render PRIVACY.md and PRIVACY.fr.md
+        run: python3 scripts/build-pages.py _site
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Check the custom domain
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          echo "Deployed to $PAGE_URL"
+          if [[ $PAGE_URL != https://tidemark.reddevs.io/* ]]; then
+            echo "::warning::Pages served $PAGE_URL, not https://tidemark.reddevs.io/. Set the custom domain and enforce HTTPS (docs/release.md)."
+          fi

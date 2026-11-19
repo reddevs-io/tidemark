@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <!-- Type list -->
+    <string name="explorer_title">Enregistrements</string>
+    <string name="explorer_types_intro">Données brutes stockées dans Connexion Santé, par type. Rien ne peut être modifié ici.</string>
+    <string name="explorer_type_readable">Tidemark peut les lire</string>
+    <string name="explorer_type_locked">Aucun accès. Touchez pour l\'autoriser dans les paramètres de Connexion Santé.</string>
+    <string name="explorer_type_steps">Pas</string>
+    <string name="explorer_type_distance">Distance</string>
+    <string name="explorer_type_active_calories">Calories actives brûlées</string>
+    <string name="explorer_type_exercise">Séances d\'exercice</string>
+    <string name="explorer_type_sleep">Sessions de sommeil</string>
+    <string name="explorer_type_heart_rate">Fréquence cardiaque</string>
+    <string name="explorer_type_resting_heart_rate">Fréquence cardiaque au repos</string>
+    <string name="explorer_type_weight">Poids</string>
+
+    <!-- Record list -->
+    <string name="explorer_range_today">Aujourd\'hui</string>
+    <string name="explorer_range_7_days">7 jours</string>
+    <string name="explorer_range_30_days">30 jours</string>
+    <string name="explorer_range_custom">Personnalisée</string>
+    <string name="explorer_date_picker_title">Choisir les dates</string>
+    <string name="explorer_action_apply">Appliquer</string>
+    <string name="explorer_action_cancel">Annuler</string>
+    <string name="explorer_source_all">Toutes les applis</string>
+    <string name="explorer_empty">Aucun enregistrement sur cette période.</string>
+    <string name="explorer_empty_source">Aucun enregistrement de cette appli sur cette période.</string>
+    <string name="explorer_permission_missing">Tidemark n\'a pas accès aux données « %1$s ». Vous pouvez l\'autoriser dans les paramètres de Connexion Santé.</string>
+    <string name="explorer_load_more_error">Impossible de charger plus d\'enregistrements.</string>
+    <string name="explorer_heart_rate_range">%1$s à %2$s</string>
+    <plurals name="explorer_record_count">
+        <item quantity="one">%d enregistrement</item>
+        <item quantity="many">%d enregistrements</item>
+        <item quantity="other">%d enregistrements</item>
+    </plurals>
+    <plurals name="explorer_steps">
+        <item quantity="one">%s pas</item>
+        <item quantity="many">%s pas</item>
+        <item quantity="other">%s pas</item>
+    </plurals>
+    <plurals name="explorer_stage_count">
+        <item quantity="one">%d phase</item>
+        <item quantity="many">%d phases</item>
+        <item quantity="other">%d phases</item>
+    </plurals>
+    <plurals name="explorer_sample_count">
+        <item quantity="one">%d mesure</item>
+        <item quantity="many">%d mesures</item>
+        <item quantity="other">%d mesures</item>
+    </plurals>
+
+    <!-- Record detail -->
+    <string name="explorer_record_not_found">Cet enregistrement ne figure plus dans Connexion Santé.</string>
+    <string name="explorer_section_time">Horodatage</string>
+    <string name="explorer_section_values">Valeurs</string>
+    <string name="explorer_section_samples">Mesures</string>
+    <string name="explorer_section_stages">Phases de sommeil</string>
+    <string name="explorer_section_segments">Segments</string>
+    <string name="explorer_section_laps">Tours</string>
+    <string name="explorer_section_metadata">Métadonnées</string>
+    <string name="explorer_section_empty">Aucun</string>
+    <string name="explorer_expanded">Développé</string>
+    <string name="explorer_collapsed">Réduit</string>
+    <string name="explorer_stored_value">Valeur enregistrée : %1$s</string>
+
+    <string name="explorer_field_start">Début</string>
+    <string name="explorer_field_end">Fin</string>
+    <string name="explorer_field_time">Heure</string>
+    <string name="explorer_field_start_offset">Décalage horaire au début</string>
+    <string name="explorer_field_end_offset">Décalage horaire à la fin</string>
+    <string name="explorer_field_offset">Décalage horaire</string>
+    <string name="explorer_field_duration">Durée</string>
+    <string name="explorer_field_steps">Pas</string>
+    <string name="explorer_field_distance">Distance</string>
+    <string name="explorer_field_energy">Énergie</string>
+    <string name="explorer_field_weight">Poids</string>
+    <string name="explorer_field_heart_rate">Fréquence cardiaque</string>
+    <string name="explorer_field_average">Moyenne</string>
+    <string name="explorer_field_minimum">Minimum</string>
+    <string name="explorer_field_maximum">Maximum</string>
+    <string name="explorer_field_exercise_type">Type d\'exercice</string>
+    <string name="explorer_field_title">Titre</string>
+    <string name="explorer_field_notes">Notes</string>
+    <string name="explorer_field_planned_session">ID de la séance planifiée</string>
+    <string name="explorer_field_route">Parcours</string>
+    <string name="explorer_field_stage">Phase</string>
+    <string name="explorer_field_segment_type">Type de segment</string>
+    <string name="explorer_field_repetitions">Répétitions</string>
+    <string name="explorer_field_lap_length">Longueur</string>
+    <string name="explorer_field_record_id">ID de l\'enregistrement</string>
+    <string name="explorer_field_data_origin">Écrit par</string>
+    <string name="explorer_field_last_modified">Dernière modification</string>
+    <string name="explorer_field_client_record_id">ID client de l\'enregistrement</string>
+    <string name="explorer_field_client_record_version">Version client de l\'enregistrement</string>
+    <string name="explorer_field_recording_method">Méthode d\'enregistrement</string>
+    <string name="explorer_field_device">Appareil</string>
+    <string name="explorer_field_device_manufacturer">Fabricant de l\'appareil</string>
+    <string name="explorer_field_device_model">Modèle de l\'appareil</string>
+    <string name="explorer_field_device_type">Type d\'appareil</string>
+
+    <string name="explorer_value_not_set">Non renseigné</string>
+    <string name="explorer_value_no_device">Aucune information sur l\'appareil</string>
+    <string name="explorer_value_route_not_requested">Non demandé par Tidemark</string>
+    <string name="explorer_value_no_route">Aucun parcours enregistré</string>
+    <string name="explorer_value_unknown_constant">Valeur inconnue (%1$d)</string>
+
+    <!-- SleepSessionRecord.STAGE_TYPE_* -->
+    <string name="explorer_sleep_stage_unknown">Inconnue</string>
+    <string name="explorer_sleep_stage_awake">Éveil</string>
+    <string name="explorer_sleep_stage_sleeping">Sommeil</string>
+    <string name="explorer_sleep_stage_out_of_bed">Hors du lit</string>
+    <string name="explorer_sleep_stage_light">Sommeil léger</string>
+    <string name="explorer_sleep_stage_deep">Sommeil profond</string>
+    <string name="explorer_sleep_stage_rem">Sommeil paradoxal</string>
+    <string name="explorer_sleep_stage_awake_in_bed">Éveil au lit</string>
+
+    <!-- Metadata.RECORDING_METHOD_* -->
+    <string name="explorer_recording_method_unknown">Inconnue</string>
+    <string name="explorer_recording_method_active">Enregistrement actif</string>
+    <string name="explorer_recording_method_automatic">Enregistrement automatique</string>
+    <string name="explorer_recording_method_manual">Saisie manuelle</string>
+
+    <!-- Device.TYPE_* -->
+    <string name="explorer_device_type_unknown">Inconnu</string>
+    <string name="explorer_device_type_watch">Montre</string>
+    <string name="explorer_device_type_phone">Téléphone</string>
+    <string name="explorer_device_type_scale">Balance</string>
+    <string name="explorer_device_type_ring">Bague</string>
+    <string name="explorer_device_type_head_mounted">Casque</string>
+    <string name="explorer_device_type_fitness_band">Bracelet d\'activité</string>
+    <string name="explorer_device_type_chest_strap">Ceinture thoracique</string>
+    <string name="explorer_device_type_smart_display">Écran connecté</string>
+</resources>

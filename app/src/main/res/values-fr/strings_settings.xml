@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <string name="settings_title">Paramètres</string>
+
+    <string name="settings_section_units">Unités</string>
+    <string name="settings_units_system">Suivre la langue et la région</string>
+    <string name="settings_units_system_current">Actuellement\u00A0: %1$s</string>
+    <string name="settings_units_metric">Métrique</string>
+    <string name="settings_units_imperial">Impérial</string>
+    <string name="settings_units_summary_metric">kilomètres et kilogrammes</string>
+    <string name="settings_units_summary_uk">miles et kilogrammes</string>
+    <string name="settings_units_summary_us">miles et livres</string>
+    <string name="settings_units_energy_note">L\'énergie est toujours affichée en kilocalories.</string>
+
+    <string name="settings_section_health_connect">Connexion Santé</string>
+    <string name="settings_manage_access">Gérer l\'accès à Connexion Santé</string>
+    <string name="settings_manage_access_summary">Choisir les données que Tidemark peut lire</string>
+
+    <string name="settings_section_privacy">Confidentialité</string>
+    <string name="settings_privacy_policy">Politique de confidentialité</string>
+    <string name="settings_no_network">Tidemark n\'a pas accès au réseau. Vos données de santé restent sur cet appareil.</string>
+
+    <string name="settings_section_about">À propos</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_license">Licence</string>
+    <string name="settings_license_value">GNU General Public License v3.0 ou version ultérieure</string>
+    <string name="settings_source_code">Code source</string>
+    <string name="settings_open_link_failed">Aucune application de cet appareil ne peut ouvrir ce lien.</string>
+</resources>

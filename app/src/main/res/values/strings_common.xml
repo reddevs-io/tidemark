@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Shared strings owned by T-001. Each feature keeps its own strings_<feature>.xml. -->
+<resources>
+    <string name="app_name" translatable="false">Tidemark</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+    <string name="action_open_health_connect_settings">Open Health Connect settings</string>
+    <string name="state_loading">Loading</string>
+    <string name="state_no_data">No data</string>
+    <string name="error_generic">Something went wrong while reading Health Connect.</string>
+    <string name="error_rate_limited">Health Connect asked Tidemark to slow down. Try again in a moment.</string>
+    <string name="error_unavailable">Health Connect isn\'t available right now.</string>
+</resources>

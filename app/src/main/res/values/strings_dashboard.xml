@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Dashboard home strings, owned by T-005. -->
+<resources>
+    <string name="dashboard_action_explorer">Browse records</string>
+    <string name="dashboard_action_settings">Settings</string>
+
+    <string name="dashboard_tile_steps">Steps</string>
+    <string name="dashboard_tile_active_calories">Active calories</string>
+    <string name="dashboard_tile_distance">Distance</string>
+    <string name="dashboard_tile_sleep">Sleep</string>
+    <string name="dashboard_tile_resting_heart_rate">Resting heart rate</string>
+    <string name="dashboard_tile_weight">Weight</string>
+    <string name="dashboard_tile_open">Show details</string>
+
+    <plurals name="dashboard_steps_value">
+        <item quantity="one">%1$s step</item>
+        <item quantity="other">%1$s steps</item>
+    </plurals>
+
+    <string name="dashboard_today">Today</string>
+    <string name="dashboard_yesterday">Yesterday</string>
+    <!-- %1$s is when the sleep session started, %2$s when it ended, for example 23:05 – 06:40. -->
+    <string name="dashboard_time_span">%1$s – %2$s</string>
+    <!-- %1$s is the label of the app that wrote the value, for example Fitbit. -->
+    <string name="dashboard_source">From %1$s</string>
+
+    <string name="dashboard_no_data_today">No data today</string>
+    <string name="dashboard_no_sleep">No sleep recorded last night</string>
+    <string name="dashboard_no_recent_value">No data in the past year</string>
+    <string name="dashboard_permission_missing">Tidemark doesn\'t have access to this data.</string>
+
+    <string name="dashboard_banner_title">Older data is hidden</string>
+    <!-- %1$s is a date, for example 20 October. -->
+    <string name="dashboard_banner_not_granted_since">Tidemark can only read data from about %1$s onwards. Allow access to past data in Health Connect to see older records.</string>
+    <string name="dashboard_banner_not_granted">Tidemark can only read data from 30 days before you first gave it access. Allow access to past data in Health Connect to see older records.</string>
+    <!-- %1$s is a date, for example 20 October. -->
+    <string name="dashboard_banner_unavailable_since">This version of Health Connect only shares data from about %1$s onwards, 30 days before you first gave Tidemark access.</string>
+    <string name="dashboard_banner_unavailable">This version of Health Connect only shares data from 30 days before you first gave Tidemark access.</string>
+    <string name="dashboard_banner_dismiss">Dismiss</string>
+
+    <string name="dashboard_open_settings_failed">Couldn\'t open Health Connect.</string>
+</resources>

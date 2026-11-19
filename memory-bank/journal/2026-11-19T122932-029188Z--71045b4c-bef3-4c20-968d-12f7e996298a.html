@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="71045b4c-bef3-4c20-968d-12f7e996298a" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T12:29:32.029188Z">2026-11-19T12:29:32.029188Z</time>
+  <h3>One DataStore per preferences file</h3>
+  <div class="rationale"><strong>Rationale</strong>DataStore throws when two instances open the same file.</div>
+  <div class="details"><strong>Details</strong>The context constructor shares one store per process; SYSTEM clears the stored key; the first grant is stored as epoch milliseconds.</div>
+</article>

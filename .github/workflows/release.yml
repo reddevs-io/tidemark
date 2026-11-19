@@ -1,0 +1,184 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Builds, signs and publishes a GitHub Release when a v* tag is pushed. See docs/release.md.
+#
+# Secrets (repository or "release" environment secrets):
+#   TIDEMARK_KEYSTORE_B64       base64 of the release keystore (.jks)
+#   TIDEMARK_KEYSTORE_PASSWORD  keystore password
+#   TIDEMARK_KEY_ALIAS          key alias inside the keystore
+#   TIDEMARK_KEY_PASSWORD       key password
+# Variable (optional until the first release, then strongly recommended):
+#   TIDEMARK_CERT_SHA256        expected SHA-256 of the signing certificate
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+# An explicit shell runs steps with "bash -eo pipefail"; the implicit default lacks pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    name: Signed release
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    # Lets the user scope the signing secrets to this environment and restrict it to v* tags.
+    environment: release
+    permissions:
+      contents: write # create the release and upload its assets
+    env:
+      APK: app/build/outputs/apk/release/app-release.apk
+      AAB: app/build/outputs/bundle/release/app-release.aab
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate the Gradle wrapper
+        uses: gradle/actions/wrapper-validation@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      - name: Check tag, versionName, versionCode and release notes
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: scripts/check-release-version.sh "$TAG"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          # A signed release never reads a cache that another workflow wrote.
+          cache-disabled: true
+          validate-wrappers: false # done above
+
+      - name: Decode the signing keystore
+        env:
+          TIDEMARK_KEYSTORE_B64: ${{ secrets.TIDEMARK_KEYSTORE_B64 }}
+          TIDEMARK_KEYSTORE_PASSWORD: ${{ secrets.TIDEMARK_KEYSTORE_PASSWORD }}
+          TIDEMARK_KEY_ALIAS: ${{ secrets.TIDEMARK_KEY_ALIAS }}
+          TIDEMARK_KEY_PASSWORD: ${{ secrets.TIDEMARK_KEY_PASSWORD }}
+        run: |
+          missing=()
+          for name in TIDEMARK_KEYSTORE_B64 TIDEMARK_KEYSTORE_PASSWORD TIDEMARK_KEY_ALIAS TIDEMARK_KEY_PASSWORD; do
+            if [[ -z ${!name} ]]; then
+              missing+=("$name")
+            fi
+          done
+          if ((${#missing[@]} > 0)); then
+            echo "::error::Missing signing secrets: ${missing[*]}. See docs/release.md."
+            exit 1
+          fi
+          keystore="$RUNNER_TEMP/tidemark-release.jks"
+          umask 077
+          tr -d '\r\n ' <<<"$TIDEMARK_KEYSTORE_B64" | base64 --decode >"$keystore"
+          # Fails early, without printing anything, if the password or alias is wrong.
+          if ! keytool -list -keystore "$keystore" -storepass:env TIDEMARK_KEYSTORE_PASSWORD \
+              -alias "$TIDEMARK_KEY_ALIAS" >/dev/null 2>&1; then
+            echo "::error::The keystore does not open with TIDEMARK_KEYSTORE_PASSWORD or has no TIDEMARK_KEY_ALIAS entry."
+            exit 1
+          fi
+          echo "TIDEMARK_KEYSTORE_PATH=$keystore" >>"$GITHUB_ENV"
+
+      - name: Build signed APK and AAB
+        env:
+          TIDEMARK_KEYSTORE_PASSWORD: ${{ secrets.TIDEMARK_KEYSTORE_PASSWORD }}
+          TIDEMARK_KEY_ALIAS: ${{ secrets.TIDEMARK_KEY_ALIAS }}
+          TIDEMARK_KEY_PASSWORD: ${{ secrets.TIDEMARK_KEY_PASSWORD }}
+        # No configuration cache, so the signing values are never serialised to disk.
+        run: ./gradlew --no-configuration-cache assembleRelease bundleRelease
+
+      - name: Check release APK permissions
+        run: scripts/check-permissions.sh "$APK"
+
+      - name: Verify signatures
+        id: signature
+        env:
+          EXPECTED_CERT_SHA256: ${{ vars.TIDEMARK_CERT_SHA256 }}
+        run: |
+          if [[ -z $EXPECTED_CERT_SHA256 ]]; then
+            echo "::warning::Repository variable TIDEMARK_CERT_SHA256 is not set, so the signing certificate is not pinned. See docs/release.md."
+          fi
+          scripts/verify-signature.sh "$APK" "$EXPECTED_CERT_SHA256" | tee "$RUNNER_TEMP/apksigner.txt"
+          apk_sha=$(sed -n 's/^Signing certificate SHA-256: //p' "$RUNNER_TEMP/apksigner.txt")
+          jarsigner -verify "$AAB" >/dev/null
+          aab_sha=$(keytool -printcert -jarfile "$AAB" | sed -n -E 's/^[[:space:]]*SHA256: //p' | head -n 1 | tr -d ':' | tr '[:upper:]' '[:lower:]')
+          if [[ $aab_sha != "$apk_sha" ]]; then
+            echo "::error::The AAB is signed with $aab_sha, the APK with $apk_sha."
+            exit 1
+          fi
+          echo "AAB signed with the same certificate."
+          echo "cert_sha256=$apk_sha" >>"$GITHUB_OUTPUT"
+
+      - name: Collect release files
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          mkdir dist
+          cp "$APK" "dist/tidemark-$VERSION_NAME.apk"
+          cp "$AAB" "dist/tidemark-$VERSION_NAME.aab"
+          printf '%s\n' "$VERSION_CODE" >dist/versionCode
+          (cd dist && sha256sum "tidemark-$VERSION_NAME.apk" "tidemark-$VERSION_NAME.aab" versionCode >SHA256SUMS)
+          cat dist/SHA256SUMS
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+          CHANGELOG: ${{ steps.version.outputs.changelog }}
+        run: |
+          args=(--verify-tag --title "Tidemark $VERSION_NAME" --notes-file "$CHANGELOG")
+          if [[ $PRERELEASE == true ]]; then
+            args+=(--prerelease)
+          fi
+          gh release create "$TAG" "${args[@]}" \
+            "dist/tidemark-$VERSION_NAME.apk" \
+            "dist/tidemark-$VERSION_NAME.aab" \
+            dist/SHA256SUMS \
+            dist/versionCode
+
+      - name: Summary
+        env:
+          TAG: ${{ github.ref_name }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+          CERT_SHA256: ${{ steps.signature.outputs.cert_sha256 }}
+        run: |
+          {
+            echo "### Tidemark $TAG"
+            echo
+            echo "- versionCode: $VERSION_CODE"
+            echo "- Pre-release: $PRERELEASE"
+            echo "- Signing certificate SHA-256: \`$CERT_SHA256\`"
+            echo
+            echo '```'
+            cat dist/SHA256SUMS
+            echo '```'
+          } >>"$GITHUB_STEP_SUMMARY"
+
+      - name: Remove the keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/tidemark-release.jks"

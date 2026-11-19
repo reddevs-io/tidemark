@@ -1,0 +1,6 @@
+// Markdown in this repo keeps one paragraph per line, so the in-app privacy policy renderer
+// never has to join wrapped lines. Line length is therefore not checked.
+{
+  "default": true,
+  "MD013": false
+}

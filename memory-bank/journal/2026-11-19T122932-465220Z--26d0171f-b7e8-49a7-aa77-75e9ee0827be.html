@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="26d0171f-b7e8-49a7-aa77-75e9ee0827be" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T12:29:32.465220Z">2026-11-19T12:29:32.465220Z</time>
+  <h3>Dashboard sparklines use rolling month windows</h3>
+  <div class="rationale"><strong>Rationale</strong>A WEEK window follows the calendar week, not the last 7 days.</div>
+  <div class="details"><strong>Details</strong>The dashboard reads MONTH series covering today-6 (today-29 for weight) to today and keeps the rolling days. A bucket day is the day of its midpoint.</div>
+</article>

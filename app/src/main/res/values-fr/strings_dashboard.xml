@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <string name="dashboard_action_explorer">Parcourir les données</string>
+    <string name="dashboard_action_settings">Paramètres</string>
+
+    <string name="dashboard_tile_steps">Pas</string>
+    <string name="dashboard_tile_active_calories">Calories actives</string>
+    <string name="dashboard_tile_distance">Distance</string>
+    <string name="dashboard_tile_sleep">Sommeil</string>
+    <string name="dashboard_tile_resting_heart_rate">Fréquence cardiaque au repos</string>
+    <string name="dashboard_tile_weight">Poids</string>
+    <string name="dashboard_tile_open">Afficher les détails</string>
+
+    <plurals name="dashboard_steps_value">
+        <item quantity="one">%1$s pas</item>
+        <item quantity="many">%1$s pas</item>
+        <item quantity="other">%1$s pas</item>
+    </plurals>
+
+    <string name="dashboard_today">Aujourd\'hui</string>
+    <string name="dashboard_yesterday">Hier</string>
+    <string name="dashboard_time_span">%1$s – %2$s</string>
+    <string name="dashboard_source">Source : %1$s</string>
+
+    <string name="dashboard_no_data_today">Aucune donnée aujourd\'hui</string>
+    <string name="dashboard_no_sleep">Aucun sommeil enregistré la nuit dernière</string>
+    <string name="dashboard_no_recent_value">Aucune donnée depuis un an</string>
+    <string name="dashboard_permission_missing">Tidemark n\'a pas accès à ces données.</string>
+
+    <string name="dashboard_banner_title">Les données plus anciennes sont masquées</string>
+    <string name="dashboard_banner_not_granted_since">Tidemark ne peut lire que les données à partir du %1$s environ. Autorisez l\'accès aux données passées dans Connexion Santé pour voir les plus anciennes.</string>
+    <string name="dashboard_banner_not_granted">Tidemark ne peut lire que les données des 30 jours précédant le premier accès que vous lui avez accordé. Autorisez l\'accès aux données passées dans Connexion Santé pour voir les plus anciennes.</string>
+    <string name="dashboard_banner_unavailable_since">Cette version de Connexion Santé ne partage que les données à partir du %1$s environ, soit 30 jours avant le premier accès accordé à Tidemark.</string>
+    <string name="dashboard_banner_unavailable">Cette version de Connexion Santé ne partage que les données des 30 jours précédant le premier accès accordé à Tidemark.</string>
+    <string name="dashboard_banner_dismiss">Ignorer</string>
+
+    <string name="dashboard_open_settings_failed">Impossible d\'ouvrir Connexion Santé.</string>
+</resources>

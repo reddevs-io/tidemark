@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Metric detail screen strings, owned by T-006. -->
+<resources>
+    <string name="detail_title_steps">Steps</string>
+    <string name="detail_title_active_calories">Active calories</string>
+    <string name="detail_title_distance">Distance</string>
+    <string name="detail_title_sleep">Sleep</string>
+    <string name="detail_title_resting_heart_rate">Resting heart rate</string>
+    <string name="detail_title_weight">Weight</string>
+
+    <string name="detail_range_day">Day</string>
+    <string name="detail_range_week">Week</string>
+    <string name="detail_range_month">Month</string>
+    <string name="detail_range_year">Year</string>
+    <string name="detail_range_switcher">Time range</string>
+    <string name="detail_previous_period">Previous period</string>
+    <string name="detail_next_period">Next period</string>
+
+    <string name="detail_stat_total">Total</string>
+    <string name="detail_stat_daily_average">Daily average</string>
+    <string name="detail_stat_average">Average</string>
+    <string name="detail_stat_nightly_average">Average night</string>
+    <string name="detail_stat_resting">Resting</string>
+    <string name="detail_stat_min">Lowest</string>
+    <string name="detail_stat_max">Highest</string>
+    <string name="detail_stat_asleep">Asleep</string>
+    <string name="detail_stat_in_bed">In bed</string>
+
+    <string name="detail_empty">No data for this period.</string>
+    <string name="detail_error_permission">Tidemark can\'t read this data. Allow access in Health Connect settings.</string>
+    <string name="detail_heart_rate_permission_missing">Heart rate samples are hidden because Tidemark can\'t read heart rate. The resting value still shows.</string>
+    <string name="detail_year_values_note">Each month shows the daily average over the days with data.</string>
+
+    <string name="detail_breakdown">Breakdown</string>
+    <string name="detail_show_records">Show records</string>
+    <string name="detail_show_month">Show month</string>
+    <string name="detail_show_day_records">Show this day\'s records</string>
+
+    <!-- Spoken summary of a chart: 1 metric, 2 period, 3 summary values. -->
+    <string name="detail_chart_description">%1$s, chart for %2$s. %3$s</string>
+    <!-- One summary value read aloud, e.g. "Total: 52,310". -->
+    <string name="detail_stat_spoken">%1$s: %2$s</string>
+    <!-- Resting heart rate reference line label, e.g. "Resting 58 bpm". -->
+    <string name="detail_resting_reference">Resting %1$s</string>
+    <!-- 1 start time, 2 end time, 3 time asleep, 4 per-stage durations. -->
+    <string name="detail_hypnogram_description">Sleep stages from %1$s to %2$s, %3$s asleep. %4$s</string>
+    <string name="detail_hypnogram_no_stages">This session has no stage data, so it shows as one block.</string>
+    <!-- Source app of the sleep session. -->
+    <string name="detail_source">Source: %1$s</string>
+    <string name="detail_heart_rate_samples">Heart rate samples</string>
+
+    <string name="detail_stage_awake">Awake</string>
+    <string name="detail_stage_light">Light</string>
+    <string name="detail_stage_deep">Deep</string>
+    <string name="detail_stage_rem">REM</string>
+    <string name="detail_stage_sleeping">Sleeping</string>
+    <string name="detail_stage_out_of_bed">Out of bed</string>
+    <string name="detail_stage_awake_in_bed">Awake in bed</string>
+    <string name="detail_stage_unknown">Unknown</string>
+</resources>

@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="22574565-13a8-4206-b281-37528ba5e0ad" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T12:24:02.352755Z">2026-11-19T12:24:02.352755Z</time>
+  <h3>Release job hardening</h3>
+  <div class="rationale"><strong>Rationale</strong>Protects the signing key and catches a wrong key before publishing.</div>
+  <div class="details"><strong>Details</strong>release environment scoped to v* tags, no Gradle caches or configuration cache in the release job, optional TIDEMARK_CERT_SHA256 pin, AAB certificate must match the APK, keystore deleted with if: always(). Use an alias like tidemark-release so log masking does not hide file names.</div>
+</article>

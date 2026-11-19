@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <string name="unit_kilometer">km</string>
+    <string name="unit_mile">mi</string>
+    <string name="unit_kilogram">kg</string>
+    <string name="unit_pound">lb</string>
+    <string name="format_heart_rate">%1$s\u00A0bpm</string>
+    <string name="format_duration_hours_minutes">%1$s\u00A0h %2$s\u00A0min</string>
+    <string name="format_duration_hours">%1$s\u00A0h</string>
+    <string name="format_duration_minutes">%1$s\u00A0min</string>
+    <string name="range_today">Aujourd\'hui</string>
+    <string name="range_yesterday">Hier</string>
+</resources>

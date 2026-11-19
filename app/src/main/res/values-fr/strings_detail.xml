@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <string name="detail_title_steps">Pas</string>
+    <string name="detail_title_active_calories">Calories actives</string>
+    <string name="detail_title_distance">Distance</string>
+    <string name="detail_title_sleep">Sommeil</string>
+    <string name="detail_title_resting_heart_rate">Fréquence cardiaque au repos</string>
+    <string name="detail_title_weight">Poids</string>
+
+    <string name="detail_range_day">Jour</string>
+    <string name="detail_range_week">Semaine</string>
+    <string name="detail_range_month">Mois</string>
+    <string name="detail_range_year">Année</string>
+    <string name="detail_range_switcher">Période</string>
+    <string name="detail_previous_period">Période précédente</string>
+    <string name="detail_next_period">Période suivante</string>
+
+    <string name="detail_stat_total">Total</string>
+    <string name="detail_stat_daily_average">Moyenne par jour</string>
+    <string name="detail_stat_average">Moyenne</string>
+    <string name="detail_stat_nightly_average">Nuit moyenne</string>
+    <string name="detail_stat_resting">Au repos</string>
+    <string name="detail_stat_min">Minimum</string>
+    <string name="detail_stat_max">Maximum</string>
+    <string name="detail_stat_asleep">Temps de sommeil</string>
+    <string name="detail_stat_in_bed">Temps au lit</string>
+
+    <string name="detail_empty">Aucune donnée pour cette période.</string>
+    <string name="detail_error_permission">Tidemark ne peut pas lire ces données. Autorisez l\'accès dans les paramètres de Connexion Santé.</string>
+    <string name="detail_heart_rate_permission_missing">Les mesures de fréquence cardiaque sont masquées, car Tidemark ne peut pas les lire. La valeur au repos reste affichée.</string>
+    <string name="detail_year_values_note">Chaque mois affiche la moyenne par jour sur les jours avec des données.</string>
+
+    <string name="detail_breakdown">Détail</string>
+    <string name="detail_show_records">Afficher les enregistrements</string>
+    <string name="detail_show_month">Afficher le mois</string>
+    <string name="detail_show_day_records">Afficher les enregistrements du jour</string>
+
+    <string name="detail_chart_description">%1$s, graphique pour %2$s. %3$s</string>
+    <string name="detail_stat_spoken">%1$s : %2$s</string>
+    <string name="detail_resting_reference">Au repos %1$s</string>
+    <string name="detail_hypnogram_description">Phases de sommeil de %1$s à %2$s, %3$s de sommeil. %4$s</string>
+    <string name="detail_hypnogram_no_stages">Cette session ne contient pas de phases ; elle s\'affiche d\'un seul bloc.</string>
+    <string name="detail_source">Source : %1$s</string>
+    <string name="detail_heart_rate_samples">Mesures de fréquence cardiaque</string>
+
+    <string name="detail_stage_awake">Éveil</string>
+    <string name="detail_stage_light">Léger</string>
+    <string name="detail_stage_deep">Profond</string>
+    <string name="detail_stage_rem">Paradoxal</string>
+    <string name="detail_stage_sleeping">Sommeil</string>
+    <string name="detail_stage_out_of_bed">Hors du lit</string>
+    <string name="detail_stage_awake_in_bed">Éveillé au lit</string>
+    <string name="detail_stage_unknown">Inconnu</string>
+</resources>

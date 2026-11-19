@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="94743053-2c91-4914-9965-238f12907758" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T12:19:09.426669Z">2026-11-19T12:19:09.426669Z</time>
+  <h3>Health Connect error mapping</h3>
+  <div class="rationale"><strong>Rationale</strong>One failed metric must not break the others.</div>
+  <div class="details"><strong>Details</strong>Rate limits map to RateLimited (platform error code on API 34+, message match on 28 to 33); RemoteException and IOException to Unavailable; SecurityException to PermissionMissing(type); everything else to Unexpected. readRecord treats IllegalArgumentException (unknown id) as null. Sleep tie-break: longest, then later end, then package name, then id.</div>
+</article>

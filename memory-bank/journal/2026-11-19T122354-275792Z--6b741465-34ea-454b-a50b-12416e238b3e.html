@@ -1,0 +1,6 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="6b741465-34ea-454b-a50b-12416e238b3e" data-kind="change" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="activeContext">
+  <time datetime="2026-11-19T12:23:54.275792Z">2026-11-19T12:23:54.275792Z</time>
+  <h3>Fixed release signing reading null key alias and password</h3>
+  <div class="details"><strong>Details</strong>In app/build.gradle.kts, bare keyAlias and keyPassword inside create("release") resolved to the signing config own null properties, so signed builds failed in validateSigningRelease. Found by T-008, fixed in the primary session by prefixing the script vals with release. A throwaway-key signed assembleRelease now passes apksigner verify and the permission check.</div>
+</article>
