@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Settings screen strings (T-004). -->
+<resources>
+    <string name="settings_title">Settings</string>
+
+    <string name="settings_section_units">Units</string>
+    <string name="settings_units_system">Follow language and region</string>
+    <!-- %1$s is one of the settings_units_summary_* strings. -->
+    <string name="settings_units_system_current">Currently: %1$s</string>
+    <string name="settings_units_metric">Metric</string>
+    <string name="settings_units_imperial">Imperial</string>
+    <string name="settings_units_summary_metric">kilometers and kilograms</string>
+    <string name="settings_units_summary_uk">miles and kilograms</string>
+    <string name="settings_units_summary_us">miles and pounds</string>
+    <string name="settings_units_energy_note">Energy is always shown in kilocalories.</string>
+
+    <string name="settings_section_health_connect">Health Connect</string>
+    <string name="settings_manage_access">Manage Health Connect access</string>
+    <string name="settings_manage_access_summary">Choose which data Tidemark can read</string>
+
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_no_network">Tidemark has no network access. Your health data stays on this device.</string>
+
+    <string name="settings_section_about">About</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_license">License</string>
+    <string name="settings_license_value">GNU General Public License v3.0 or later</string>
+    <string name="settings_source_code">Source code</string>
+    <string name="settings_source_code_value" translatable="false">github.com/reddevs-io/tidemark</string>
+    <string name="settings_open_link_failed">No app on this device can open this link.</string>
+</resources>
