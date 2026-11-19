@@ -2,21 +2,26 @@
 package io.reddevs.tidemark.dashboard.home
 
 import io.reddevs.tidemark.ui.components.AppLabels
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.DirectionsWalk
-import androidx.compose.material.icons.outlined.Bedtime
-import androidx.compose.material.icons.outlined.LocalFireDepartment
-import androidx.compose.material.icons.outlined.MonitorHeart
-import androidx.compose.material.icons.outlined.MonitorWeight
-import androidx.compose.material.icons.outlined.Straighten
+import androidx.compose.material.icons.automirrored.rounded.DirectionsWalk
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material.icons.rounded.MonitorHeart
+import androidx.compose.material.icons.rounded.MonitorWeight
+import androidx.compose.material.icons.rounded.Straighten
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +43,13 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import io.reddevs.tidemark.R
 import io.reddevs.tidemark.data.model.Metric
 import io.reddevs.tidemark.format.DateStyle
@@ -70,6 +81,9 @@ internal fun MetricTile(
     when (state) {
         is TileState.PermissionMissing, is TileState.Error -> Card(
             modifier = modifier.semantics(mergeDescendants = true) { testTag = tag },
+            shape = TileShape,
+            colors = tileColors(),
+            border = tileBorder(),
         ) {
             TileBody(metric, text) {
                 val (label, action) = if (state is TileState.Error) {
@@ -90,6 +104,9 @@ internal fun MetricTile(
                     role = Role.Button
                     onClick(label = openLabel) { onOpen(); true }
                 },
+                shape = TileShape,
+                colors = tileColors(),
+                border = tileBorder(),
             ) {
                 TileBody(metric, text) {
                     when (state) {
@@ -109,23 +126,84 @@ internal fun MetricTile(
 
 @Composable
 private fun TileBody(metric: Metric, text: TileText, extra: @Composable () -> Unit) {
-    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    val colors = MaterialTheme.colorScheme
+    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Icon(metric.icon(), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Text(text.title, style = MaterialTheme.typography.titleSmall)
+            MetricBadge(metric)
+            Text(
+                text.title,
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 13.sp, lineHeight = 18.sp),
+                modifier = Modifier.weight(1f, fill = false),
+            )
         }
         Spacer(Modifier.height(4.dp))
-        text.value?.let { Text(it, style = MaterialTheme.typography.headlineSmall) }
+        text.value?.let {
+            Text(
+                withSmallUnits(
+                    it,
+                    SpanStyle(
+                        fontSize = 0.5.em,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.em,
+                        color = colors.onSurfaceVariant,
+                    ),
+                ),
+                style = MaterialTheme.typography.headlineMedium,
+            )
+        }
         text.message?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
         text.subtitle?.let {
-            Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(it, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
         text.source?.let {
-            Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(it, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
         extra()
     }
 }
+
+/** A 26 dp rounded square in the primary container colour holding the metric's icon. */
+@Composable
+private fun MetricBadge(metric: Metric) {
+    val colors = MaterialTheme.colorScheme
+    Box(
+        Modifier
+            .size(26.dp)
+            .background(colors.primaryContainer, RoundedCornerShape(9.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(metric.icon(), contentDescription = null, tint = colors.onPrimaryContainer, modifier = Modifier.size(17.dp))
+    }
+}
+
+/**
+ * Shrinks the unit words in a formatted value ("8,432 steps", "7 h 32 min", "72.5 kg") so the
+ * numbers stand out. Every run of letters counts as a unit; the text itself is unchanged.
+ */
+internal fun withSmallUnits(value: String, unitStyle: SpanStyle): AnnotatedString = buildAnnotatedString {
+    append(value)
+    var i = 0
+    while (i < value.length) {
+        if (value[i].isLetter()) {
+            val start = i
+            while (i < value.length && value[i].isLetter()) i++
+            addStyle(unitStyle, start, i)
+        } else {
+            i++
+        }
+    }
+}
+
+private val TileShape = RoundedCornerShape(20.dp)
+
+@Composable
+private fun tileColors() = CardDefaults.cardColors(
+    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+    contentColor = MaterialTheme.colorScheme.onSurface,
+)
+
+@Composable
+private fun tileBorder() = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
 
 /** The words on a tile; [description] is what TalkBack reads for the whole tile. */
 internal data class TileText(
@@ -244,10 +322,10 @@ internal fun Metric.titleRes(): Int = when (this) {
 }
 
 private fun Metric.icon(): ImageVector = when (this) {
-    Metric.STEPS -> Icons.AutoMirrored.Outlined.DirectionsWalk
-    Metric.ACTIVE_CALORIES -> Icons.Outlined.LocalFireDepartment
-    Metric.DISTANCE -> Icons.Outlined.Straighten
-    Metric.SLEEP -> Icons.Outlined.Bedtime
-    Metric.RESTING_HEART_RATE -> Icons.Outlined.MonitorHeart
-    Metric.WEIGHT -> Icons.Outlined.MonitorWeight
+    Metric.STEPS -> Icons.AutoMirrored.Rounded.DirectionsWalk
+    Metric.ACTIVE_CALORIES -> Icons.Rounded.LocalFireDepartment
+    Metric.DISTANCE -> Icons.Rounded.Straighten
+    Metric.SLEEP -> Icons.Rounded.Bedtime
+    Metric.RESTING_HEART_RATE -> Icons.Rounded.MonitorHeart
+    Metric.WEIGHT -> Icons.Rounded.MonitorWeight
 }

@@ -22,3 +22,12 @@ Lifecycle, DataStore and the Health Connect client), Kotlin and kotlinx
 libraries, and Vico. All are licensed under the Apache License 2.0, which is
 compatible with GPL-3.0-or-later. Their versions are listed in
 gradle/libs.versions.toml.
+
+Fonts
+-----
+
+Manrope (app/src/main/res/font/manrope.ttf), the variable font Manrope[wght].ttf
+from https://github.com/google/fonts/tree/main/ofl/manrope.
+Copyright 2018 The Manrope Project Authors (https://github.com/googlefonts/manrope).
+Licensed under the SIL Open Font License, Version 1.1; the full licence ships in
+the app as app/src/main/assets/licenses/manrope-OFL.txt.

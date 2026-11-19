@@ -4,7 +4,6 @@ package io.reddevs.tidemark.dashboard.detail
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,7 +12,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -27,28 +25,16 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.reddevs.tidemark.R
-import io.reddevs.tidemark.data.model.SleepStage
 import io.reddevs.tidemark.format.MeasurementFormatter
+import io.reddevs.tidemark.ui.theme.sleepColors
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
-/** A stage colour for the hypnogram and its legend. Wake states are warm, sleep runs light to deep. */
-internal fun stageColor(stage: SleepStage, colors: ColorScheme): Color = when (stage) {
-    SleepStage.OUT_OF_BED -> colors.outline
-    SleepStage.AWAKE -> colors.tertiary
-    SleepStage.AWAKE_IN_BED -> colors.tertiary.copy(alpha = 0.6f)
-    SleepStage.REM -> colors.secondary
-    SleepStage.LIGHT -> colors.primary.copy(alpha = 0.55f)
-    SleepStage.SLEEPING -> colors.primary.copy(alpha = 0.75f)
-    SleepStage.DEEP -> colors.primary
-    SleepStage.UNKNOWN -> colors.outlineVariant
-}
-
 /**
- * Stepped sleep-stage chart drawn on a Compose Canvas: one row per stage present, a bar per stage
- * span, thin connectors where one stage hands over to the next, and nothing in the gaps no stage
- * covers. The whole chart is one accessibility node carrying [description].
+ * Stepped sleep-stage chart drawn on a Compose Canvas: one rounded lane per stage present, a bar
+ * per stage span in the fixed sleep colours, thin connectors where one stage hands over to the
+ * next, and nothing in the gaps no stage covers. The whole chart is one accessibility node carrying [description].
  */
 @Composable
 internal fun Hypnogram(
@@ -59,6 +45,7 @@ internal fun Hypnogram(
     modifier: Modifier = Modifier,
 ) {
     val colors = MaterialTheme.colorScheme
+    val stages = sleepColors
     val labelStyle = MaterialTheme.typography.labelSmall.copy(color = colors.onSurfaceVariant)
     val measurer = rememberTextMeasurer()
     val rowNames = model.rows.map { stringResource(stageName(it)) }
@@ -83,17 +70,17 @@ internal fun Hypnogram(
         val plotHeight = rowPx * model.rows.size
         fun x(fraction: Float) = if (rtl) plotStart + plotWidth * (1 - fraction) else plotStart + plotWidth * fraction
 
-        // Row labels and faint row guides.
+        // Row labels and one rounded lane per row.
+        val laneInset = 2.dp.toPx()
         rowNames.forEachIndexed { row, name ->
             val layout = measurer.measure(name, labelStyle)
             val labelX = if (rtl) size.width - layout.size.width else 0f
             drawText(layout, topLeft = Offset(labelX, row * rowPx + (rowPx - layout.size.height) / 2))
-            drawLine(
-                color = colors.outlineVariant.copy(alpha = 0.5f),
-                start = Offset(plotStart, row * rowPx + rowPx / 2),
-                end = Offset(plotStart + plotWidth, row * rowPx + rowPx / 2),
-                strokeWidth = 1.dp.toPx(),
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 4.dp.toPx())),
+            drawRoundRect(
+                color = colors.surfaceContainer,
+                topLeft = Offset(plotStart, row * rowPx + laneInset),
+                size = Size(plotWidth, rowPx - 2 * laneInset),
+                cornerRadius = CornerRadius(8.dp.toPx()),
             )
         }
 
@@ -116,7 +103,7 @@ internal fun Hypnogram(
             val left = minOf(x(segment.span.startFraction), x(segment.span.endFraction))
             val right = maxOf(x(segment.span.startFraction), x(segment.span.endFraction))
             drawRoundRect(
-                color = stageColor(segment.stage, colors),
+                color = stages.of(segment.stage),
                 topLeft = Offset(left, segment.row * rowPx + (rowPx - barHeight) / 2),
                 size = Size((right - left).coerceAtLeast(1.dp.toPx()), barHeight),
                 cornerRadius = CornerRadius(3.dp.toPx()),
