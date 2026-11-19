@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.data.model.RecordType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.Duration
@@ -24,6 +25,18 @@ class ExplorerRangeTest {
             assertEquals(today.plusDays(1).atStartOfDay(zone).toInstant(), bounds.end)
             assertEquals(0, bounds.start.atZone(zone).toLocalTime().toSecondOfDay())
         }
+    }
+
+    @Test
+    fun sleepDaysRunNoonToNoonSoAMorningFindsTheNightBefore() {
+        val morning = LocalDate.of(2026, 11, 18)
+        val bounds = ExplorerRange.Day(morning).bounds(today, zone, RecordType.SLEEP_SESSION)
+        assertEquals(morning.minusDays(1).atTime(12, 0).atZone(zone).toInstant(), bounds.start)
+        assertEquals(morning.atTime(12, 0).atZone(zone).toInstant(), bounds.end)
+
+        // Other types keep whole local days.
+        val steps = ExplorerRange.Day(morning).bounds(today, zone, RecordType.STEPS)
+        assertEquals(morning.atStartOfDay(zone).toInstant(), steps.start)
     }
 
     @Test

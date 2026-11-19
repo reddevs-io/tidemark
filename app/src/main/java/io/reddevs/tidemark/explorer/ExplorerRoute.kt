@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -102,7 +103,7 @@ private fun TypeListRoute(viewModel: ExplorerTypesViewModel, onSelect: (RecordTy
     TypeListScreen(
         state = state,
         onSelect = onSelect,
-        onOpenSettings = { openHealthConnectSettings(context) },
+        onOpenSettings = { HealthConnectIntents.openAccess(context) },
         onRetry = viewModel::refresh,
         onBack = onBack,
     )

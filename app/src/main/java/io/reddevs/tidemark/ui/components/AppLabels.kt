@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package io.reddevs.tidemark.explorer
+package io.reddevs.tidemark.ui.components
 
 import android.content.Context
 import android.content.pm.ApplicationInfo

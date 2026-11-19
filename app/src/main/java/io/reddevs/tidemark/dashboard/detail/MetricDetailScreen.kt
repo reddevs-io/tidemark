@@ -27,6 +27,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -66,6 +67,7 @@ internal data class DetailActions(
     val onPrevious: () -> Unit = {},
     val onNext: () -> Unit = {},
     val onRetry: () -> Unit = {},
+    val onOpenHealthConnectSettings: () -> Unit = {},
     val onBucketSelected: (Int) -> Unit = {},
     val onDaySelected: () -> Unit = {},
     val onBack: () -> Unit = {},
@@ -194,7 +196,11 @@ private fun DetailBody(
         DetailContent.Loading -> Box(boxModifier) { LoadingState() }
         DetailContent.Empty -> Box(boxModifier) { EmptyState(stringResource(R.string.detail_empty)) }
         is DetailContent.Error -> Box(boxModifier) {
-            ErrorState(message = stringResource(errorMessage(content.error)), onRetry = actions.onRetry)
+            if (content.error == DetailError.PERMISSION_MISSING) {
+                PermissionMissing(actions)
+            } else {
+                ErrorState(message = stringResource(errorMessage(content.error)), onRetry = actions.onRetry)
+            }
         }
         is DetailContent.Buckets -> BucketsBody(state, content, formatter, labels, scale, actions)
         is DetailContent.SleepDay -> SleepDayBody(content, formatter, zone, actions, sourceLabel)
@@ -453,6 +459,26 @@ private fun chartDescription(state: MetricDetailUiState, formatter: MeasurementF
         formatter.rangeLabel(state.window),
         summary,
     )
+
+/** The permission error offers Health Connect's settings, where the user can grant the type. */
+@Composable
+private fun PermissionMissing(actions: DetailActions) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            stringResource(R.string.detail_error_permission),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+        )
+        Button(onClick = actions.onOpenHealthConnectSettings) {
+            Text(stringResource(R.string.action_open_health_connect_settings))
+        }
+        OutlinedButton(onClick = actions.onRetry) { Text(stringResource(R.string.action_retry)) }
+    }
+}
 
 @StringRes
 private fun errorMessage(error: DetailError): Int = when (error) {

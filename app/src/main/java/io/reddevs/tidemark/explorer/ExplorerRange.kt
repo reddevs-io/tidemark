@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.data.model.RecordType
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+
+private val NOON = java.time.LocalTime.NOON
 
 /** A half-open time window [start, end) for a record query. */
 data class TimeBounds(val start: Instant, val end: Instant)
@@ -13,9 +16,21 @@ sealed interface ExplorerRange {
     /** First and last local day covered, both inclusive. */
     fun days(today: LocalDate): Pair<LocalDate, LocalDate>
 
-    fun bounds(today: LocalDate, zone: ZoneId): TimeBounds {
+    /**
+     * The query window for [type]. Sleep sessions follow the dashboard rule that a night belongs to
+     * the morning it ends, so their days run noon to noon: "Today" shows last night, and a sleep
+     * drill-down for a morning finds the session that started the evening before.
+     */
+    fun bounds(today: LocalDate, zone: ZoneId, type: RecordType? = null): TimeBounds {
         val (first, last) = days(today)
-        return TimeBounds(first.atStartOfDay(zone).toInstant(), last.plusDays(1).atStartOfDay(zone).toInstant())
+        return if (type == RecordType.SLEEP_SESSION) {
+            TimeBounds(
+                first.minusDays(1).atTime(NOON).atZone(zone).toInstant(),
+                last.atTime(NOON).atZone(zone).toInstant(),
+            )
+        } else {
+            TimeBounds(first.atStartOfDay(zone).toInstant(), last.plusDays(1).atStartOfDay(zone).toInstant())
+        }
     }
 
     data object Today : ExplorerRange {

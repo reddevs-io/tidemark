@@ -1,0 +1,24 @@
+Tidemark
+Copyright (C) 2026 RedDevs
+
+Tidemark is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. See LICENSE for the full text.
+
+Code from other projects
+------------------------
+
+None at present. Heartwood (GPL-3.0-or-later) and Health Disconnect
+(Apache-2.0) served as references for behaviour, but no code was copied from
+either. Code taken from another project in future is listed here with its
+repository, file, commit and original copyright notice.
+
+Third-party libraries
+---------------------
+
+The app is built with AndroidX (including Jetpack Compose, Navigation,
+Lifecycle, DataStore and the Health Connect client), Kotlin and kotlinx
+libraries, and Vico. All are licensed under the Apache License 2.0, which is
+compatible with GPL-3.0-or-later. Their versions are listed in
+gradle/libs.versions.toml.

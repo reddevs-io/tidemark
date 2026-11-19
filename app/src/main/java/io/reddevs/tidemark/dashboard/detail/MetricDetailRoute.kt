@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.dashboard.detail
 
-import android.content.Context
-import android.content.pm.PackageManager
+import io.reddevs.tidemark.ui.components.AppLabels
+import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,7 +49,7 @@ fun MetricDetailRoute(
         viewModel.recordsRequests.collect { openRecords(it.type, it.day) }
     }
     val context = LocalContext.current
-    val labels = remember(context) { AppLabels(context) }
+    val labels = remember(context) { AppLabels.get(context) }
 
     MetricDetailScreen(
         state = state,
@@ -60,6 +60,7 @@ fun MetricDetailRoute(
             onPrevious = viewModel::previous,
             onNext = viewModel::next,
             onRetry = viewModel::retry,
+            onOpenHealthConnectSettings = { HealthConnectIntents.openAccess(context) },
             onBucketSelected = viewModel::onBucketSelected,
             onDaySelected = viewModel::onDaySelected,
             onBack = onBack,
@@ -68,19 +69,3 @@ fun MetricDetailRoute(
     )
 }
 
-/**
- * Resolves a data origin's app label. Health Connect apps are visible through the manifest's
- * rationale-intent query; anything unresolved falls back to the package name.
- */
-private class AppLabels(context: Context) {
-    private val packageManager = context.packageManager
-    private val cache = mutableMapOf<String, String>()
-
-    fun label(packageName: String): String = cache.getOrPut(packageName) {
-        try {
-            packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, 0)).toString()
-        } catch (_: PackageManager.NameNotFoundException) {
-            packageName
-        }
-    }
-}

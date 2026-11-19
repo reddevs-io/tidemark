@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.dashboard.home
 
-import android.content.pm.PackageManager
+import io.reddevs.tidemark.ui.components.AppLabels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -220,7 +220,7 @@ private fun dayLabel(day: LocalDate, today: LocalDate, formatter: MeasurementFor
     else -> formatter.date(day, DateStyle.MEDIUM)
 }
 
-/** The app's label through PackageManager, or the package name when it can't be resolved. */
+/** The app's label from the shared [AppLabels] cache, or the package name in previews. */
 @Composable
 private fun appLabel(packageName: String): String {
     val context = LocalContext.current
@@ -229,12 +229,7 @@ private fun appLabel(packageName: String): String {
         if (inspection) {
             packageName
         } else {
-            try {
-                val pm = context.packageManager
-                pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
-            } catch (e: PackageManager.NameNotFoundException) {
-                packageName
-            }
+            AppLabels.get(context).label(packageName)
         }
     }
 }

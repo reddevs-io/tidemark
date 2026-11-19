@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.dashboard.home
 
-import android.content.ActivityNotFoundException
-import android.content.Context
+import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,7 +50,7 @@ fun DashboardRoute(
         onOpenMetric = onOpenMetric,
         onRetry = viewModel::retry,
         onOpenHealthConnectSettings = {
-            if (!openHealthConnectSettings(context)) scope.launch { snackbarHostState.showSnackbar(openFailed) }
+            if (!HealthConnectIntents.openAccess(context)) scope.launch { snackbarHostState.showSnackbar(openFailed) }
         },
         onDismissBanner = viewModel::dismissBanner,
         onOpenExplorer = onOpenExplorer,
@@ -61,10 +59,3 @@ fun DashboardRoute(
     )
 }
 
-/** Opens Health Connect's data and access screen. Returns false when no app handles it. */
-internal fun openHealthConnectSettings(context: Context): Boolean = try {
-    context.startActivity(HealthConnectClient.getHealthConnectManageDataIntent(context))
-    true
-} catch (e: ActivityNotFoundException) {
-    false
-}

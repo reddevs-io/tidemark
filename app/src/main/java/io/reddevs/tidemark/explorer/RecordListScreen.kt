@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.ui.components.AppLabels
+import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -99,7 +101,7 @@ internal fun RecordListRoute(
         onSelectSource = viewModel::selectSource,
         onLastVisibleItem = viewModel::onLastVisibleItem,
         onRetry = viewModel::retry,
-        onOpenSettings = { openHealthConnectSettings(context) },
+        onOpenSettings = { HealthConnectIntents.openAccess(context) },
         onOpenRecord = { record -> onOpenRecord(state.type, record.metadata.id) },
         onBack = onBack,
     )

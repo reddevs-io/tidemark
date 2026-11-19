@@ -46,7 +46,7 @@ class AppContainer(
     }
 
     private fun createFormatter(locale: Locale, unit: UnitPreference): MeasurementFormatter =
-        LocaleMeasurementFormatter(context, locale, unit)
+        LocaleMeasurementFormatter(context, locale, unit, clock)
 
     private fun currentLocale(): Locale = context.resources.configuration.locales[0]
 }

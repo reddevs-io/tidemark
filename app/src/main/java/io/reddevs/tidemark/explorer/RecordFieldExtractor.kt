@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.ui.components.AppLabels
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.onboarding
 
+import io.reddevs.tidemark.data.HealthConnectIntents
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -54,7 +55,7 @@ fun OnboardingRoute(container: AppContainer, onDone: () -> Unit) {
                 viewModel.onPermissionRequestFailed()
             }
         },
-        onOpenHealthConnectSettings = { openOrToast(context, HealthConnectIntents.appPermissions(context)) },
+        onOpenHealthConnectSettings = { openOrToast(context, HealthConnectIntents.access(context)) },
         onOpenPrivacyPolicy = { context.startActivity(Intent(context, PrivacyPolicyActivity::class.java)) },
     )
 }

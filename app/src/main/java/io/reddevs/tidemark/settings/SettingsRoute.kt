@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.settings
 
+import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -78,9 +79,7 @@ fun SettingsRoute(
         snackbarHostState = snackbar,
         onSelectUnit = viewModel::selectUnit,
         onManageHealthConnect = {
-            val opened = runCatching { context.startActivityOrFalse(SettingsLinks.manageHealthConnect(context)) }
-                .getOrDefault(false)
-            if (!opened) scope.launch { snackbar.showSnackbar(unavailable) }
+            if (!HealthConnectIntents.openAccess(context)) scope.launch { snackbar.showSnackbar(unavailable) }
         },
         onOpenPrivacy = onOpenPrivacy,
         onOpenSourceCode = {

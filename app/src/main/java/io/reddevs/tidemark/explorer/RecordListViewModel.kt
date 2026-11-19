@@ -57,7 +57,7 @@ class RecordListViewModel(
     )
     val state: StateFlow<RecordListState> = _state.asStateFlow()
 
-    private var bounds: TimeBounds = initialRange.bounds(today(), clock.zone)
+    private var bounds: TimeBounds = initialRange.bounds(today(), clock.zone, type)
     private var nextPageToken: String? = null
     private var pageJob: Job? = null
     private var originsJob: Job? = null
@@ -104,7 +104,7 @@ class RecordListViewModel(
         pageJob?.cancel()
         nextPageToken = null
         val range = _state.value.range
-        bounds = range.bounds(today(), clock.zone)
+        bounds = range.bounds(today(), clock.zone, _state.value.type)
         _state.update {
             it.copy(
                 records = emptyList(),

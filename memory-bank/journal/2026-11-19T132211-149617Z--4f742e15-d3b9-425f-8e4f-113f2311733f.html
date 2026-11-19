@@ -1,0 +1,6 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="4f742e15-d3b9-425f-8e4f-113f2311733f" data-kind="change" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="activeContext">
+  <time datetime="2026-11-19T13:22:11.149617Z">2026-11-19T13:22:11.149617Z</time>
+  <h3>T-010 integration cleanups</h3>
+  <div class="details"><strong>Details</strong>One data.HealthConnectIntents helper (installOrUpdate, access = manage-data intent then HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS, openAccess, startFirst) replaces the onboarding, settings, dashboard and explorer copies; no HealthConnectClient outside data. Detail permission error gains an Open Health Connect settings button. AppLabels moved to ui/components and shared by dashboard, detail and explorer. Explorer queries sleep sessions noon to noon so a sleep drill-down for a morning finds the night before. AppContainer passes its clock to the formatter. Added NOTICE and .markdownlint.jsonc (MD013 off). 276 tests pass.</div>
+</article>

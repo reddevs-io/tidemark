@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,11 +22,6 @@ class SettingsLinksTest {
         assertEquals(Intent.ACTION_VIEW, intent.action)
         assertEquals("https://github.com/reddevs-io/tidemark", intent.dataString)
         assertTrue(intent.hasCategory(Intent.CATEGORY_BROWSABLE))
-    }
-
-    @Test
-    fun manageHealthConnectBuildsAnIntent() {
-        assertNotNull(SettingsLinks.manageHealthConnect(app).action)
     }
 
     @Test
