@@ -1,0 +1,6 @@
+Première version.
+• Tableau de bord avec les pas, les calories actives et la distance du jour, le sommeil de la nuit dernière, et vos dernières valeurs de fréquence cardiaque au repos et de poids
+• Graphiques par jour, semaine, mois et année, avec un hypnogramme des phases de sommeil
+• Explorateur des enregistrements bruts de Connexion Santé et de leurs métadonnées
+• Français et anglais, unités métriques et impériales
+• Aucun accès au réseau, lecture seule

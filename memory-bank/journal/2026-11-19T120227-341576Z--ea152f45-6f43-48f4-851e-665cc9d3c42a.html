@@ -1,0 +1,6 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-class="testing" data-entry-id="ea152f45-6f43-48f4-851e-665cc9d3c42a" data-kind="pattern" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="systemPatterns">
+  <time datetime="2026-11-19T12:02:27.341576Z">2026-11-19T12:02:27.341576Z</time>
+  <h3>Parallel Gradle builds on one machine</h3>
+  <div class="details"><strong>Details</strong>With eight worktrees building at once on a 30 GB / 12-core machine, each agent runs Gradle with --max-workers=2, -Xmx3g and the in-process Kotlin compiler, and never runs ./gradlew --stop, because daemons are shared across worktrees.</div>
+</article>

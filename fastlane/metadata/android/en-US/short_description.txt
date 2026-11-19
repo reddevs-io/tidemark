@@ -1,0 +1,1 @@
+See your Health Connect data: trends and raw records. Offline and read-only.

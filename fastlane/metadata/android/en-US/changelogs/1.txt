@@ -1,0 +1,6 @@
+First release.
+• Dashboard with today's steps, active calories and distance, last night's sleep, and your latest resting heart rate and weight
+• Day, week, month and year charts, with a sleep stage hypnogram
+• Record explorer for raw Health Connect records and their metadata
+• English and French, metric and imperial units
+• No network access, read-only

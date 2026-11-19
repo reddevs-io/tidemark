@@ -1,0 +1,40 @@
+Tidemark is a read-only viewer for the health and fitness data you keep in Health Connect. It shows your trends at a glance and lets you look at every raw record, with nothing leaving your phone.
+
+DASHBOARD
+• Today's steps, active calories and distance
+• Last night's sleep, with a sleep stage bar
+• Your latest resting heart rate and weight
+• A 7-day trend on every tile, 30 days for weight
+
+CHARTS
+• Day, week, month and year views for each metric
+• Sleep stage hypnogram for each night
+• Heart rate samples for the day, with your resting heart rate as a reference line
+• Tap a day to see the records behind it
+
+RECORD EXPLORER
+• Browse raw records for all eight data types
+• Filter by date range and by the app that wrote the data
+• See every field Health Connect stores: values, samples, stages, segments, laps, the source app, the device and the recording method
+
+PRIVATE BY DESIGN
+• No internet permission. Tidemark cannot connect to any network.
+• No accounts, ads, analytics or crash reporting
+• Read-only: Tidemark never writes, edits or deletes your data
+• Reads only while it's on screen, never in the background
+• Stores two settings on your phone, your unit choice and the date you first granted access, and nothing else
+
+DATA TYPES
+Steps, distance, active calories burned, exercise sessions, sleep sessions with stages, heart rate, resting heart rate and weight. You choose which ones Tidemark can read, and you can change that at any time in Health Connect. With the past data permission, Tidemark can also show records older than 30 days before you first granted access.
+
+IN YOUR LANGUAGE AND UNITS
+English and French. Units follow your language and region, with a metric or imperial override in settings.
+
+REQUIREMENTS
+Android 9 or later. On Android 9 to 13, install the Health Connect app from Google Play. On Android 14 and later, Health Connect is part of the system.
+
+FREE SOFTWARE
+Tidemark is open source under the GNU GPL, version 3 or later. Source code: https://github.com/reddevs-io/tidemark
+Privacy policy: https://tidemark.reddevs.io/privacy/
+
+Tidemark is not a medical device and does not give medical advice. Health Connect is a trademark of Google LLC.

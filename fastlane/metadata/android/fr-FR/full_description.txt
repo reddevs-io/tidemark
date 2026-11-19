@@ -1,0 +1,40 @@
+Tidemark est une visionneuse en lecture seule pour les données de santé et de forme que vous conservez dans Connexion Santé. Elle affiche vos tendances en un coup d'œil et vous laisse consulter chaque enregistrement brut, sans que rien ne quitte votre téléphone.
+
+TABLEAU DE BORD
+• Pas, calories actives et distance du jour
+• Sommeil de la nuit dernière, avec une barre des phases de sommeil
+• Dernières valeurs de fréquence cardiaque au repos et de poids
+• Une tendance sur 7 jours sur chaque tuile, 30 jours pour le poids
+
+GRAPHIQUES
+• Vues par jour, semaine, mois et année pour chaque mesure
+• Hypnogramme des phases de sommeil pour chaque nuit
+• Mesures de fréquence cardiaque de la journée, avec votre fréquence cardiaque au repos comme ligne de référence
+• Touchez un jour pour voir les enregistrements correspondants
+
+EXPLORATEUR D'ENREGISTREMENTS
+• Parcourez les enregistrements bruts des huit types de données
+• Filtrez par période et par application source
+• Consultez tous les champs que Connexion Santé conserve : valeurs, mesures, phases, segments, tours, application source, appareil et mode d'enregistrement
+
+CONFIDENTIALITÉ DÈS LA CONCEPTION
+• Aucune autorisation d'accès à Internet. Tidemark ne peut se connecter à aucun réseau.
+• Ni compte, ni publicité, ni statistiques d'utilisation, ni rapports de plantage
+• Lecture seule : Tidemark n'écrit, ne modifie et ne supprime jamais vos données
+• Lit les données uniquement lorsqu'elle est à l'écran, jamais en arrière-plan
+• Enregistre deux réglages sur votre téléphone, votre choix d'unités et la date de votre première autorisation, et rien d'autre
+
+TYPES DE DONNÉES
+Pas, distance, calories actives brûlées, séances d'exercice, sessions de sommeil avec leurs phases, fréquence cardiaque, fréquence cardiaque au repos et poids. Vous choisissez ceux que Tidemark peut lire, et vous pouvez modifier ce choix à tout moment dans Connexion Santé. Avec l'autorisation d'accès aux données passées, Tidemark peut aussi afficher les enregistrements antérieurs aux 30 jours précédant votre première autorisation.
+
+DANS VOTRE LANGUE ET VOS UNITÉS
+Français et anglais. Les unités suivent votre langue et votre région, et vous pouvez choisir le système métrique ou impérial dans les réglages.
+
+CONFIGURATION REQUISE
+Android 9 ou version ultérieure. Sur Android 9 à 13, installez l'application Connexion Santé depuis Google Play. Sur Android 14 et versions ultérieures, Connexion Santé est intégrée au système.
+
+LOGICIEL LIBRE
+Tidemark est un logiciel libre distribué sous la licence GNU GPL, version 3 ou ultérieure. Code source : https://github.com/reddevs-io/tidemark
+Politique de confidentialité : https://tidemark.reddevs.io/fr/privacy/
+
+Tidemark n'est pas un dispositif médical et ne donne aucun conseil médical. Connexion Santé (Health Connect) est une marque de Google LLC.
