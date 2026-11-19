@@ -1,0 +1,75 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Lint, unit tests, an unsigned release build and the permission check on every pull request
+# and every push to main.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# An explicit shell runs steps with "bash -eo pipefail"; the implicit default lacks pipefail.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Lint, test, release build, permissions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate the Gradle wrapper
+        uses: gradle/actions/wrapper-validation@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        # The Gradle cache is written only from main; pull requests read it.
+        with:
+          validate-wrappers: false # done by the step above
+
+      - name: Lint, unit tests and release build
+        run: ./gradlew lintDebug testDebugUnitTest assembleRelease
+
+      - name: Check release APK permissions
+        run: scripts/check-permissions.sh app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Upload lint report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-*.*
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload unit test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unit-test-reports
+          path: |
+            app/build/reports/tests/
+            app/build/test-results/
+          if-no-files-found: ignore
+          retention-days: 14

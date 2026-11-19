@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Keeps the SHA-pinned GitHub Actions current. Gradle dependencies are bumped by hand in
+# gradle/libs.versions.toml, so Dependabot leaves them alone.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        patterns: ["*"]
