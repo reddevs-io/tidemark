@@ -77,9 +77,9 @@ internal fun HistoryBannerCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
-                TextButton(onClick = onDismiss) { Text(stringResource(R.string.dashboard_banner_dismiss)) }
+                TextButton(onClick = onDismiss, shape = MaterialTheme.shapes.small) { Text(stringResource(R.string.dashboard_banner_dismiss)) }
                 if (banner.canOpenSettings) {
-                    TextButton(onClick = onOpenHealthConnectSettings) {
+                    TextButton(onClick = onOpenHealthConnectSettings, shape = MaterialTheme.shapes.small) {
                         Text(stringResource(R.string.action_open_health_connect_settings))
                     }
                 }

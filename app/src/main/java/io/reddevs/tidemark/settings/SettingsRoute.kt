@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.settings
 
+import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -108,6 +109,7 @@ fun SettingsScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                expandedHeight = scaledTopAppBarHeight(),
                 title = { Text(stringResource(R.string.settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {

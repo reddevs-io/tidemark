@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.dashboard.detail
 
+import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -86,6 +87,7 @@ internal fun MetricDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                expandedHeight = scaledTopAppBarHeight(),
                 title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = actions.onBack) {

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -121,6 +122,7 @@ internal fun TypeListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                expandedHeight = scaledTopAppBarHeight(),
                 title = { Text(stringResource(R.string.explorer_title)) },
                 navigationIcon = { BackButton(onBack) },
             )

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.onboarding
 
+import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -49,6 +50,7 @@ fun PrivacyPolicyScreen(onBack: (() -> Unit)?) {
     Scaffold(
         topBar = {
             TopAppBar(
+                expandedHeight = scaledTopAppBarHeight(),
                 title = { Text(stringResource(R.string.privacy_policy_title)) },
                 navigationIcon = {
                     if (onBack != null) {

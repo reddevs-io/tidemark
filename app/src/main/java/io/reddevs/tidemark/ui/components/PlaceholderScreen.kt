@@ -25,6 +25,7 @@ fun PlaceholderScreen(title: String, onBack: (() -> Unit)? = null, body: String 
     Scaffold(
         topBar = {
             TopAppBar(
+                expandedHeight = scaledTopAppBarHeight(),
                 title = { Text(title) },
                 navigationIcon = {
                     if (onBack != null) {

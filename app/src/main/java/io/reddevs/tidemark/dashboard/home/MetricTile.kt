@@ -77,7 +77,7 @@ internal fun MetricTile(
                 } else {
                     stringResource(R.string.action_open_health_connect_settings) to onOpenHealthConnectSettings
                 }
-                TextButton(onClick = action) { Text(label) }
+                TextButton(onClick = action, shape = MaterialTheme.shapes.small) { Text(label) }
             }
         }
         else -> {

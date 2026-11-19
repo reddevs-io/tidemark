@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.reddevs.tidemark.explorer
 
+import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import io.reddevs.tidemark.ui.components.AppLabels
 import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.compose.foundation.clickable
@@ -105,7 +106,7 @@ internal fun RecordDetailScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(type.label)) }, navigationIcon = { BackButton(onBack) })
+            TopAppBar(expandedHeight = scaledTopAppBarHeight(), title = { Text(stringResource(type.label)) }, navigationIcon = { BackButton(onBack) })
         },
     ) { padding ->
         val modifier = Modifier.fillMaxSize().padding(padding)
