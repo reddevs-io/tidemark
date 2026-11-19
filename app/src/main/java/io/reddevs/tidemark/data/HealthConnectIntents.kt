@@ -32,13 +32,14 @@ object HealthConnectIntents {
     )
 
     /**
-     * Where the user grants or revokes Tidemark's access: Health Connect's data and access screen
-     * for Tidemark first, then Health Connect's general settings.
+     * Where the user grants or revokes Tidemark's access. Health Connect's home screen comes first,
+     * because its "App permissions" entry is one tap away; third-party apps can't open Tidemark's
+     * own permission page directly. The data management screen is the fallback.
      */
     fun access(context: Context): List<Intent> = listOf(
-        HealthConnectClient.getHealthConnectManageDataIntent(context, PROVIDER_PACKAGE),
         // The library picks the platform action on Android 14+ and the app's action below.
         Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS),
+        HealthConnectClient.getHealthConnectManageDataIntent(context, PROVIDER_PACKAGE),
     )
 
     /** Opens [access]. Returns false when nothing on the device handles it. */

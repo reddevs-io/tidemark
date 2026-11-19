@@ -62,13 +62,14 @@ class HealthConnectHealthRepositoryTest {
     private var status = HealthConnectClient.SDK_AVAILABLE
     private var clientsCreated = 0
 
-    private fun repository(installable: Boolean = true) = HealthConnectHealthRepository(
+    private fun repository(installable: Boolean = true, installed: Boolean = true) = HealthConnectHealthRepository(
         sdkStatus = { status },
         clientFactory = { clientsCreated++; client },
         clock = Clock.fixed(now, paris),
         zone = { paris },
         locale = { Locale.FRANCE },
         providerInstallable = { installable },
+        providerInstalled = { installed },
     )
 
     private val repo = repository()
@@ -101,6 +102,14 @@ class HealthConnectHealthRepositoryTest {
         status = HealthConnectClient.SDK_UNAVAILABLE
         assertEquals(HcAvailability.NOT_INSTALLED, repo.availability())
         assertEquals(HcAvailability.UNSUPPORTED, repository(installable = false).availability())
+    }
+
+    @Test
+    fun updateRequiredWithoutThePackageMeansNotInstalled() {
+        // Android 9 to 13 report "update required" when Health Connect is missing but installable.
+        status = HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
+        assertEquals(HcAvailability.NOT_INSTALLED, repository(installed = false).availability())
+        assertEquals(HcAvailability.UPDATE_REQUIRED, repository(installed = true).availability())
     }
 
     @Test

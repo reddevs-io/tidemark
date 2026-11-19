@@ -2,6 +2,7 @@
 package io.reddevs.tidemark.data
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectFeatures
@@ -46,7 +47,7 @@ import kotlin.reflect.KClass
  * others. Dates and buckets follow the device time zone and locale at call time.
  *
  * The internal constructor exists for tests: it takes the SDK status, the client factory, a clock,
- * the zone and locale, and whether the provider is installable from Play.
+ * the zone and locale, whether the provider is installable from Play, and whether it is installed.
  */
 class HealthConnectHealthRepository internal constructor(
     private val sdkStatus: () -> Int,
@@ -55,6 +56,7 @@ class HealthConnectHealthRepository internal constructor(
     private val zone: () -> ZoneId,
     private val locale: () -> Locale,
     private val providerInstallable: () -> Boolean,
+    private val providerInstalled: () -> Boolean,
 ) : HealthRepository {
 
     constructor(context: Context) : this(
@@ -65,6 +67,8 @@ class HealthConnectHealthRepository internal constructor(
         locale = { Locale.getDefault() },
         // Health Connect ships as a Play app on Android 9 to 13 and is built in from Android 14.
         providerInstallable = { Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE },
+        // The manifest's <queries> entry makes the Health Connect package visible.
+        providerInstalled = { isPackageInstalled(context, PROVIDER_PACKAGE) },
     )
 
     @Volatile
@@ -90,7 +94,10 @@ class HealthConnectHealthRepository internal constructor(
     override fun availability(): HcAvailability =
         when (sdkStatus()) {
             HealthConnectClient.SDK_AVAILABLE -> HcAvailability.AVAILABLE
-            HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> HcAvailability.UPDATE_REQUIRED
+            // On Android 9 to 13 the SDK also reports "update required" when Health Connect is
+            // missing but installable from Play, so check whether the package is there.
+            HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED ->
+                if (providerInstalled()) HcAvailability.UPDATE_REQUIRED else HcAvailability.NOT_INSTALLED
             else -> if (providerInstallable()) HcAvailability.NOT_INSTALLED else HcAvailability.UNSUPPORTED
         }
 
@@ -282,4 +289,16 @@ class HealthConnectHealthRepository internal constructor(
         private val SLEEP_LOOKBACK: Duration = Duration.ofDays(1)
         private val LATEST_LOOKBACK: Duration = Duration.ofDays(365)
     }
+}
+
+private fun isPackageInstalled(context: Context, packageName: String): Boolean = try {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+    } else {
+        @Suppress("DEPRECATION")
+        context.packageManager.getPackageInfo(packageName, 0)
+    }
+    true
+} catch (_: PackageManager.NameNotFoundException) {
+    false
 }

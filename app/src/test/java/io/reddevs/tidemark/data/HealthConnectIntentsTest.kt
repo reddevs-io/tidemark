@@ -27,13 +27,13 @@ class HealthConnectIntentsTest {
     }
 
     @Test
-    fun accessTriesTidemarksDataScreenBeforeGeneralSettings() {
+    fun accessTriesHealthConnectHomeBeforeTheDataScreen() {
         val candidates = HealthConnectIntents.access(app)
+        assertEquals(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS, candidates.first().action)
         assertEquals(
             HealthConnectClient.getHealthConnectManageDataIntent(app, HealthConnectHealthRepository.PROVIDER_PACKAGE).action,
-            candidates.first().action,
+            candidates.last().action,
         )
-        assertEquals(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS, candidates.last().action)
     }
 
     @Test
