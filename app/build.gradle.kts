@@ -11,11 +11,14 @@ val tidemarkVersionCode = providers.gradleProperty("tidemark.versionCode").get()
 
 // Release signing comes from the environment (GitHub secrets in CI, see docs/release.md).
 // When any value is missing the release build stays unsigned.
-val keystorePath = providers.environmentVariable("TIDEMARK_KEYSTORE_PATH").orNull
-val keystorePassword = providers.environmentVariable("TIDEMARK_KEYSTORE_PASSWORD").orNull
-val keyAlias = providers.environmentVariable("TIDEMARK_KEY_ALIAS").orNull
-val keyPassword = providers.environmentVariable("TIDEMARK_KEY_PASSWORD").orNull
-val hasReleaseSigning = listOf(keystorePath, keystorePassword, keyAlias, keyPassword).all { !it.isNullOrBlank() }
+// The names carry a "release" prefix on purpose: inside create("release") { } a bare keyAlias or
+// keyPassword resolves to the signing config's own (null) property, not to a script-level val.
+val releaseStorePath = providers.environmentVariable("TIDEMARK_KEYSTORE_PATH").orNull
+val releaseStorePassword = providers.environmentVariable("TIDEMARK_KEYSTORE_PASSWORD").orNull
+val releaseKeyAlias = providers.environmentVariable("TIDEMARK_KEY_ALIAS").orNull
+val releaseKeyPassword = providers.environmentVariable("TIDEMARK_KEY_PASSWORD").orNull
+val hasReleaseSigning = listOf(releaseStorePath, releaseStorePassword, releaseKeyAlias, releaseKeyPassword)
+    .all { !it.isNullOrBlank() }
 
 android {
     namespace = "io.reddevs.tidemark"
@@ -34,10 +37,10 @@ android {
     signingConfigs {
         if (hasReleaseSigning) {
             create("release") {
-                storeFile = file(keystorePath!!)
-                storePassword = keystorePassword
-                this.keyAlias = keyAlias
-                this.keyPassword = keyPassword
+                storeFile = file(releaseStorePath!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
             }
         }
     }
