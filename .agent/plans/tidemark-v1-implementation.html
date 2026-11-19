@@ -154,6 +154,30 @@ Wave 4   T-012 Play: app record, own key to Play App Signing, declarations, revi
 <h2 id="contracts">4. Shared contracts (frozen after T-001)</h2>
 <p>Signatures are a sketch. T-001 may adjust names to compile, but once T-001 is accepted these files change only through the blocker process in section 7.</p>
 
+<div class="box warn">
+<h4 style="margin-top:4px">As built by T-001 (2026-11-19). These facts override the sketch below.</h4>
+<ul>
+<li><strong>Toolchain.</strong> AGP 9.5.1 (built-in Kotlin, no <code>kotlin-android</code> plugin), Kotlin 2.4.21, Gradle 9.9.1, Compose BOM 2026.09.00, Navigation 2.10.2, Vico 3.3.1, DataStore 1.3.0, Robolectric 4.18.1. Versions live in <code>gradle/libs.versions.toml</code>.</li>
+<li><strong>compileSdk is 37</strong>, and targetSdk stays 36. Compose 1.12, Navigation 2.10 and Vico 3.3 refuse to build against 36. compileSdk only changes the build, not runtime behaviour.</li>
+<li><strong>connect-testing is pinned to 1.0.0-alpha03.</strong> alpha04 pins connect-client 1.2.0-alpha05.</li>
+<li><strong>Robolectric runs at SDK 34</strong> (<code>app/src/test/resources/robolectric.properties</code>), because it needs JDK 21 for SDK 35 and above and the toolchain is JDK 17. Don't override it per test with <code>@Config(sdk = 35+)</code>.</li>
+<li><strong>Test records.</strong> The public <code>Metadata</code> constructor can't set an id or data origin, and <code>IntervalRecord</code> and <code>InstantaneousRecord</code> are internal. Use <code>TestRecords.metadata(id, packageName)</code> (it wraps connect-testing's <code>Metadata.populatedWithTestValues</code>) and <code>FakeHealthRepository.timeOf(record)</code>.</li>
+<li><strong>Aggregates in FakeHealthConnectClient</strong> (risk R1, now confirmed): the fake does not compute them. Stub results through <code>fake.overrides.aggregate</code>, <code>aggregateGroupByPeriod</code> and <code>aggregateGroupByDuration</code>, using connect-testing's <code>AggregationResult(dataOrigins, metrics)</code> factory.</li>
+<li><strong>Permission allow-list.</strong> The APK also requests <code>io.reddevs.tidemark.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code>, an app-private signature permission that androidx.core adds. T-008's permission check must allow it. <code>ManifestContractTest</code> already does.</li>
+<li><strong>Navigation enums</strong> (<code>RecordType</code>, <code>Metric</code>, <code>ChartRange</code>) carry <code>@Keep</code> so R8 keeps their serializers.</li>
+<li><strong>Signature differences from the sketch.</strong>
+  <ul>
+  <li><code>AppContainer(context, healthRepository = ..., userPreferences = ..., clock = Clock.systemDefaultZone(), scope = ...)</code>. Tests pass fakes and <code>backgroundScope</code>. Use <code>container.clock</code> for "today".</li>
+  <li><code>MeasurementFormatter</code> also has <code>val locale</code> and <code>metricValue(metric, value)</code>. <code>DateStyle</code> is <code>SHORT</code>, <code>MEDIUM</code>, <code>LONG</code> or <code>DAY_MONTH</code>. The implementation constructor is <code>LocaleMeasurementFormatter(context, locale, unitPreference)</code>.</li>
+  <li>The <code>Explorer</code> route stores <code>typeName: String?</code> and <code>dayEpochDay: Long?</code>, with computed <code>type</code> and <code>day</code>, and a factory <code>Explorer.of(type, day, sourcePackage)</code>.</li>
+  <li><code>RecordType.readPermissions</code> and <code>RecordType.fromRecord(record)</code> are companion helpers.</li>
+  <li><code>ErrorState(modifier, message, onRetry)</code>, <code>EmptyState(message)</code> and <code>LoadingState()</code> are in <code>ui/components</code>, along with <code>PlaceholderScreen</code> (used by the stubs) and <code>Modifier.semanticsLabel()</code>.</li>
+  <li>Shared test fixtures are in <code>$TEST/testing</code>: <code>FakeHealthRepository</code> (with <code>failures</code> and <code>calls</code> maps keyed by <code>Call</code>, and it enforces read permissions), <code>FakeUserPreferences</code>, <code>MainDispatcherRule</code> and <code>TestRecords</code>.</li>
+  </ul></li>
+<li><strong>Health Connect in French</strong> is called "Connexion Santé". Use that name in every French string.</li>
+</ul>
+</div>
+
 <h4><code>data/model</code></h4>
 <pre><code>enum class RecordType(val recordClass: KClass&lt;out Record&gt;) {
     STEPS, DISTANCE, ACTIVE_CALORIES, EXERCISE_SESSION, SLEEP_SESSION, HEART_RATE, RESTING_HEART_RATE, WEIGHT;

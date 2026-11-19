@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <string name="action_retry">Réessayer</string>
+    <string name="action_back">Retour</string>
+    <string name="action_close">Fermer</string>
+    <string name="action_open_health_connect_settings">Ouvrir les paramètres de Connexion Santé</string>
+    <string name="state_loading">Chargement</string>
+    <string name="state_no_data">Aucune donnée</string>
+    <string name="error_generic">Une erreur s\'est produite lors de la lecture des données de Connexion Santé.</string>
+    <string name="error_rate_limited">Connexion Santé demande à Tidemark de ralentir. Réessayez dans un instant.</string>
+    <string name="error_unavailable">Connexion Santé n\'est pas disponible pour le moment.</string>
+</resources>
