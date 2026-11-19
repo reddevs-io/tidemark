@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="1f7a92ad-c683-4365-ba60-b9f718b4b5eb" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T09:57:58.545661Z">2026-11-19T09:57:58.545661Z</time>
+  <h3>One strings file per feature</h3>
+  <div class="rationale"><strong>Rationale</strong>Android merges every file in values/, so parallel workstreams never edit the same XML.</div>
+  <div class="details"><strong>Details</strong>Each feature owns values/strings_&lt;feature&gt;.xml and values-fr/strings_&lt;feature&gt;.xml; T-001 owns strings_common.xml.</div>
+</article>
