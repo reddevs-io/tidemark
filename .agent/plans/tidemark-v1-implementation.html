@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidemark v1 plan</title>
+<style>
+:root {
+  --bg: #fbfaf7; --fg: #1d2326; --muted: #5b6569; --line: #d9dcd8; --card: #ffffff;
+  --accent: #1f6f78; --accent-soft: #e2f0ef; --warn: #8a5a00; --warn-soft: #fdf1d8; --code: #f1f2ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12171a; --fg: #e3e7e6; --muted: #9aa5a8; --line: #2c3539; --card: #182024;
+    --accent: #6cc3c9; --accent-soft: #173235; --warn: #f0c060; --warn-soft: #3a2f14; --code: #1f282c;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 80px; }
+h1 { font-size: 1.9rem; margin: 0 0 4px; }
+h2 { font-size: 1.35rem; margin: 48px 0 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin: 28px 0 8px; }
+h4 { font-size: 1rem; margin: 18px 0 6px; }
+p, li { max-width: 78ch; }
+a { color: var(--accent); }
+code, pre { font: 13px/1.5 ui-monospace, "JetBrains Mono", Menlo, monospace; background: var(--code); border-radius: 4px; }
+code { padding: 1px 4px; }
+pre { padding: 12px 14px; overflow-x: auto; }
+pre code { padding: 0; background: none; }
+.meta { color: var(--muted); margin: 0 0 20px; }
+.tag { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; }
+.warn { background: var(--warn-soft); color: var(--warn); }
+.box { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; margin: 14px 0; }
+.box.warn { border-color: var(--warn); color: var(--fg); }
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); }
+td code { white-space: nowrap; }
+details.prompt { background: var(--card); border: 1px solid var(--line); border-radius: 8px; margin: 14px 0; }
+details.prompt > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; }
+details.prompt > div { padding: 0 18px 14px; }
+nav.toc ol { columns: 2; column-gap: 32px; }
+@media (max-width: 640px) { nav.toc ol { columns: 1; } }
+.graph { white-space: pre; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Tidemark v1 implementation plan</h1>
+<p class="meta">Created 2026-11-19 · Status <span class="tag">proposed</span> · Repo <a href="https://github.com/reddevs-io/tidemark">reddevs-io/tidemark</a> · Memory Bank session <code>1ddffc95-64fb-4951-b127-caecca016c52</code></p>
+
+<div class="box">
+<p><strong>Goal.</strong> Ship Tidemark v1: a read-only Android viewer for Health Connect with a trend dashboard and a raw record explorer, in English and French, with no network access. Release it as a signed APK on GitHub Releases, then submit to Google Play.</p>
+<p><strong>Source of truth.</strong> The agreed design lives in the Memory Bank (structural goal, feature and architecture entries plus the decision log). This plan adds the build order, the contracts that let work run in parallel, and acceptance criteria. Where this plan makes a choice the design left open, it says so and the choice is recorded as a decision.</p>
+<p><strong>Not in this plan.</strong> Everything listed under v1 non-goals in the bank: writes, sync, insights, widgets, notifications, background reads, export, exercise routes, more record types, flavors, local cache.</p>
+</div>
+
+<nav class="toc">
+<h2 style="border:0;margin-top:24px">Contents</h2>
+<ol>
+<li><a href="#dispatch">Dispatch table</a></li>
+<li><a href="#graph">Dependencies</a></li>
+<li><a href="#choices">Choices this plan makes</a></li>
+<li><a href="#contracts">Shared contracts (frozen after T-001)</a></li>
+<li><a href="#prompts">Workstream prompts</a></li>
+<li><a href="#verify">Per-wave verification</a></li>
+<li><a href="#mechanics">Worktrees, staging and blockers</a></li>
+<li><a href="#risks">Risks</a></li>
+<li><a href="#questions">Open questions for the user</a></li>
+</ol>
+</nav>
+
+<h2 id="dispatch">1. Dispatch table</h2>
+<p>Paths below are relative to the repo root. <code>$PKG</code> means <code>app/src/main/java/io/reddevs/tidemark</code> and <code>$TEST</code> means <code>app/src/test/java/io/reddevs/tidemark</code>. A workstream may create new files only inside its owned paths. Files marked "stub from T-001" are created by T-001 with frozen public signatures, and ownership then passes to the listed workstream.</p>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Wave</th><th>Task</th><th>Workstream</th><th>Agent</th><th>Exclusive owned paths</th><th>Depends on</th><th>Milestone</th></tr></thead>
+<tbody>
+<tr><td>0</td><td><code>T-001</code></td><td>Scaffold and contracts</td><td>mb-code (one agent, in the main worktree)</td><td>
+<code>settings.gradle.kts</code>, <code>build.gradle.kts</code>, <code>gradle.properties</code>, <code>gradle/**</code>, <code>gradlew</code>, <code>gradlew.bat</code>, <code>.gitignore</code>, <code>app/build.gradle.kts</code>, <code>app/proguard-rules.pro</code>, <code>app/src/main/AndroidManifest.xml</code>, <code>app/src/main/res/{mipmap*,drawable*,xml}/**</code>, <code>res/values{,-fr}/strings_common.xml</code>, <code>res/values{,-night}/themes.xml</code>, <code>$PKG/TidemarkApplication.kt</code>, <code>$PKG/AppContainer.kt</code>, <code>$PKG/MainActivity.kt</code>, <code>$PKG/navigation/**</code>, <code>$PKG/ui/**</code>, <code>$PKG/data/HealthRepository.kt</code>, <code>$PKG/data/HealthAccessException.kt</code>, <code>$PKG/data/model/**</code>, <code>$PKG/format/MeasurementFormatter.kt</code>, <code>$PKG/settings/UserPreferences.kt</code>, <code>$TEST/testing/**</code>; plus every stub listed in the rows below</td>
+<td>none</td><td><code>M1</code></td></tr>
+<tr><td>1</td><td><code>T-002</code></td><td>Data layer</td><td>mb-code, worktree</td><td><code>$PKG/data/**</code> except the frozen contract files; stub <code>$PKG/data/HealthConnectHealthRepository.kt</code>; <code>$TEST/data/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-003</code></td><td>Onboarding, permissions, privacy rationale</td><td>mb-code, worktree</td><td><code>$PKG/onboarding/**</code> (stubs <code>OnboardingRoute.kt</code>, <code>OnboardingGate.kt</code>, <code>PrivacyPolicyActivity.kt</code>, <code>PrivacyPolicyScreen.kt</code>); <code>res/values{,-fr}/strings_onboarding.xml</code>; <code>$TEST/onboarding/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-004</code></td><td>Settings, units and formatting</td><td>mb-code, worktree</td><td><code>$PKG/settings/**</code> except <code>UserPreferences.kt</code> (stubs <code>SettingsRoute.kt</code>, <code>DataStoreUserPreferences.kt</code>); <code>$PKG/format/**</code> except <code>MeasurementFormatter.kt</code> (stub <code>LocaleMeasurementFormatter.kt</code>); <code>res/values{,-fr}/strings_settings.xml</code>, <code>strings_units.xml</code>; <code>$TEST/settings/**</code>, <code>$TEST/format/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-005</code></td><td>Dashboard home: tiles, sparklines, history banner</td><td>mb-code, worktree</td><td><code>$PKG/dashboard/home/**</code> (stub <code>DashboardRoute.kt</code>); <code>res/values{,-fr}/strings_dashboard.xml</code>; <code>$TEST/dashboard/home/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-006</code></td><td>Metric detail charts and sleep hypnogram</td><td>mb-code, worktree</td><td><code>$PKG/dashboard/detail/**</code> (stub <code>MetricDetailRoute.kt</code>); <code>res/values{,-fr}/strings_detail.xml</code>; <code>$TEST/dashboard/detail/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-007</code></td><td>Record explorer</td><td>mb-code, worktree</td><td><code>$PKG/explorer/**</code> (stubs <code>ExplorerRoute.kt</code>, <code>RecordDetailRoute.kt</code>); <code>res/values{,-fr}/strings_explorer.xml</code>, <code>strings_exercise_types.xml</code>; <code>$TEST/explorer/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-008</code></td><td>CI and release pipeline</td><td>mb-code, worktree</td><td><code>.github/**</code>, <code>docs/release.md</code>, <code>scripts/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>1</td><td><code>T-009</code></td><td>Privacy policy, docs, store text</td><td>mb-code, worktree</td><td><code>PRIVACY.md</code>, <code>PRIVACY.fr.md</code> (placeholders from T-001), <code>README.md</code>, <code>CONTRIBUTING.md</code>, <code>docs/**</code> except <code>docs/release.md</code>, <code>fastlane/metadata/**</code></td><td>T-001</td><td><code>M2</code></td></tr>
+<tr><td>2</td><td><code>T-010</code></td><td>Integration and device verification</td><td>primary session (may delegate fixes to mb-code / mb-debug)</td><td>All paths, after Wave 1 is merged; adds <code>NOTICE</code></td><td>T-002 to T-009</td><td><code>M3</code></td></tr>
+<tr><td>3</td><td><code>T-011</code></td><td>First GitHub release</td><td>primary session plus the user</td><td><code>gradle.properties</code> (version), <code>fastlane/metadata/**/changelogs/**</code></td><td>T-010</td><td><code>M4</code></td></tr>
+<tr><td>4</td><td><code>T-012</code></td><td>Google Play submission (deferred)</td><td>the user, with primary-session help</td><td><code>docs/play/**</code> updates only</td><td>T-011 and a stable permission set</td><td><code>M5</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Milestones</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>ID</th><th>Milestone</th><th>Done when</th></tr></thead>
+<tbody>
+<tr><td><code>M1</code></td><td>Foundation</td><td>T-001 accepted and committed so Wave 1 worktrees can branch from it.</td></tr>
+<tr><td><code>M2</code></td><td>Feature-complete</td><td>All eight Wave 1 workstreams pass their acceptance criteria in their worktrees and are copied into the main worktree.</td></tr>
+<tr><td><code>M3</code></td><td>Integrated and device-verified</td><td>Full build, lint and tests pass on the merged tree, and the manual device checklist passes on API 28 and API 36.</td></tr>
+<tr><td><code>M4</code></td><td>GitHub release v1.0.0</td><td>A tag push produces a signed APK and AAB on a GitHub Release, and Obtainium can install and update from it.</td></tr>
+<tr><td><code>M5</code></td><td>Google Play listing</td><td>The app is published on Play under the reddevs Organization account with the Health apps declaration approved.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="graph">2. Dependencies</h2>
+<pre class="graph"><code>Wave 0   T-001 scaffold + frozen contracts + stubs
+            |   (commit and push; worktrees branch from here)
+            v
+Wave 1   T-002 data      T-003 onboarding   T-004 settings/format   T-005 dashboard home
+         T-006 detail    T-007 explorer     T-008 CI/release        T-009 privacy/docs/store
+            |   (all eight run in parallel; UI work codes against FakeHealthRepository)
+            v
+Wave 2   T-010 integration, device checklist, perf check, NOTICE
+            v
+Wave 3   T-011 keystore + secrets (user) -> tag v1.0.0 -> GitHub Release
+            v
+Wave 4   T-012 Play: app record, own key to Play App Signing, declarations, review</code></pre>
+<p>The only real dependency inside Wave 1 is on the T-001 contracts. UI workstreams never wait for T-002, because they test against <code>FakeHealthRepository</code> and the stub repository returns empty data at runtime. T-008 and T-009 touch no Kotlin at all.</p>
+
+<h2 id="choices">3. Choices this plan makes</h2>
+<p>The design left these open. Each is recorded in the decision log so later sessions don't re-argue them.</p>
+<ol>
+<li><strong>Frozen contracts and stubs.</strong> T-001 writes the repository interface, domain models, formatter and preferences interfaces, routes, <code>AppContainer</code>, and a compiling stub for every class a later workstream fills in. Wave 1 agents may not change those signatures. This removes merge conflicts in a single-module app.</li>
+<li><strong>One strings file per feature.</strong> <code>values/strings_&lt;feature&gt;.xml</code> and <code>values-fr/strings_&lt;feature&gt;.xml</code>. Android merges every file in <code>values/</code>, so parallel workstreams never edit the same XML file.</li>
+<li><strong>Worktree per Wave 1 agent.</strong> One module means one agent's half-written file breaks every other agent's compile, and parallel Gradle runs fight over the same <code>build/</code> locks. Each Wave 1 agent runs with <code>isolation: "worktree"</code> and the primary session copies the owned paths back.</li>
+<li><strong>Domain models carry SI values.</strong> Meters, kilocalories, kilograms, beats per minute, step counts, <code>Instant</code> and <code>Duration</code>. Only the <code>format</code> package converts for display.</li>
+<li><strong>Units by measurement system.</strong> <code>android.icu.util.LocaleData.getMeasurementSystem</code> (API 28) picks the default. US gets miles and pounds, UK gets miles and kilograms, everyone else is metric. The settings override switches metric or imperial as a whole. Energy is always kcal. Stones are not supported in v1.</li>
+<li><strong>Chart buckets.</strong> Day range shows hourly buckets (<code>aggregateGroupByDuration</code>). Week and month show daily buckets and year shows monthly buckets (<code>aggregateGroupByPeriod</code>). The year view of cumulative metrics (steps, calories, distance, sleep) shows the daily average for each month, and averages are taken over days that have data. Weeks start on the locale's first day (<code>WeekFields.of(locale)</code>).</li>
+<li><strong>Sleep belongs to the morning it ends.</strong> Sleep buckets run noon to noon, so a night that crosses midnight lands in one bucket. "Last night" is the longest session ending between 12:00 yesterday and now. If several apps wrote overlapping sessions, the tile shows the longest one and names its source.</li>
+<li><strong>The resting heart rate detail day view plots that day's HeartRate samples</strong> with the resting value as a reference line. That gives the HeartRate permission a visible dashboard use, which helps the Play declaration. ExerciseSession is visible through the explorer.</li>
+<li><strong>Source list in the explorer</strong> is the union of <code>AggregationResult.dataOrigins</code> for the range and every <code>dataOrigin</code> seen in loaded pages, because aggregates may leave out lower-priority sources.</li>
+<li><strong>App labels for data origins.</strong> The manifest adds a <code>&lt;queries&gt;</code> intent entry for <code>androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE</code>. Every Health Connect app must declare that intent, so their labels and icons become visible to Tidemark without <code>QUERY_ALL_PACKAGES</code>. If a label can't be resolved, show the package name.</li>
+<li><strong>Manual paging, no Paging 3.</strong> The explorer loads 100 records per page and fetches the next page when the list nears its end.</li>
+<li><strong>Local preferences in DataStore.</strong> Two values only: the unit override and the time Tidemark first saw a granted permission. The second value dates the 30-day banner ("data from about 20 October onwards").</li>
+<li><strong>Privacy policy has one source.</strong> <code>PRIVACY.md</code> and <code>PRIVACY.fr.md</code> at the repo root. A Gradle copy task in <code>app/build.gradle.kts</code> bundles them as assets, and a Pages workflow publishes them at <code>https://tidemark.reddevs.io/privacy/</code> and <code>/fr/privacy/</code>. The app renders headings, paragraphs and bullet lists with a small built-in renderer.</li>
+<li><strong>Versioning.</strong> <code>gradle.properties</code> holds <code>tidemark.versionName</code> and <code>tidemark.versionCode</code>. A person bumps them by hand, and the release workflow fails if the tag does not equal <code>v</code> + versionName or the code did not increase. One integer sequence covers both channels.</li>
+<li><strong>Belt and braces on network.</strong> The manifest removes INTERNET with <code>tools:node="remove"</code>, and CI fails if the merged release manifest or the built APK lists INTERNET or ACCESS_NETWORK_STATE.</li>
+<li><strong>No backup.</strong> <code>android:allowBackup="false"</code>. Tidemark stores no health data, and there is nothing worth restoring.</li>
+<li><strong>License GPL-3.0-or-later with SPDX headers.</strong> Every Kotlin, Gradle and workflow file starts with <code>SPDX-License-Identifier: GPL-3.0-or-later</code>. Heartwood is GPL-3.0-or-later too, so borrowed files keep the same terms, and Apache-2.0 code from Health Disconnect can be combined with it. Files copied from either project keep their original copyright line next to ours.</li>
+<li><strong>Custom domain for the privacy policy.</strong> GitHub Pages serves <code>tidemark.reddevs.io</code>. Play's privacy URL is <code>https://tidemark.reddevs.io/privacy/</code>.</li>
+<li><strong>Store text in fastlane layout.</strong> <code>fastlane/metadata/android/{en-US,fr-FR}/</code>. Obtainium, F-Droid and IzzyOnDroid all read this layout, and it doubles as the source for the Play listing.</li>
+</ol>
+
+<h2 id="contracts">4. Shared contracts (frozen after T-001)</h2>
+<p>Signatures are a sketch. T-001 may adjust names to compile, but once T-001 is accepted these files change only through the blocker process in section 7.</p>
+
+<h4><code>data/model</code></h4>
+<pre><code>enum class RecordType(val recordClass: KClass&lt;out Record&gt;) {
+    STEPS, DISTANCE, ACTIVE_CALORIES, EXERCISE_SESSION, SLEEP_SESSION, HEART_RATE, RESTING_HEART_RATE, WEIGHT;
+    val readPermission: String   // HealthPermission.getReadPermission(recordClass)
+}
+enum class Metric(val recordType: RecordType) { STEPS, ACTIVE_CALORIES, DISTANCE, SLEEP, RESTING_HEART_RATE, WEIGHT }
+enum class ChartRange { DAY, WEEK, MONTH, YEAR }
+data class ChartWindow(val range: ChartRange, val anchor: LocalDate)       // window that contains anchor
+data class SeriesPoint(val start: LocalDateTime, val end: LocalDateTime,
+                       val value: Double?, val min: Double? = null, val max: Double? = null)
+data class Series(val metric: Metric, val window: ChartWindow, val points: List&lt;SeriesPoint&gt;,
+                  val total: Double?, val average: Double?, val min: Double?, val max: Double?)
+data class SleepStageSpan(val start: Instant, val end: Instant, val stage: SleepStage)
+enum class SleepStage { AWAKE, LIGHT, DEEP, REM, SLEEPING, OUT_OF_BED, AWAKE_IN_BED, UNKNOWN }
+data class SleepNight(val sessionId: String, val start: Instant, val end: Instant,
+                      val stages: List&lt;SleepStageSpan&gt;, val source: DataSource)
+data class LatestValue(val metric: Metric, val time: Instant, val value: Double, val source: DataSource)
+data class HeartRateSample(val time: Instant, val bpm: Long)
+data class DataSource(val packageName: String)          // label resolved in the UI layer
+data class RecordPage(val records: List&lt;Record&gt;, val nextPageToken: String?)
+enum class HcAvailability { AVAILABLE, NOT_INSTALLED, UPDATE_REQUIRED, UNSUPPORTED }
+enum class HistoryAccess { GRANTED, NOT_GRANTED, UNAVAILABLE }</code></pre>
+
+<h4><code>data/HealthRepository.kt</code></h4>
+<pre><code>interface HealthRepository {
+    fun availability(): HcAvailability
+    suspend fun historyFeatureAvailable(): Boolean
+    fun permissionsToRequest(includeHistory: Boolean): Set&lt;String&gt;
+    suspend fun grantedPermissions(): Set&lt;String&gt;
+    suspend fun historyAccess(): HistoryAccess
+
+    suspend fun todayTotal(metric: Metric, today: LocalDate): Double?   // steps, calories, distance
+    suspend fun series(metric: Metric, window: ChartWindow): Series
+    suspend fun lastNightSleep(now: ZonedDateTime): SleepNight?
+    suspend fun sleepNight(morning: LocalDate): SleepNight?
+    suspend fun latest(metric: Metric): LatestValue?                    // weight, resting HR
+    suspend fun heartRateSamples(day: LocalDate): List&lt;HeartRateSample&gt;
+
+    suspend fun dataOrigins(type: RecordType, start: Instant, end: Instant): Set&lt;DataSource&gt;
+    suspend fun readPage(type: RecordType, start: Instant, end: Instant, source: DataSource?,
+                         pageToken: String?, pageSize: Int = 100): RecordPage
+    suspend fun readRecord(type: RecordType, id: String): Record?
+}</code></pre>
+<p><code>HealthAccessException</code> is a sealed class with <code>PermissionMissing(type)</code>, <code>RateLimited</code>, <code>Unavailable</code> and <code>Unexpected(cause)</code>. The repository maps <code>SecurityException</code>, <code>RemoteException</code>, <code>IOException</code> and <code>IllegalStateException</code> to it. ViewModels catch it and expose an error state. They never let it crash the app.</p>
+
+<h4>Other frozen files</h4>
+<ul>
+<li><code>settings/UserPreferences.kt</code>: <code>unitPreference: Flow&lt;UnitPreference&gt;</code> (<code>SYSTEM</code>, <code>METRIC</code>, <code>IMPERIAL</code>), <code>suspend setUnitPreference()</code>, <code>firstGrantAt: Flow&lt;Instant?&gt;</code>, <code>suspend recordFirstGrantIfAbsent(Instant)</code>.</li>
+<li><code>format/MeasurementFormatter.kt</code>: <code>steps(Long)</code>, <code>distance(meters)</code>, <code>energy(kcal)</code>, <code>mass(kg)</code>, <code>heartRate(bpm)</code>, <code>duration(Duration)</code>, <code>date(LocalDate, DateStyle)</code>, <code>time(Instant)</code>, <code>dateTime(Instant)</code>, <code>rangeLabel(ChartWindow)</code>, <code>distanceUnitLabel()</code>, <code>massUnitLabel()</code>, plus <code>toDisplayDistance(meters)</code> and <code>toDisplayMass(kg)</code> for chart axes. <code>AppContainer</code> exposes <code>formatter: StateFlow&lt;MeasurementFormatter&gt;</code>, rebuilt when the locale or unit preference changes.</li>
+<li><code>navigation/Routes.kt</code>: type-safe Navigation-Compose routes with kotlinx.serialization: <code>Onboarding</code>, <code>Dashboard</code>, <code>MetricDetail(metric, range, anchorEpochDay)</code>, <code>Explorer(type?, dayEpochDay?, sourcePackage?)</code>, <code>RecordDetail(type, recordId)</code>, <code>Settings</code>, <code>PrivacyPolicy</code>.</li>
+<li>Route composable stubs, one per feature, each taking <code>AppContainer</code> plus navigation callbacks: <code>OnboardingRoute(onDone)</code>, <code>DashboardRoute(onOpenMetric, onOpenExplorer, onOpenSettings)</code>, <code>MetricDetailRoute(args, onOpenRecords, onBack)</code>, <code>ExplorerRoute(args, onOpenRecord, onBack)</code>, <code>RecordDetailRoute(args, onBack)</code>, <code>SettingsRoute(onOpenPrivacy, onBack)</code>, <code>PrivacyPolicyScreen(onBack)</code>. <code>OnboardingGate.startDestination(container)</code> picks Onboarding or Dashboard.</li>
+<li><code>$TEST/testing/FakeHealthRepository.kt</code> and <code>FakeUserPreferences.kt</code>: in-memory, configurable per test, plus a <code>MainDispatcherRule</code>. Workstreams may subclass or wrap them in their own test folders but not edit them.</li>
+</ul>
+
+<h2 id="prompts">5. Workstream prompts</h2>
+<p>Each prompt is self-contained. The primary session pastes it into the Agent call as is, with <code>subagent_type</code> set to the listed agent and <code>isolation: "worktree"</code> for Wave 1. Every prompt implicitly includes the common rules block below.</p>
+
+<div class="box">
+<h4 style="margin-top:4px">Common rules for every child agent</h4>
+<ul>
+<li>Project: Tidemark, a read-only, offline Android viewer for Health Connect. Kotlin, Jetpack Compose, Material 3, connect-client 1.1.0, minSdk 28, compileSdk and targetSdk 36, single <code>app</code> module, manual DI through <code>AppContainer</code>, ViewModels with StateFlow. License GPL-3.0-or-later: start every new Kotlin, Gradle and workflow file with an <code>SPDX-License-Identifier: GPL-3.0-or-later</code> comment. Privacy policy URL: <code>https://tidemark.reddevs.io/privacy/</code>.</li>
+<li>Memory Bank: run <code>mbctl start --mode code --topic "&lt;task id and title&gt;"</code> and use <code>mbctl search</code> for decisions. Do not run <code>mbctl append</code>. Put suggested events in your report instead, and the primary session records them.</li>
+<li>Git: do not stage, commit, push, reset, rebase, merge, tag or switch branches. Leave changes in your worktree.</li>
+<li>Edit only your exclusive owned paths. Read anything. If you need a change to a frozen contract or to another workstream's file, stop that part and report it as a blocker with the exact proposed diff.</li>
+<li>No INTERNET or network-state permission, no network libraries, no analytics. Never request write permissions or <code>READ_HEALTH_DATA_IN_BACKGROUND</code>.</li>
+<li>Every user-facing string goes in your own <code>strings_&lt;feature&gt;.xml</code> with a French translation in <code>values-fr/</code>. Keep "Tidemark" untranslated. Use the formatter for numbers, units and dates.</li>
+<li>Code borrowed from Heartwood (GPL-3.0) or Health Disconnect (Apache-2.0) is allowed. Report the repo, file path, commit and what you took, so T-010 can write <code>NOTICE</code>.</li>
+<li>Before reporting, run <code>./gradlew lintDebug testDebugUnitTest</code> in your worktree and include the result.</li>
+<li>Report: changed and new files; tests added and their result; acceptance criteria with pass or fail each; deviations and why; borrowed code; blockers; suggested Memory Bank events (task status for your task ID, decisions, patterns).</li>
+</ul>
+</div>
+
+<details class="prompt" open>
+<summary>T-001 · Scaffold and contracts (Wave 0, mb-code, main worktree)</summary>
+<div>
+<p><strong>Context.</strong> The repo holds only <code>LICENSE</code> (GPL-3.0), the Memory Bank and this plan. You lay down the project and freeze the contracts in section 4 of <code>.agent/plans/tidemark-v1-implementation.html</code> so eight agents can work in parallel without touching the same files.</p>
+<p><strong>Build.</strong></p>
+<ul>
+<li>Gradle Kotlin DSL with a version catalog. Use the latest stable AGP that is at least 8.9.1, a matching Kotlin 2.x with the Compose compiler plugin, the Compose BOM, Material 3, Navigation-Compose with kotlinx.serialization, lifecycle-viewmodel-compose, DataStore Preferences, Vico <code>compose-m3</code>, <code>androidx.health.connect:connect-client:1.1.0</code>; for tests JUnit4, Robolectric, kotlinx-coroutines-test, Turbine and <code>androidx.health.connect:connect-testing</code> (the version that pairs with connect-client 1.1.0). Check each version exists before you pin it. Add the Gradle wrapper.</li>
+<li><code>applicationId</code> <code>io.reddevs.tidemark</code>, namespace the same, minSdk 28, compileSdk and targetSdk 36. Read <code>tidemark.versionName</code> and <code>tidemark.versionCode</code> from <code>gradle.properties</code> (start at 0.1.0 and 1). Release build has R8 enabled. Signing config reads <code>TIDEMARK_KEYSTORE_PATH</code>, <code>TIDEMARK_KEYSTORE_PASSWORD</code>, <code>TIDEMARK_KEY_ALIAS</code>, <code>TIDEMARK_KEY_PASSWORD</code> from the environment and is applied only when all four are set.</li>
+<li>A Gradle task copies <code>PRIVACY.md</code> and <code>PRIVACY.fr.md</code> from the repo root into a generated assets folder wired into the <code>main</code> source set. Create both files as one-line placeholders. T-009 owns their content.</li>
+<li>Robolectric set up for unit tests (<code>isIncludeAndroidResources = true</code>).</li>
+</ul>
+<p><strong>Manifest.</strong></p>
+<ul>
+<li>Read permissions for the eight record types and <code>android.permission.health.READ_HEALTH_DATA_HISTORY</code>. Remove INTERNET and ACCESS_NETWORK_STATE with <code>tools:node="remove"</code>. <code>allowBackup="false"</code>.</li>
+<li><code>&lt;queries&gt;</code>: package <code>com.google.android.apps.healthdata</code>, and an intent with action <code>androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE</code>.</li>
+<li><code>onboarding.PrivacyPolicyActivity</code>, exported, with an intent filter for <code>androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE</code>.</li>
+<li>An <code>activity-alias</code> named <code>ViewPermissionUsageActivity</code> targeting it, exported, <code>android:permission="android.permission.START_VIEW_PERMISSION_USAGE"</code>, intent filter with action <code>android.intent.action.VIEW_PERMISSION_USAGE</code> and category <code>android.intent.category.HEALTH_PERMISSIONS</code>.</li>
+<li><code>MainActivity</code> as the launcher.</li>
+</ul>
+<p><strong>Code.</strong> Everything in section 4, plus:</p>
+<ul>
+<li><code>TidemarkApplication</code> creating <code>AppContainer</code>. The container wires <code>HealthConnectHealthRepository</code>, <code>DataStoreUserPreferences</code> and <code>LocaleMeasurementFormatter</code>.</li>
+<li><code>MainActivity</code> with edge-to-edge and the NavHost. The start destination comes from <code>OnboardingGate</code>.</li>
+<li>A <code>ui/theme</code> with Material 3, dynamic color on API 31+, a static fallback palette, and light and dark schemes. <code>ui/components</code> holds a loading, an empty and an error state composable.</li>
+<li>A placeholder adaptive launcher icon.</li>
+<li>Stubs for every file marked "stub" in the dispatch table. Stubs compile, render a centered label, and return empty data. The stub repository's <code>availability()</code> returns the real <code>getSdkStatus</code> mapping, so the app can launch.</li>
+<li><code>strings_common.xml</code> in EN and FR: app name, generic actions, error texts.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li><code>./gradlew assembleDebug assembleRelease lintDebug testDebugUnitTest</code> passes. The unsigned release build is fine.</li>
+<li>The debug APK installs and launches on an API 28 and an API 36 emulator and shows the stub onboarding or dashboard without crashing.</li>
+<li><code>aapt2 dump permissions</code> (or <code>apkanalyzer manifest permissions</code>) on the release APK lists exactly the nine Health Connect read permissions and nothing network related.</li>
+<li>The merged manifest contains both <code>&lt;queries&gt;</code> entries, the rationale activity and the permission-protected alias.</li>
+<li>One Robolectric smoke test builds <code>AppContainer</code>, and one test runs against <code>FakeHealthRepository</code>.</li>
+<li>Every file in section 4 exists with the listed signatures, and the report pastes the final signatures.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-002 · Data layer (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> Implement <code>HealthConnectHealthRepository</code> against the frozen <code>HealthRepository</code> interface. Heartwood is the reference for the history permission flow and paged reads.</p>
+<ul>
+<li>Availability: <code>HealthConnectClient.getSdkStatus(context, "com.google.android.apps.healthdata")</code> maps to <code>HcAvailability</code>. Create the client lazily, and only when the status is available.</li>
+<li>History: <code>client.features.getFeatureStatus(HealthConnectFeatures.FEATURE_READ_HEALTH_DATA_HISTORY)</code>. <code>permissionsToRequest(includeHistory)</code> adds the history permission only when asked and available. <code>historyAccess()</code> returns <code>UNAVAILABLE</code>, <code>NOT_GRANTED</code> or <code>GRANTED</code>.</li>
+<li>Totals and series use <code>aggregate</code>, <code>aggregateGroupByPeriod</code> (day, week, month and year buckets, with <code>LocalDateTime</code> boundaries in the device zone) and <code>aggregateGroupByDuration</code> (hourly day view). Metrics map as follows: steps <code>COUNT_TOTAL</code>, active calories <code>ACTIVE_CALORIES_TOTAL</code>, distance <code>DISTANCE_TOTAL</code>, sleep <code>SLEEP_DURATION_TOTAL</code> with noon-to-noon buckets, resting HR <code>BPM_AVG</code>/<code>BPM_MIN</code>/<code>BPM_MAX</code>, weight <code>WEIGHT_AVG</code>/<code>WEIGHT_MIN</code>/<code>WEIGHT_MAX</code>. Follow the bucketing and year-average rules in section 3.</li>
+<li>Sleep: <code>lastNightSleep</code> and <code>sleepNight</code> read <code>SleepSessionRecord</code> through <code>readRecords</code> and pick per the rule in section 3. Map stage constants to <code>SleepStage</code>.</li>
+<li><code>latest()</code> reads with <code>ascendingOrder = false</code> and <code>pageSize = 1</code> over the last 365 days.</li>
+<li><code>heartRateSamples(day)</code> flattens <code>HeartRateRecord.samples</code> for the local day, paging through all results.</li>
+<li><code>readPage</code> and <code>readRecord</code> wrap <code>readRecords</code> and <code>readRecord</code>, passing the page token and a <code>dataOriginFilter</code> when a source is given. <code>dataOrigins</code> uses each type's aggregate metric and returns <code>AggregationResult.dataOrigins</code>.</li>
+<li>Map exceptions to <code>HealthAccessException</code>. A missing read permission for one metric must not fail the others.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>Robolectric tests with <code>FakeHealthConnectClient</code> cover: paging across at least three pages with a token; the source filter; <code>readRecord</code> found and missing; last-night selection with two overlapping sessions from different sources; stage mapping; history access in its three states; a missing permission turning into <code>PermissionMissing</code>.</li>
+<li>Aggregation tests cover bucket boundaries for each range, including a DST change week in Europe/Paris, a locale whose week starts on Sunday (en-US) and one on Monday (fr-FR), noon-to-noon sleep buckets, and year averages over days with data. If the fake client can't aggregate, stub aggregation results through its overrides, or move bucket math into pure functions and test those. Say which approach you used.</li>
+<li>No class outside <code>data</code> references <code>HealthConnectClient</code>.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-003 · Onboarding, permissions and privacy rationale (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> The first-run flow, permission handling and the privacy policy screens that Health Connect requires.</p>
+<ul>
+<li><code>OnboardingGate.startDestination</code> returns Dashboard when Health Connect is available and at least one read permission is granted, and Onboarding otherwise.</li>
+<li>The onboarding screens. First, a welcome screen saying what Tidemark does and that data stays on the device. Then a Health Connect status step. If Health Connect is not installed, an install button opens <code>market://details?id=com.google.android.apps.healthdata&amp;url=healthconnect%3A%2F%2Fonboarding</code>, with a fallback to the Play web URL in a browser intent. If an update is required, show an update prompt. Unsupported devices get an explanation and nothing else. Re-check the status on resume.</li>
+<li>Permission step: launch <code>PermissionController.createRequestPermissionResultContract()</code> with <code>repository.permissionsToRequest(includeHistory = repository.historyFeatureAvailable())</code>. If at least one read permission comes back, call <code>recordFirstGrantIfAbsent(now)</code> and finish. If none come back, explain and offer a retry plus a button to Health Connect's settings for Tidemark, because the system stops showing the dialog after repeated denials.</li>
+<li><code>PrivacyPolicyScreen</code> and <code>PrivacyPolicyActivity</code> render the bundled <code>PRIVACY.fr.md</code> when the app locale is French and <code>PRIVACY.md</code> otherwise, through a small Markdown renderer that handles headings, paragraphs, bullet lists, bold and links. The activity serves both the rationale intent and the Android 14+ alias, and it works when launched cold by Health Connect without going through <code>MainActivity</code>.</li>
+<li>A test should prove the manifest declares exactly what the rationale contract needs, with the activity resolving both intents under Robolectric.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>ViewModel tests with <code>FakeHealthRepository</code> cover: not installed, update required, all granted, partial grant, none granted, and history unavailable (history permission not requested).</li>
+<li>A Robolectric test resolves <code>ACTION_SHOW_PERMISSIONS_RATIONALE</code> and <code>VIEW_PERMISSION_USAGE</code> with category <code>HEALTH_PERMISSIONS</code> to Tidemark's component.</li>
+<li>The Markdown renderer has unit tests for each supported element and falls back to plain text for anything else.</li>
+<li>All strings are in EN and FR.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-004 · Settings, units and formatting (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> Locale-aware formatting, the unit override, and the settings screen.</p>
+<ul>
+<li><code>LocaleMeasurementFormatter</code> implements <code>MeasurementFormatter</code> with <code>android.icu.text.MeasureFormat</code>, <code>NumberFormat</code> and <code>java.time.format.DateTimeFormatter.ofLocalizedDate</code>. Resolve the unit system from <code>UnitPreference</code> and <code>LocaleData.getMeasurementSystem</code>, following the rules in section 3.</li>
+<li><code>DataStoreUserPreferences</code> implements <code>UserPreferences</code>.</li>
+<li>The settings screen has the unit choice (follow language and region, metric, imperial) and a "Manage Health Connect access" row that opens Health Connect's settings with <code>HealthConnectClient.getHealthConnectManageDataIntent</code>. It also has a privacy policy row, an About block (version, GPL-3.0 license and a source code link to github.com/reddevs-io/tidemark opened with <code>ACTION_VIEW</code>), and a short line saying Tidemark has no network access.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>Formatter tests for en-US, en-GB, fr-FR and fr-CA under each <code>UnitPreference</code> value: distance, mass, energy, steps (grouping separators, e.g. "12,345" and "12 345"), durations ("7 h 32 min"), dates, and range labels for every <code>ChartRange</code>.</li>
+<li>Preferences tests: the unit override round-trips, and <code>recordFirstGrantIfAbsent</code> keeps the first value.</li>
+<li>Changing the unit preference updates <code>AppContainer.formatter</code> without restarting the app.</li>
+<li>All strings are in EN and FR.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-005 · Dashboard home (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> The main screen with six tiles and the history banner.</p>
+<ul>
+<li>The tiles are today's steps, today's active calories, today's distance, last night's sleep (duration plus a compact stage bar), the latest resting heart rate and the latest weight. Each has a 7-day sparkline drawn with Vico, or 30 days for weight. Tapping a tile calls <code>onOpenMetric</code>.</li>
+<li>Each tile has its own state: loading, value, no data, permission missing (with a button that opens Health Connect's settings), or error. One failed metric never blanks the screen.</li>
+<li>History banner: when <code>historyAccess()</code> is <code>NOT_GRANTED</code> or <code>UNAVAILABLE</code>, a dismissible-for-this-session banner explains that only data from 30 days before the first grant is visible, with the date from <code>firstGrantAt</code> when known. For <code>NOT_GRANTED</code> it offers to open Health Connect's settings.</li>
+<li>The top bar has entries for the explorer and settings. Pull to refresh. Reload when the screen resumes, with no polling.</li>
+<li>Show the tile's data source only for sleep and latest values, since aggregates have none.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>ViewModel tests with <code>FakeHealthRepository</code>: all data present; no data; one permission missing while the other tiles still load; repository throws <code>RateLimited</code>; each banner state.</li>
+<li>Compose previews for light, dark, French and a large font scale. Nothing truncates at 200% font scale on a 360 dp wide screen.</li>
+<li>Tiles have content descriptions that read the value and unit.</li>
+<li>All strings are in EN and FR.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-006 · Metric detail charts and sleep hypnogram (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> The detail screen behind each tile.</p>
+<ul>
+<li>A range switcher (day, week, month, year) with previous and next buttons. Next is disabled past today.</li>
+<li>Bar charts for steps, calories, distance and sleep duration. Line charts for resting HR and weight, with a min to max band where it helps. Use Vico. The summary row shows total, average, min and max as they apply to the metric.</li>
+<li>Day view of sleep: a hypnogram of that morning's night from <code>sleepNight</code>. Try Vico first. If it can't draw stepped stage bands cleanly, write a Compose Canvas hypnogram. Report which one you used and why.</li>
+<li>Day view of resting HR: <code>heartRateSamples(day)</code> as a line, with the day's resting value as a reference line.</li>
+<li>Drill-down: tapping a day bucket (or an hour in the day view) calls <code>onOpenRecords(recordType, day)</code>. Tapping a month in the year view switches to that month's view.</li>
+<li>Axis labels and values go through the formatter, so units follow settings.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>ViewModel tests: range switching keeps the anchor sensible (going from a year view to a month view lands on the tapped month); next is disabled at today; drill-down emits the right type and day; empty and error states.</li>
+<li>A test or preview for the hypnogram with all stage kinds, including gaps between stages.</li>
+<li>Previews for every metric and range in light and dark.</li>
+<li>Charts have a text alternative (a summary content description).</li>
+<li>All strings are in EN and FR.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-007 · Record explorer (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> Browse raw records for the eight types and show every field and its metadata. Health Disconnect is the reference for what a raw explorer shows.</p>
+<ul>
+<li>A type list showing the eight types and whether each is readable. Locked types link to Health Connect's settings.</li>
+<li>A record list with a date range (today, 7 days, 30 days, custom, and the single day passed from drill-down), source filter chips from <code>dataOrigins</code> merged with the origins seen in loaded pages, and manual paging (100 per page, load more near the end). Each row shows time, a one-line value summary and the source app's label and icon.</li>
+<li>Record detail: one generic renderer over <code>List&lt;FieldSection&gt;</code>. <code>RecordFieldExtractor</code> maps each of the eight record classes into sections: Time (start, end, time, zone offsets), Values (formatted value with the raw stored value and unit underneath), Samples / Stages / Segments / Laps as collapsible lists, and Metadata (id, data origin package and app label, last modified, client record id and version, recording method, device manufacturer, model and type).</li>
+<li>Exercise session routes show "not requested by Tidemark". Exercise types, sleep stages, recording methods and device types get readable names in <code>strings_exercise_types.xml</code> and <code>strings_explorer.xml</code>, in EN and FR, with a humanized constant name as the fallback.</li>
+<li>Resolve app labels through <code>PackageManager</code> and fall back to the package name.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>Extractor tests for each of the eight record types, built from real record classes with <code>Metadata</code> factory methods, check that every public field of the record and its metadata appears.</li>
+<li>ViewModel tests: first page, next page, end of data, source filter change resets paging, drill-down arguments preselect type and day, permission missing, error.</li>
+<li>A list of 5,000 records scrolls without loading more than the pages it needs (verified through the fake's call count).</li>
+<li>All strings are in EN and FR.</li>
+<li>Common rules lint and test command passes.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-008 · CI and release pipeline (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> GitHub Actions for PRs, tagged releases and the privacy policy site.</p>
+<ul>
+<li><code>.github/workflows/ci.yml</code> runs on pull requests and pushes to <code>main</code>. It does Gradle wrapper validation, JDK 17 (or the JDK the AGP version requires), Gradle cache, <code>./gradlew lintDebug testDebugUnitTest assembleRelease</code>, then a permission check script that fails if the release APK requests any permission outside the allowed list (the nine Health Connect read permissions). It uploads lint and test reports as artifacts. Pin third-party actions to commit SHAs.</li>
+<li><code>.github/workflows/release.yml</code> runs on tags <code>v*</code>. It checks that the tag equals <code>v</code> + <code>tidemark.versionName</code> and that <code>versionCode</code> is greater than the previous release's code (read from the latest release asset or a <code>versionCode</code> file attached to it). It decodes the keystore from the <code>TIDEMARK_KEYSTORE_B64</code> secret into the runner temp dir, sets the four signing env vars from secrets, builds <code>assembleRelease bundleRelease</code>, verifies the APK with <code>apksigner verify --print-certs</code>, and writes <code>SHA256SUMS</code>. Then it creates a GitHub Release with the APK named <code>tidemark-&lt;version&gt;.apk</code>, the AAB and the checksums. The release notes come from <code>fastlane/metadata/android/en-US/changelogs/&lt;versionCode&gt;.txt</code>. Tags containing <code>-rc</code> are marked as pre-releases.</li>
+<li><code>.github/workflows/pages.yml</code> publishes <code>PRIVACY.md</code> at <code>/privacy/</code> and <code>PRIVACY.fr.md</code> at <code>/fr/privacy/</code>, plus a minimal index, through <code>actions/deploy-pages</code>, whenever those files change on <code>main</code>. The site uses the custom domain <code>tidemark.reddevs.io</code> with HTTPS enforced. <code>docs/release.md</code> lists the one-time setup the user does: a DNS <code>CNAME</code> record from <code>tidemark</code> to <code>reddevs-io.github.io</code>, verifying <code>reddevs.io</code> in the GitHub organization's Pages settings (this blocks domain takeover), and setting the custom domain on the repo.</li>
+<li><code>scripts/check-permissions.sh</code> holds the permission check, so it also runs locally.</li>
+<li><code>docs/release.md</code> is the runbook: generating the upload/app key with <code>keytool</code> (RSA 4096, long validity), making the offline backup (two copies on separate encrypted media, passwords in the password manager, no copy in the repo), base64-encoding it into the secrets, bumping versions, tagging, verifying the release, and later uploading the same key to Play App Signing with PEPK.</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li><code>actionlint</code> passes on all workflows.</li>
+<li>The permission script passes on the T-001 release APK and fails on an APK built with INTERNET added (show both runs).</li>
+<li>A dry run of the release steps with a throwaway keystore (local, not committed) produces a signed APK that <code>apksigner verify</code> accepts.</li>
+<li>No secret values appear in workflow files or logs. Signing steps don't echo env vars.</li>
+<li>The runbook names every secret and every manual step.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-009 · Privacy policy, docs and store text (Wave 1, mb-code, worktree)</summary>
+<div>
+<p><strong>Goal.</strong> Everything a user, contributor or Play reviewer reads outside the app.</p>
+<ul>
+<li><code>PRIVACY.md</code> and <code>PRIVACY.fr.md</code>, short and honest. Tidemark reads the eight listed types from Health Connect only to display them on the device. It has no network permission and collects, stores, shares and sells nothing. The only local storage is the unit preference and the date access was first granted. Removing access in Health Connect or uninstalling the app ends all access. Include a contact (the GitHub issues page), an effective date, and the canonical URL <code>https://tidemark.reddevs.io/privacy/</code> (<code>/fr/privacy/</code> for French). Use only headings, paragraphs, bullet lists, bold and links so the in-app renderer handles them.</li>
+<li><code>README.md</code>: what Tidemark is, screenshot placeholders, the privacy promise, supported Android versions, install from GitHub Releases and Obtainium, build instructions, the license and credits to Heartwood and Health Disconnect. <code>CONTRIBUTING.md</code>: how to build and test, the translation rules, and the no-network rule.</li>
+<li><code>fastlane/metadata/android/en-US/</code> and <code>fr-FR/</code>: <code>title.txt</code> ("Tidemark"), <code>short_description.txt</code> (80 characters or fewer, propose two tagline options per language in your report), <code>full_description.txt</code>, <code>changelogs/1.txt</code>.</li>
+<li><code>docs/play/health-declaration.md</code>: for each of the nine permissions, the visible feature that uses it and a justification in EN and FR. The history permission is justified as "view your past records". HeartRate cites the resting heart rate day view and the explorer, and ExerciseSession cites the explorer.</li>
+<li><code>docs/play/data-safety.md</code>: the answers for the Data safety form (no data collected, no data shared) with reasons.</li>
+<li><code>docs/testing/device-checklist.md</code>: the manual checklist from section 6 in a fill-in format (device, Android version, Health Connect version, result, notes).</li>
+</ul>
+<p><strong>Acceptance criteria.</strong></p>
+<ol>
+<li>EN and FR versions say the same thing. A reviewer can diff them section by section.</li>
+<li>Every permission in the manifest has a justification, and nothing in the declaration lacks a manifest permission.</li>
+<li>The privacy policy matches the app's real behaviour (no network, the two stored preferences, the eight types).</li>
+<li>Short descriptions are 80 characters or fewer, titles 30 or fewer.</li>
+<li>Run markdownlint if available, otherwise check the headings by hand.</li>
+</ol>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-010 · Integration and device verification (Wave 2, primary session)</summary>
+<div>
+<ol>
+<li>For each Wave 1 worktree in task order, copy only the owned paths into the main worktree, then run <code>./gradlew lintDebug testDebugUnitTest assembleRelease</code> and <code>scripts/check-permissions.sh</code>. If a copy breaks the build, fix it in the main worktree or send it back to that workstream with the error.</li>
+<li>Replace stub behaviour that remains, and check every route in the NavHost reaches its real screen.</li>
+<li>Seed test data on emulators with Google's Health Connect Toolbox app, plus at least one more writer app for the same metric (for example Google Fit or a second Toolbox-written origin).</li>
+<li>Run the manual device checklist (section 6) on API 28 (Google Play image, Health Connect from Play) and API 36. Record results in <code>docs/testing/device-checklist.md</code>.</li>
+<li>Timing: open the year view for steps and sleep with a year of data. If either takes more than 2 seconds on a mid-range device or emulator, file an issue in the Memory Bank and decide on caching. Expected outcome: no cache.</li>
+<li>Write <code>NOTICE</code> from the borrowed-code reports.</li>
+<li>Record task status, decisions and issues in the Memory Bank.</li>
+</ol>
+<p><strong>Acceptance criteria.</strong> The checklist passes on both API levels. CI is green on a PR with the merged tree. No open issue is marked as blocking release.</p>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-011 · First GitHub release (Wave 3, primary session and the user)</summary>
+<div>
+<ol>
+<li>The user generates the keystore following <code>docs/release.md</code>, makes the offline backup, and adds the four secrets plus <code>TIDEMARK_KEYSTORE_B64</code> to the repo. The primary session never sees the passwords. Use <code>request_secret</code> only if the user wants help running a command that needs them.</li>
+<li>Set <code>tidemark.versionName</code> to 1.0.0 (or the version the user picks) and bump <code>versionCode</code>. Write the changelog.</li>
+<li>Optionally tag <code>v1.0.0-rc1</code> first to exercise the pipeline as a pre-release.</li>
+<li>With the user's go-ahead, tag and push. Check that the release has the APK, AAB and checksums, that the certificate fingerprint matches the one the user recorded, and that a fresh Obtainium setup installs it and sees the update after a later test tag.</li>
+</ol>
+<p><strong>Acceptance criteria.</strong> As listed for milestone M4. The keystore fingerprint is written into <code>docs/release.md</code> so future releases can be checked against it.</p>
+</div>
+</details>
+
+<details class="prompt">
+<summary>T-012 · Google Play submission (Wave 4, deferred, the user leads)</summary>
+<div>
+<ol>
+<li>Wait until the permission set has stayed the same through at least one GitHub release.</li>
+<li>Create the app in the reddevs Organization developer account. In Play App Signing, choose to upload your own key (PEPK export of the same key used for GitHub). Do not let Google generate one.</li>
+<li>Store listing in EN and FR from <code>fastlane/metadata</code>, with phone screenshots in both languages.</li>
+<li>Privacy policy URL: <code>https://tidemark.reddevs.io/privacy/</code>. Check that it loads over HTTPS and matches the in-app text.</li>
+<li>Data safety form from <code>docs/play/data-safety.md</code>. Health apps declaration from <code>docs/play/health-declaration.md</code>, one justification per type in EN and FR. Content rating, target audience, and ads (none).</li>
+<li>Upload the AAB from the release to internal testing, then promote to production review. Allow 1 to 2 weeks. Any rejection goes into the Memory Bank as an issue with the reviewer's exact wording.</li>
+</ol>
+<p><strong>Acceptance criteria.</strong> As listed for milestone M5. A Play install can update over a GitHub install and back (same key, monotonic versionCode).</p>
+</div>
+</details>
+
+<h2 id="verify">6. Per-wave verification</h2>
+<h3>Wave 0</h3>
+<ul>
+<li>T-001 acceptance criteria pass. The primary session reads the frozen files once more before Wave 1 starts, because any change after that costs eight agents a rebase.</li>
+<li>The primary session commits and pushes the scaffold so worktrees have a base. Without it, Wave 1 can't start in worktrees.</li>
+</ul>
+<h3>Wave 1</h3>
+<ul>
+<li>Each workstream passes its own criteria in its worktree.</li>
+<li>After copying each one back, the primary session runs the full build, lint, tests and permission check. A workstream counts as done only when the merged tree is still green.</li>
+<li>Contract drift check: <code>git diff &lt;wave-0 commit&gt; -- &lt;frozen files&gt;</code> must be empty unless a blocker was approved.</li>
+</ul>
+<h3>Wave 2: manual device checklist</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>#</th><th>Scenario</th><th>Expected</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>API 28, Health Connect not installed</td><td>Install prompt opens Play. After installing and returning, onboarding moves on.</td></tr>
+<tr><td>2</td><td>Health Connect needs an update</td><td>Update prompt is shown.</td></tr>
+<tr><td>3</td><td>Deny all permissions twice</td><td>Explanation plus a working "open Health Connect settings" button.</td></tr>
+<tr><td>4</td><td>Grant only steps and sleep</td><td>Those tiles load. The others show "permission missing" and the explorer marks those types locked.</td></tr>
+<tr><td>5</td><td>History feature unavailable, or history permission denied</td><td>Banner with the 30-day explanation and date. Older data is absent, and nothing crashes.</td></tr>
+<tr><td>6</td><td>History granted, a year of data</td><td>Year charts show the full year. Year view loads in under 2 seconds.</td></tr>
+<tr><td>7</td><td>Two apps write steps for the same hours</td><td>The dashboard total follows the priority order set in Health Connect, with no double count. Changing the priority changes the total. The explorer lists both sources and filters by each.</td></tr>
+<tr><td>8</td><td>Sleep with stages from one app, no stages from another</td><td>Last night picks per the rule and names the source. The hypnogram draws every stage.</td></tr>
+<tr><td>9</td><td>Health Connect's "app permissions" screen, privacy link (API 34+), and the rationale link (API 28 to 33)</td><td>Each opens Tidemark's privacy policy, cold start included.</td></tr>
+<tr><td>10</td><td>Device in French, region France. Then English, region US</td><td>All text is translated, with metric units in France and imperial in the US. The override in settings works both ways.</td></tr>
+<tr><td>11</td><td>Revoke a permission in Health Connect while Tidemark is in the background</td><td>On return, the affected tile shows "permission missing" without crashing.</td></tr>
+<tr><td>12</td><td>Dark theme, dynamic color, 200% font size, TalkBack on the dashboard</td><td>Readable, nothing clipped, tiles announce value and unit.</td></tr>
+<tr><td>13</td><td>Release build (R8)</td><td>Every screen works, with no missing-class crash.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="mechanics">7. Worktrees, staging and blockers</h2>
+<h3>Worktree checks before Wave 1</h3>
+<ul>
+<li><code>git status</code> in the main worktree is clean and <code>HEAD</code> is the approved Wave 0 commit.</li>
+<li><code>git worktree list</code> shows no leftover worktrees from an earlier run. If two primary sessions run at the same time, each has its own worktree created from the same base commit, and neither touches the other's paths.</li>
+<li>Launch all eight Wave 1 agents in one message, each with <code>isolation: "worktree"</code>, so they start together.</li>
+</ul>
+<h3>Bringing work back</h3>
+<ul>
+<li>The primary session copies only the paths listed for that task, for example <code>rsync -a &lt;worktree&gt;/app/src/main/java/io/reddevs/tidemark/explorer/ app/src/main/java/io/reddevs/tidemark/explorer/</code>. Anything the agent wrote outside its paths is reported back, not copied.</li>
+<li>Remove each worktree after its copy is verified.</li>
+</ul>
+<h3>Staging (primary session only)</h3>
+<p>On 2026-11-19 the user authorized the primary session to commit and push whenever it judges the work ready. Release tags (T-011) still need the user's go-ahead, because a tag publishes a release.</p>
+<ul>
+<li>Run <code>git status</code> first. Stage explicit paths only. Never <code>git add -A</code>, <code>git add .</code> or <code>git commit -a</code>.</li>
+<li>Wave 0 commit: the T-001 paths from the dispatch table, <code>PRIVACY.md</code>, <code>PRIVACY.fr.md</code>, <code>.gitattributes</code>, <code>memory-bank/</code> (journal files listed by name or the directory as an explicit path), and <code>.agent/plans/tidemark-v1-implementation.html</code> if the user wants plans in the repo.</li>
+<li>Wave 1: one commit per workstream, staging that workstream's owned paths, so <code>git log</code> maps to task IDs.</li>
+<li>No AI attribution lines in commit messages.</li>
+</ul>
+<h3>Blockers</h3>
+<ul>
+<li>Contract change needed: the agent stops that part, keeps working on the rest, and reports the exact diff. The primary session decides, edits the frozen file in the main worktree, records a decision in the Memory Bank, and copies the updated file into every live worktree.</li>
+<li>Dependency missing or incompatible (connect-testing version, Vico API, AGP): the agent reports the error output and what it tried. The primary session changes the version catalog. No workstream edits <code>gradle/libs.versions.toml</code> on its own.</li>
+<li>A test that needs a real device is replaced by a checklist item in section 6 and reported.</li>
+<li>Blockers are recorded as <code>issue</code> events in the Memory Bank with the task ID.</li>
+</ul>
+
+<h2 id="risks">8. Risks</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Risk</th><th>Effect</th><th>Mitigation</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td><code>FakeHealthConnectClient</code> may not compute aggregates</td><td>Aggregation tests can't use the fake directly</td><td>Stub results through the fake's overrides, or test pure bucket math</td><td>T-002</td></tr>
+<tr><td><code>AggregationResult.dataOrigins</code> may leave out lower-priority sources</td><td>The explorer source filter misses an app</td><td>Union with origins seen in loaded pages. Checklist item 7</td><td>T-007, T-010</td></tr>
+<tr><td>Vico can't draw a hypnogram</td><td>The sleep day view needs custom drawing</td><td>Canvas fallback, already allowed by the design</td><td>T-006</td></tr>
+<tr><td>Health Connect foreground rate limits</td><td>Dashboard errors on frequent refresh</td><td>Load on entry and resume only. <code>RateLimited</code> shows a retry state</td><td>T-002, T-005</td></tr>
+<tr><td>Play questions HeartRate or ExerciseSession</td><td>Declaration rejected or delayed</td><td>Visible uses in the resting HR day view and the explorer. Specific justifications</td><td>T-006, T-009, T-012</td></tr>
+<tr><td>A dependency adds INTERNET through manifest merge</td><td>Breaks the privacy promise</td><td><code>tools:node="remove"</code> plus the CI permission check</td><td>T-001, T-008</td></tr>
+<tr><td>Toolchain versions in late 2026 differ from what agents expect</td><td>Scaffold fails to sync</td><td>T-001 verifies each version before pinning. Blocker process for later changes</td><td>T-001</td></tr>
+<tr><td>Health Connect on API 28 to 33 emulators needs a Play image</td><td>Checklist item 1 can't run on a plain AOSP image</td><td>Use a Google Play system image or a real device</td><td>T-010</td></tr>
+<tr><td>Losing the signing key</td><td>No more updates on either channel</td><td>Offline backup in two places, fingerprint recorded, runbook</td><td>T-008, T-011</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="questions">9. Questions</h2>
+<h3>Answered 2026-11-19</h3>
+<ul>
+<li><strong>License identifier.</strong> GPL-3.0-or-later with SPDX headers, on my recommendation (the user deferred to it). It matches Heartwood's terms.</li>
+<li><strong>Privacy policy URL.</strong> <code>tidemark.reddevs.io</code>, served by GitHub Pages.</li>
+<li><strong>Commits.</strong> The primary session commits and pushes when it sees fit. Release tags still need a go-ahead.</li>
+</ul>
+<h3>Still open</h3>
+<p>None of these block Wave 0. Each lists the default the plan uses if no answer comes.</p>
+<ol>
+<li><strong>Launcher icon and tagline.</strong> T-001 ships a placeholder icon and T-009 proposes taglines. A final icon is needed before T-011.</li>
+<li><strong>First version number.</strong> Default: 1.0.0, with an optional <code>-rc1</code> pre-release first.</li>
+<li><strong>DNS.</strong> Someone with access to the <code>reddevs.io</code> DNS adds the <code>tidemark</code> CNAME and verifies the domain in the GitHub organization before the Pages workflow first runs.</li>
+</ol>
+
+</main>
+</body>
+</html>

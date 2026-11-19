@@ -1,0 +1,7 @@
+<link href="journal.css" rel="stylesheet">
+<article class="entry" data-entry-id="0cc9d32d-52cc-49b0-9029-3d60c2a640c9" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
+  <time datetime="2026-11-19T09:51:48.401226Z">2026-11-19T09:51:48.401226Z</time>
+  <h3>Aggregates for charts, no source picker</h3>
+  <div class="rationale"><strong>Rationale</strong>Aggregates deduplicate by the data-source priority the user already set in Health Connect settings, so the dashboard avoids double counting when several apps write the same metric. A per-metric picker would duplicate that setting.</div>
+  <div class="details"><strong>Details</strong>Dashboard charts use aggregate, aggregateGroupByPeriod and aggregateGroupByDuration. The explorer shows per-record dataOrigin with a filter by source.</div>
+</article>
