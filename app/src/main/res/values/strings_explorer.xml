@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Record explorer strings. Owned by T-007. -->
+<resources>
+    <!-- Type list -->
+    <string name="explorer_title">Records</string>
+    <string name="explorer_types_intro">Raw records stored in Health Connect, by type. Nothing here can be changed.</string>
+    <string name="explorer_type_readable">Tidemark can read these</string>
+    <string name="explorer_type_locked">No access. Tap to allow it in Health Connect settings.</string>
+    <string name="explorer_type_steps">Steps</string>
+    <string name="explorer_type_distance">Distance</string>
+    <string name="explorer_type_active_calories">Active calories burned</string>
+    <string name="explorer_type_exercise">Exercise sessions</string>
+    <string name="explorer_type_sleep">Sleep sessions</string>
+    <string name="explorer_type_heart_rate">Heart rate</string>
+    <string name="explorer_type_resting_heart_rate">Resting heart rate</string>
+    <string name="explorer_type_weight">Weight</string>
+
+    <!-- Record list -->
+    <string name="explorer_range_today">Today</string>
+    <string name="explorer_range_7_days">7 days</string>
+    <string name="explorer_range_30_days">30 days</string>
+    <string name="explorer_range_custom">Custom</string>
+    <string name="explorer_date_span" translatable="false">%1$s – %2$s</string>
+    <string name="explorer_date_picker_title">Choose dates</string>
+    <string name="explorer_action_apply">Apply</string>
+    <string name="explorer_action_cancel">Cancel</string>
+    <string name="explorer_source_all">All apps</string>
+    <string name="explorer_empty">No records in this period.</string>
+    <string name="explorer_empty_source">No records from this app in this period.</string>
+    <string name="explorer_permission_missing">Tidemark has no access to %1$s. You can allow it in Health Connect settings.</string>
+    <string name="explorer_load_more_error">Couldn\'t load more records.</string>
+    <string name="explorer_time_span" translatable="false">%1$s – %2$s</string>
+    <string name="explorer_heart_rate_range">%1$s to %2$s</string>
+    <plurals name="explorer_record_count">
+        <item quantity="one">%d record</item>
+        <item quantity="other">%d records</item>
+    </plurals>
+    <plurals name="explorer_steps">
+        <item quantity="one">%s step</item>
+        <item quantity="other">%s steps</item>
+    </plurals>
+    <plurals name="explorer_stage_count">
+        <item quantity="one">%d stage</item>
+        <item quantity="other">%d stages</item>
+    </plurals>
+    <plurals name="explorer_sample_count">
+        <item quantity="one">%d sample</item>
+        <item quantity="other">%d samples</item>
+    </plurals>
+
+    <!-- Record detail -->
+    <string name="explorer_record_not_found">This record is no longer in Health Connect.</string>
+    <string name="explorer_section_time">Time</string>
+    <string name="explorer_section_values">Values</string>
+    <string name="explorer_section_samples">Samples</string>
+    <string name="explorer_section_stages">Sleep stages</string>
+    <string name="explorer_section_segments">Segments</string>
+    <string name="explorer_section_laps">Laps</string>
+    <string name="explorer_section_metadata">Metadata</string>
+    <string name="explorer_section_count" translatable="false">%1$s (%2$d)</string>
+    <string name="explorer_section_empty">None</string>
+    <string name="explorer_expanded">Expanded</string>
+    <string name="explorer_collapsed">Collapsed</string>
+    <string name="explorer_stored_value">Stored value: %1$s</string>
+
+    <string name="explorer_field_start">Start</string>
+    <string name="explorer_field_end">End</string>
+    <string name="explorer_field_time">Time</string>
+    <string name="explorer_field_start_offset">Time zone offset at start</string>
+    <string name="explorer_field_end_offset">Time zone offset at end</string>
+    <string name="explorer_field_offset">Time zone offset</string>
+    <string name="explorer_field_duration">Duration</string>
+    <string name="explorer_field_steps">Steps</string>
+    <string name="explorer_field_distance">Distance</string>
+    <string name="explorer_field_energy">Energy</string>
+    <string name="explorer_field_weight">Weight</string>
+    <string name="explorer_field_heart_rate">Heart rate</string>
+    <string name="explorer_field_average">Average</string>
+    <string name="explorer_field_minimum">Minimum</string>
+    <string name="explorer_field_maximum">Maximum</string>
+    <string name="explorer_field_exercise_type">Exercise type</string>
+    <string name="explorer_field_title">Title</string>
+    <string name="explorer_field_notes">Notes</string>
+    <string name="explorer_field_planned_session">Planned session ID</string>
+    <string name="explorer_field_route">Route</string>
+    <string name="explorer_field_stage">Stage</string>
+    <string name="explorer_field_segment_type">Segment type</string>
+    <string name="explorer_field_repetitions">Repetitions</string>
+    <string name="explorer_field_lap_length">Length</string>
+    <string name="explorer_field_record_id">Record ID</string>
+    <string name="explorer_field_data_origin">Written by</string>
+    <string name="explorer_field_last_modified">Last modified</string>
+    <string name="explorer_field_client_record_id">Client record ID</string>
+    <string name="explorer_field_client_record_version">Client record version</string>
+    <string name="explorer_field_recording_method">Recording method</string>
+    <string name="explorer_field_device">Device</string>
+    <string name="explorer_field_device_manufacturer">Device manufacturer</string>
+    <string name="explorer_field_device_model">Device model</string>
+    <string name="explorer_field_device_type">Device type</string>
+
+    <string name="explorer_value_not_set">Not set</string>
+    <string name="explorer_value_no_device">No device information</string>
+    <string name="explorer_value_route_not_requested">Not requested by Tidemark</string>
+    <string name="explorer_value_no_route">No route recorded</string>
+    <string name="explorer_value_unknown_constant">Unknown value (%1$d)</string>
+    <string name="explorer_value_utc_offset" translatable="false">UTC%1$s</string>
+    <string name="explorer_value_with_unit" translatable="false">%1$s %2$s</string>
+    <string name="explorer_unit_meters" translatable="false">m</string>
+    <string name="explorer_unit_kilocalories" translatable="false">kcal</string>
+    <string name="explorer_unit_kilograms" translatable="false">kg</string>
+    <string name="explorer_unit_bpm" translatable="false">bpm</string>
+
+    <!-- SleepSessionRecord.STAGE_TYPE_* -->
+    <string name="explorer_sleep_stage_unknown">Unknown</string>
+    <string name="explorer_sleep_stage_awake">Awake</string>
+    <string name="explorer_sleep_stage_sleeping">Sleeping</string>
+    <string name="explorer_sleep_stage_out_of_bed">Out of bed</string>
+    <string name="explorer_sleep_stage_light">Light sleep</string>
+    <string name="explorer_sleep_stage_deep">Deep sleep</string>
+    <string name="explorer_sleep_stage_rem">REM sleep</string>
+    <string name="explorer_sleep_stage_awake_in_bed">Awake in bed</string>
+
+    <!-- Metadata.RECORDING_METHOD_* -->
+    <string name="explorer_recording_method_unknown">Unknown</string>
+    <string name="explorer_recording_method_active">Actively recorded</string>
+    <string name="explorer_recording_method_automatic">Recorded automatically</string>
+    <string name="explorer_recording_method_manual">Entered manually</string>
+
+    <!-- Device.TYPE_* -->
+    <string name="explorer_device_type_unknown">Unknown</string>
+    <string name="explorer_device_type_watch">Watch</string>
+    <string name="explorer_device_type_phone">Phone</string>
+    <string name="explorer_device_type_scale">Scale</string>
+    <string name="explorer_device_type_ring">Ring</string>
+    <string name="explorer_device_type_head_mounted">Head-mounted device</string>
+    <string name="explorer_device_type_fitness_band">Fitness band</string>
+    <string name="explorer_device_type_chest_strap">Chest strap</string>
+    <string name="explorer_device_type_smart_display">Smart display</string>
+</resources>
