@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="852c3122-6d55-4db6-82ad-70b75212951c" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T09:51:48.398079Z">2026-11-19T09:51:48.398079Z</time>
-  <h3>History permission with 30-day fallback</h3>
-  <div class="rationale"><strong>Rationale</strong>Without the history permission Health Connect silently omits older data from results, so the UI must tell the user why older data is missing. Play justification: view your past records.</div>
-  <div class="details"><strong>Details</strong>Request PERMISSION_READ_HEALTH_DATA_HISTORY only when getFeatureStatus(FEATURE_READ_HEALTH_DATA_HISTORY) returns available. Where it is unavailable or denied, show a banner and fall back to the default window, which is 30 days before the first permission grant.</div>
-</article>

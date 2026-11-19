@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="319cab0b-b6ec-4f8c-95b7-e5173644adf0" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T09:57:58.578000Z">2026-11-19T09:57:58.578000Z</time>
-  <h3>Network removal enforced in CI</h3>
-  <div class="rationale"><strong>Rationale</strong>A dependency could add a network permission through manifest merging and silently break the privacy promise.</div>
-  <div class="details"><strong>Details</strong>The manifest removes INTERNET and ACCESS_NETWORK_STATE with tools:node=remove, and CI fails if the release APK requests any permission outside the nine Health Connect read permissions. allowBackup is false.</div>
-</article>

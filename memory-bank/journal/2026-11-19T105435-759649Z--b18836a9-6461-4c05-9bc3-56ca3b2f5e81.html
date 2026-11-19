@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="b18836a9-6461-4c05-9bc3-56ca3b2f5e81" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T10:54:35.759649Z">2026-11-19T10:54:35.759649Z</time>
-  <h3>Robolectric at SDK 34 on JDK 17</h3>
-  <div class="rationale"><strong>Rationale</strong>Robolectric needs JDK 21 to emulate SDK 35 and above; this machine has only JDK 17. Raise it once local and CI builds use JDK 21.</div>
-  <div class="details"><strong>Details</strong>app/src/test/resources/robolectric.properties sets sdk=34. Tests must not use @Config(sdk = 35+).</div>
-</article>

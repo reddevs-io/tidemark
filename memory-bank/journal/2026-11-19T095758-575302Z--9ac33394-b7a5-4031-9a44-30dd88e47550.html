@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="9ac33394-b7a5-4031-9a44-30dd88e47550" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T09:57:58.575302Z">2026-11-19T09:57:58.575302Z</time>
-  <h3>Versioning and release checks</h3>
-  <div class="rationale"><strong>Rationale</strong>Users moving between channels need monotonic versionCodes under the same key.</div>
-  <div class="details"><strong>Details</strong>gradle.properties holds tidemark.versionName and tidemark.versionCode, bumped by hand. The release workflow fails if the tag is not v+versionName or the versionCode did not increase. One integer sequence covers GitHub and Play.</div>
-</article>

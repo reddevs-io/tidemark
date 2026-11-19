@@ -1,6 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="ec20c9be-5a29-42af-81a7-633e06d15532" data-kind="structural" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-slot="feature" data-target="productContext">
-  <time datetime="2026-11-19T09:51:48.371542Z">2026-11-19T09:51:48.371542Z</time>
-  <h3>Onboarding and privacy rationale</h3>
-  <div class="details"><strong>Details</strong>Checks Health Connect availability with getSdkStatus. On Android 9-13 Health Connect is a separate Play app: manifest needs a &lt;queries&gt; entry for com.google.android.apps.healthdata and the app shows an install prompt. Runs the permission request flow and handles partial grants. Required rationale handling, without which the permission dialog won't show: an activity for androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE (Android 13 and below) and an activity-alias for android.intent.action.VIEW_PERMISSION_USAGE with category android.intent.category.HEALTH_PERMISSIONS, protected by android.permission.START_VIEW_PERMISSION_USAGE (Android 14+). Both show the bundled in-app privacy policy.</div>
-</article>

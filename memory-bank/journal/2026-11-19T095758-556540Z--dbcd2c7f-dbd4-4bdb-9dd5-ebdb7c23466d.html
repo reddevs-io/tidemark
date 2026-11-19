@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T09:57:58.556540Z">2026-11-19T09:57:58.556540Z</time>
-  <h3>Chart bucket rules</h3>
-  <div class="rationale"><strong>Rationale</strong>Keeps each chart to one aggregate call and attributes overnight sleep to a single morning.</div>
-  <div class="details"><strong>Details</strong>Day range: hourly buckets via aggregateGroupByDuration. Week and month: daily buckets; year: monthly buckets via aggregateGroupByPeriod. Year view of cumulative metrics shows the daily average per month over days with data. Weeks start per WeekFields.of(locale). Sleep buckets run noon to noon.</div>
-</article>

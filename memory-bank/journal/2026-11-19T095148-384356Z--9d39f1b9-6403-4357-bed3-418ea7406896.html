@@ -1,6 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="9d39f1b9-6403-4357-bed3-418ea7406896" data-kind="structural" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-slot="architecture" data-target="productContext">
-  <time datetime="2026-11-19T09:51:48.384356Z">2026-11-19T09:51:48.384356Z</time>
-  <h3>CI, signing and release</h3>
-  <div class="details"><strong>Details</strong>GitHub Actions runs lint and unit tests on every PR. A tag push builds a signed APK attached to a GitHub Release plus an AAB for Play. Keystore and passwords live in encrypted GitHub secrets with an offline backup of the keystore. Same applicationId and same signing key on GitHub and Play so users can move between channels; versionCodes must be monotonic across channels. Upload our own key to Play App Signing instead of letting Google generate one.</div>
-</article>

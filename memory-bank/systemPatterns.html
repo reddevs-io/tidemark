@@ -13,23 +13,195 @@
     <header class="page-head">
       <p class="eyebrow">Memory Bank / Patterns</p>
       <h1>System Patterns</h1>
-      <p class="meta">Conventions worth repeating · coding, architecture &amp; testing · Updated 2026-11-19T09:49:48.488763Z</p>
+      <p class="meta">Conventions worth repeating · coding, architecture &amp; testing · Updated 2026-11-19T14:13:23.492461Z</p>
     </header>
     <h2>Coding Patterns</h2>
-    <div class="pattern-card coding placeholder">
+    <div class="pattern-card coding" data-entry-id="817853c0-39b3-4317-8792-ea02c2e19a5e" data-event-digest="09c79e3b4477fd9f73b84caca667fb5688dd8ebbb83ab7000763a857fb1e101d" data-event-key="817853c0-39b3-4317-8792-ea02c2e19a5e|2026-11-19T095148-427823Z--817853c0-39b3-4317-8792-ea02c2e19a5e.html" data-event-time="2026-11-19T09:51:48.427823Z">
       <span class="category-badge">Code</span>
-      <p>—</p>
+      <p>Every user-facing string in EN and FR: Each feature owns its own resource files (values/strings_&lt;feature&gt;.xml and values-fr/strings_&lt;feature&gt;.xml). No hard-coded user-facing text. Format dates, numbers and units with the current locale.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="301581fd-cf02-4777-9a13-35fb42e588ec" data-event-digest="0f1bef106dbc1584b620c227e6f079aeafb679250c45c34dfde7c37c0f956b1c" data-event-key="301581fd-cf02-4777-9a13-35fb42e588ec|2026-11-19T105435-765518Z--301581fd-cf02-4777-9a13-35fb42e588ec.html" data-event-time="2026-11-19T10:54:35.765518Z">
+      <span class="category-badge">Code</span>
+      <p>French name of Health Connect: In French, Health Connect is Connexion Santé. Use that name in every values-fr string and in the French store and policy text.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="893a0bae-c6cc-4022-9955-4b64ea597468" data-event-digest="ac82a91c15e6f78807e8e6924bdb1dedf270dd7fe2f8e9348144bf72133e88fd" data-event-key="893a0bae-c6cc-4022-9955-4b64ea597468|2026-11-19T120933-159585Z--893a0bae-c6cc-4022-9955-4b64ea597468.html" data-event-time="2026-11-19T12:09:33.159585Z">
+      <span class="category-badge">Code</span>
+      <p>French typography: French text uses a non-breaking space before : ; ! and ?. The privacy renderer must pass it through unchanged.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="ca99c453-55f0-4d8c-bbf0-c8e81b3059e3" data-event-digest="640e1b8001625be416c9b1298294ec6a0bace3a6b724fbbb9b09928d0a09c43e" data-event-key="ca99c453-55f0-4d8c-bbf0-c8e81b3059e3|2026-11-19T120933-170432Z--ca99c453-55f0-4d8c-bbf0-c8e81b3059e3.html" data-event-time="2026-11-19T12:09:33.170432Z">
+      <span class="category-badge">Code</span>
+      <p>Keep privacy docs in step: Any change to permissions, storage or dependencies updates PRIVACY*.md, docs/play/data-safety.md and docs/play/health-declaration.md in the same change.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="15f309ef-8a04-4ecb-8f6b-0b00b8ca2013" data-event-digest="800f8067f2be936b13b90338aa382e6835be68562430b7e5e94e146b425ddfb6" data-event-key="15f309ef-8a04-4ecb-8f6b-0b00b8ca2013|2026-11-19T122354-282652Z--15f309ef-8a04-4ecb-8f6b-0b00b8ca2013.html" data-event-time="2026-11-19T12:23:54.282652Z">
+      <span class="category-badge">Code</span>
+      <p>No script vals named like DSL properties in Gradle KTS: Inside a receiver lambda the receiver own property wins over a script-level val with the same name. Prefix script vals (releaseKeyAlias) instead.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="05e17151-2a94-45b6-8974-029b8a871502" data-event-digest="c11eb1c63d1dbff28ba250c78acd7531a35f00b2eb733cb19e2e25929c1ac0c0" data-event-key="05e17151-2a94-45b6-8974-029b8a871502|2026-11-19T122402-363492Z--05e17151-2a94-45b6-8974-029b8a871502.html" data-event-time="2026-11-19T12:24:02.363492Z">
+      <span class="category-badge">Code</span>
+      <p>Workflow conventions: Workflows set defaults.run.shell: bash for pipefail, pin third-party actions to commit SHAs with version comments, and Dependabot keeps the pins current.</p>
+    </div>
+    <div class="pattern-card coding" data-entry-id="e3f7b1c4-56a7-4ae4-ac37-63af4c9be346" data-event-digest="5866901e94f92d0a1c677e4b837934b834166a7692af64c4cf54c3920ed13d68" data-event-key="e3f7b1c4-56a7-4ae4-ac37-63af4c9be346|2026-11-19T122932-488584Z--e3f7b1c4-56a7-4ae4-ac37-63af4c9be346.html" data-event-time="2026-11-19T12:29:32.488584Z">
+      <span class="category-badge">Code</span>
+      <p>Tiles read as one TalkBack element: clearAndSetSemantics with title, value and unit, when, and source; tiles containing buttons use mergeDescendants so the button stays reachable.</p>
     </div>
     <h2>Architectural Patterns</h2>
-    <div class="pattern-card arch placeholder">
+    <div class="pattern-card arch" data-entry-id="997f36ad-7591-418e-a355-abe5ceb5736d" data-event-digest="73b7f6438b002490b780cc77cb13c211f3013f695d1af9ea9de99077f02c6ded" data-event-key="997f36ad-7591-418e-a355-abe5ceb5736d|2026-11-19T095148-422444Z--997f36ad-7591-418e-a355-abe5ceb5736d.html" data-event-time="2026-11-19T09:51:48.422444Z">
       <span class="category-badge">Architecture</span>
-      <p>—</p>
+      <p>Read-only Health Connect access through HealthRepository: All Health Connect calls go through the HealthRepository interface in the data package. ViewModels depend on the interface, never on HealthConnectClient. Domain models carry SI values (meters, kilocalories, kilograms, bpm, counts) and Instants; the format package converts for display.</p>
+    </div>
+    <div class="pattern-card arch" data-entry-id="75263592-2d23-4df8-86e1-df48fba0b566" data-event-digest="f49a66b8d2d7b1afa6cc835f6032c9a9e7fd3c054b95c03d274e57743578aed5" data-event-key="75263592-2d23-4df8-86e1-df48fba0b566|2026-11-19T095758-582995Z--75263592-2d23-4df8-86e1-df48fba0b566.html" data-event-time="2026-11-19T09:57:58.582995Z">
+      <span class="category-badge">Architecture</span>
+      <p>Exclusive file ownership per workstream: Parallel work follows the dispatch table in .agent/plans/tidemark-v1-implementation.html. A workstream edits only its owned paths; frozen contract files and gradle/libs.versions.toml change only through the primary session.</p>
+    </div>
+    <div class="pattern-card arch" data-entry-id="85393433-a482-4771-96d2-4a483f4a8be3" data-event-digest="f66da60671b713eff9c0327db9e895d376851aa8f90a45e0377f3e044233b8e1" data-event-key="85393433-a482-4771-96d2-4a483f4a8be3|2026-11-19T121909-451430Z--85393433-a482-4771-96d2-4a483f4a8be3.html" data-event-time="2026-11-19T12:19:09.451430Z">
+      <span class="category-badge">Architecture</span>
+      <p>UI opens Health Connect screens through data.HealthConnectIntents: Only the data package references HealthConnectClient; UI code calls HealthConnectIntents.manageData(context) or settings(). T-010 points the other helpers at it.</p>
     </div>
     <h2>Testing Patterns</h2>
-    <div class="pattern-card testing placeholder">
+    <div class="pattern-card testing" data-entry-id="f7394080-41eb-41d5-8401-e1207e993e6b" data-event-digest="34f008f5a11b3608132acd7ad87df2bef79b0a14e97c9a6da8befad60e4e09a4" data-event-key="f7394080-41eb-41d5-8401-e1207e993e6b|2026-11-19T095148-425036Z--f7394080-41eb-41d5-8401-e1207e993e6b.html" data-event-time="2026-11-19T09:51:48.425036Z">
       <span class="category-badge">Testing</span>
-      <p>—</p>
+      <p>FakeHealthConnectClient on Robolectric: Repository tests use androidx.health.connect:connect-testing FakeHealthConnectClient on Robolectric. ViewModel tests use a fake HealthRepository with kotlinx-coroutines-test. Physical-device behaviour is covered by a manual checklist: Health Connect not installed, permission denied or partially granted, history permission unavailable (30-day banner), and several apps writing the same metric.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe" data-event-digest="9d3ff20e638538cf68f134bdece54c91975b25075785e8f51610906ea563f08e" data-event-key="0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe|2026-11-19T105435-762705Z--0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe.html" data-event-time="2026-11-19T10:54:35.762705Z">
+      <span class="category-badge">Testing</span>
+      <p>Building Health Connect records in tests: The public Metadata constructor can't set an id or dataOrigin, and IntervalRecord/InstantaneousRecord are Kotlin-internal. Use TestRecords.metadata(id, packageName), which wraps connect-testing Metadata.populatedWithTestValues, and FakeHealthRepository.timeOf(record). FakeHealthConnectClient doesn't compute aggregates: stub overrides.aggregate / aggregateGroupByPeriod / aggregateGroupByDuration with connect-testing's AggregationResult(dataOrigins, metrics).</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="ea152f45-6f43-48f4-851e-665cc9d3c42a" data-event-digest="08dbe94ab336c3532165eb3e1371b93c7b64410f9ce9c6e12dde5ee7fc420f00" data-event-key="ea152f45-6f43-48f4-851e-665cc9d3c42a|2026-11-19T120227-341576Z--ea152f45-6f43-48f4-851e-665cc9d3c42a.html" data-event-time="2026-11-19T12:02:27.341576Z">
+      <span class="category-badge">Testing</span>
+      <p>Parallel Gradle builds on one machine: With eight worktrees building at once on a 30 GB / 12-core machine, each agent runs Gradle with --max-workers=2, -Xmx3g and the in-process Kotlin compiler, and never runs ./gradlew --stop, because daemons are shared across worktrees.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="19cd9ce1-d237-4402-9891-7bb6535214f9" data-event-digest="c8f47e27139f2074abeb1e6d5cd8b7a4e47d876d7b24ebc3624225f0e047766c" data-event-key="19cd9ce1-d237-4402-9891-7bb6535214f9|2026-11-19T121734-393195Z--19cd9ce1-d237-4402-9891-7bb6535214f9.html" data-event-time="2026-11-19T12:17:34.393195Z">
+      <span class="category-badge">Testing</span>
+      <p>Compose tests use the v2 rules: Use androidx.compose.ui.test.junit4.v2.createComposeRule and createEmptyComposeRule; v1 is deprecated in BOM 2026.09. Under Robolectric call waitForIdle() inside waitUntil for content loaded on Dispatchers.IO.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="252196da-2070-4b11-b68b-f0fdf95c26f6" data-event-digest="5997a41ec0fb9915f611820ab858f0e5c3fe087fcedde2633f69fe48513130d4" data-event-key="252196da-2070-4b11-b68b-f0fdf95c26f6|2026-11-19T121734-404568Z--252196da-2070-4b11-b68b-f0fdf95c26f6.html" data-event-time="2026-11-19T12:17:34.404568Z">
+      <span class="category-badge">Testing</span>
+      <p>Checking that an intent reaches Tidemark: Use queryIntentActivities(intent.setPackage(pkg)). Aliases come back with activityInfo.name set to the alias and targetActivity set to the real activity.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="834735b4-a7f1-411f-9698-fd3b0c6489fa" data-event-digest="9c494c7b05bb549b597f27164dd36778e53e236fd9fe1569bc0927a9565c4660" data-event-key="834735b4-a7f1-411f-9698-fd3b0c6489fa|2026-11-19T121909-441593Z--834735b4-a7f1-411f-9698-fd3b0c6489fa.html" data-event-time="2026-11-19T12:19:09.441593Z">
+      <span class="category-badge">Testing</span>
+      <p>TestHealthConnectClient wrapper: data tests wrap connect-testing alpha03 FakeHealthConnectClient to add feature status, permission checks, newest-first reads and lookup by id. Inserted records get ids testHCidN and their origin is the package set with fake.setPackageName, not the one in TestRecords.metadata.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="215096e9-2227-489f-8769-7ba2ffb49b65" data-event-digest="821fadaa31278bfb2f9844228177cf331f108846b25ff89eb8aefdf9d71679bb" data-event-key="215096e9-2227-489f-8769-7ba2ffb49b65|2026-11-19T122932-038481Z--215096e9-2227-489f-8769-7ba2ffb49b65.html" data-event-time="2026-11-19T12:29:32.038481Z">
+      <span class="category-badge">Testing</span>
+      <p>Normalize ICU spaces in formatted-text assertions: Map U+00A0, U+202F and U+2009 to a plain space before comparing formatted text. Robolectric defaults to en-US, which resolves SYSTEM units to imperial.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="cca2b0ef-ffe1-4237-b02d-c94e66dd9d01" data-event-digest="e05a9f9f36b3590a75b91830f0268fdd1d70e78fb7d28cbdf1a0193fd5fac404" data-event-key="cca2b0ef-ffe1-4237-b02d-c94e66dd9d01|2026-11-19T122932-481905Z--cca2b0ef-ffe1-4237-b02d-c94e66dd9d01.html" data-event-time="2026-11-19T12:29:32.481905Z">
+      <span class="category-badge">Testing</span>
+      <p>Compose text-fit tests use native graphics: Use @GraphicsMode(NATIVE) for tests that measure text; check ellipsis, didOverflowHeight and screen bounds, not didOverflowWidth; use positionInRoot and size because boundsInRoot is clipped by scrolling.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="b640f11a-a9ce-4008-8961-8dba159e2246" data-event-digest="78d11c9eb8731a41f53792536180ad5834386c5b1f33c52a21f217dd33fca799" data-event-key="b640f11a-a9ce-4008-8961-8dba159e2246|2026-11-19T122932-964399Z--b640f11a-a9ce-4008-8961-8dba159e2246.html" data-event-time="2026-11-19T12:29:32.964399Z">
+      <span class="category-badge">Testing</span>
+      <p>Field coverage and paging laziness by test: Reflect over record classes public getters and check the extractor emits each; subclass FakeHealthRepository to record page tokens and assert calls[READ_PAGE] counts.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="3cfc17dc-08b8-454c-aa77-a7b5e2f70e08" data-event-digest="29217f70c284bec9fd23270934d6c08aaf93d76e915b38f8fbe52398d574ad4d" data-event-key="3cfc17dc-08b8-454c-aa77-a7b5e2f70e08|2026-11-19T123157-209438Z--3cfc17dc-08b8-454c-aa77-a7b5e2f70e08.html" data-event-time="2026-11-19T12:31:57.209438Z">
+      <span class="category-badge">Testing</span>
+      <p>Render screens to PNG without an emulator: Robolectric @GraphicsMode(NATIVE) with captureToImage() renders Compose and Vico screens for visual checks. Read the Vico API with javap -l on the cached jar.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="af319183-3252-4b34-9fc2-cce84ca1505e" data-event-digest="4c8e02a227fed34335f3a6c20da592bf8a3deac974860a7beb3657c42e25edc6" data-event-key="af319183-3252-4b34-9fc2-cce84ca1505e|2026-11-19T132211-157200Z--af319183-3252-4b34-9fc2-cce84ca1505e.html" data-event-time="2026-11-19T13:22:11.157200Z">
+      <span class="category-badge">Testing</span>
+      <p>Robolectric startActivity resolution: Call shadowOf(app).checkActivities(true) so unresolved intents throw ActivityNotFoundException, and give test intent filters CATEGORY_DEFAULT so startActivity resolves them.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="e25fb378-a348-4f3f-acc0-4b2026e3ea7f" data-event-digest="e661eb8961f8f4c93ca3483309fb4e99ecc5fb069e41a0b66c2a9b0398a864e5" data-event-key="e25fb378-a348-4f3f-acc0-4b2026e3ea7f|2026-11-19T135020-462354Z--e25fb378-a348-4f3f-acc0-4b2026e3ea7f.html" data-event-time="2026-11-19T13:50:20.462354Z">
+      <span class="category-badge">Testing</span>
+      <p>Device test data with a throwaway seeder: A seeder app kept outside the repo, built in two flavors (Seeder Watch, Seeder Phone) with WRITE permissions granted through adb install -g, writes a year of all eight types plus overlapping steps and stage-less sleep, so two origins exist. Health Connect Toolbox only inserts one record at a time.</p>
+    </div>
+    <div class="pattern-card testing" data-entry-id="4fa8c48f-261a-443d-a69f-c0d16188d851" data-event-digest="cbf727efe2baffc86349a63c2cb54c5845abd4875c058fa65adaa6e2afe1aa58" data-event-key="4fa8c48f-261a-443d-a69f-c0d16188d851|2026-11-19T141323-492461Z--4fa8c48f-261a-443d-a69f-c0d16188d851.html" data-event-time="2026-11-19T14:13:23.492461Z">
+      <span class="category-badge">Testing</span>
+      <p>Driving Health Connect on emulators: On API 34+ adb install -g grants health permissions; on API 28 they must be granted in Health Connect UI. Health Connect on API 28 has no launcher icon: start it with am start -a androidx.health.ACTION_HEALTH_CONNECT_SETTINGS -p com.google.android.apps.healthdata. Per-app language (cmd locale set-app-locales) only works on Android 13+; on API 28 change the system language. Health Connect activities opened from Tidemark run in Tidemark task, so force-stopping Tidemark closes them.</p>
     </div>
     <p class="log-section-header">Activity Log</p>
+    <article class="log-entry" data-entry-id="997f36ad-7591-418e-a355-abe5ceb5736d" data-event-digest="73b7f6438b002490b780cc77cb13c211f3013f695d1af9ea9de99077f02c6ded" data-event-key="997f36ad-7591-418e-a355-abe5ceb5736d|2026-11-19T095148-422444Z--997f36ad-7591-418e-a355-abe5ceb5736d.html" data-event-time="2026-11-19T09:51:48.422444Z">
+      <time datetime="2026-11-19T09:51:48.422444Z">2026-11-19T09:51:48.422444Z</time>
+      <p>Read-only Health Connect access through HealthRepository — All Health Connect calls go through the HealthRepository interface in the data package. ViewModels depend on the interface, never on HealthConnectClient. Domain models carry SI values (meters, kilocalories, kilograms, bpm, counts) and Instants; the format package converts for display.</p>
+    </article>
+    <article class="log-entry" data-entry-id="f7394080-41eb-41d5-8401-e1207e993e6b" data-event-digest="34f008f5a11b3608132acd7ad87df2bef79b0a14e97c9a6da8befad60e4e09a4" data-event-key="f7394080-41eb-41d5-8401-e1207e993e6b|2026-11-19T095148-425036Z--f7394080-41eb-41d5-8401-e1207e993e6b.html" data-event-time="2026-11-19T09:51:48.425036Z">
+      <time datetime="2026-11-19T09:51:48.425036Z">2026-11-19T09:51:48.425036Z</time>
+      <p>FakeHealthConnectClient on Robolectric — Repository tests use androidx.health.connect:connect-testing FakeHealthConnectClient on Robolectric. ViewModel tests use a fake HealthRepository with kotlinx-coroutines-test. Physical-device behaviour is covered by a manual checklist: Health Connect not installed, permission denied or partially granted, history permission unavailable (30-day banner), and several apps writing the same metric.</p>
+    </article>
+    <article class="log-entry" data-entry-id="817853c0-39b3-4317-8792-ea02c2e19a5e" data-event-digest="09c79e3b4477fd9f73b84caca667fb5688dd8ebbb83ab7000763a857fb1e101d" data-event-key="817853c0-39b3-4317-8792-ea02c2e19a5e|2026-11-19T095148-427823Z--817853c0-39b3-4317-8792-ea02c2e19a5e.html" data-event-time="2026-11-19T09:51:48.427823Z">
+      <time datetime="2026-11-19T09:51:48.427823Z">2026-11-19T09:51:48.427823Z</time>
+      <p>Every user-facing string in EN and FR — Each feature owns its own resource files (values/strings_&lt;feature&gt;.xml and values-fr/strings_&lt;feature&gt;.xml). No hard-coded user-facing text. Format dates, numbers and units with the current locale.</p>
+    </article>
+    <article class="log-entry" data-entry-id="75263592-2d23-4df8-86e1-df48fba0b566" data-event-digest="f49a66b8d2d7b1afa6cc835f6032c9a9e7fd3c054b95c03d274e57743578aed5" data-event-key="75263592-2d23-4df8-86e1-df48fba0b566|2026-11-19T095758-582995Z--75263592-2d23-4df8-86e1-df48fba0b566.html" data-event-time="2026-11-19T09:57:58.582995Z">
+      <time datetime="2026-11-19T09:57:58.582995Z">2026-11-19T09:57:58.582995Z</time>
+      <p>Exclusive file ownership per workstream — Parallel work follows the dispatch table in .agent/plans/tidemark-v1-implementation.html. A workstream edits only its owned paths; frozen contract files and gradle/libs.versions.toml change only through the primary session.</p>
+    </article>
+    <article class="log-entry" data-entry-id="0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe" data-event-digest="9d3ff20e638538cf68f134bdece54c91975b25075785e8f51610906ea563f08e" data-event-key="0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe|2026-11-19T105435-762705Z--0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe.html" data-event-time="2026-11-19T10:54:35.762705Z">
+      <time datetime="2026-11-19T10:54:35.762705Z">2026-11-19T10:54:35.762705Z</time>
+      <p>Building Health Connect records in tests — The public Metadata constructor can't set an id or dataOrigin, and IntervalRecord/InstantaneousRecord are Kotlin-internal. Use TestRecords.metadata(id, packageName), which wraps connect-testing Metadata.populatedWithTestValues, and FakeHealthRepository.timeOf(record). FakeHealthConnectClient doesn't compute aggregates: stub overrides.aggregate / aggregateGroupByPeriod / aggregateGroupByDuration with connect-testing's AggregationResult(dataOrigins, metrics).</p>
+    </article>
+    <article class="log-entry" data-entry-id="301581fd-cf02-4777-9a13-35fb42e588ec" data-event-digest="0f1bef106dbc1584b620c227e6f079aeafb679250c45c34dfde7c37c0f956b1c" data-event-key="301581fd-cf02-4777-9a13-35fb42e588ec|2026-11-19T105435-765518Z--301581fd-cf02-4777-9a13-35fb42e588ec.html" data-event-time="2026-11-19T10:54:35.765518Z">
+      <time datetime="2026-11-19T10:54:35.765518Z">2026-11-19T10:54:35.765518Z</time>
+      <p>French name of Health Connect — In French, Health Connect is Connexion Santé. Use that name in every values-fr string and in the French store and policy text.</p>
+    </article>
+    <article class="log-entry" data-entry-id="ea152f45-6f43-48f4-851e-665cc9d3c42a" data-event-digest="08dbe94ab336c3532165eb3e1371b93c7b64410f9ce9c6e12dde5ee7fc420f00" data-event-key="ea152f45-6f43-48f4-851e-665cc9d3c42a|2026-11-19T120227-341576Z--ea152f45-6f43-48f4-851e-665cc9d3c42a.html" data-event-time="2026-11-19T12:02:27.341576Z">
+      <time datetime="2026-11-19T12:02:27.341576Z">2026-11-19T12:02:27.341576Z</time>
+      <p>Parallel Gradle builds on one machine — With eight worktrees building at once on a 30 GB / 12-core machine, each agent runs Gradle with --max-workers=2, -Xmx3g and the in-process Kotlin compiler, and never runs ./gradlew --stop, because daemons are shared across worktrees.</p>
+    </article>
+    <article class="log-entry" data-entry-id="893a0bae-c6cc-4022-9955-4b64ea597468" data-event-digest="ac82a91c15e6f78807e8e6924bdb1dedf270dd7fe2f8e9348144bf72133e88fd" data-event-key="893a0bae-c6cc-4022-9955-4b64ea597468|2026-11-19T120933-159585Z--893a0bae-c6cc-4022-9955-4b64ea597468.html" data-event-time="2026-11-19T12:09:33.159585Z">
+      <time datetime="2026-11-19T12:09:33.159585Z">2026-11-19T12:09:33.159585Z</time>
+      <p>French typography — French text uses a non-breaking space before : ; ! and ?. The privacy renderer must pass it through unchanged.</p>
+    </article>
+    <article class="log-entry" data-entry-id="ca99c453-55f0-4d8c-bbf0-c8e81b3059e3" data-event-digest="640e1b8001625be416c9b1298294ec6a0bace3a6b724fbbb9b09928d0a09c43e" data-event-key="ca99c453-55f0-4d8c-bbf0-c8e81b3059e3|2026-11-19T120933-170432Z--ca99c453-55f0-4d8c-bbf0-c8e81b3059e3.html" data-event-time="2026-11-19T12:09:33.170432Z">
+      <time datetime="2026-11-19T12:09:33.170432Z">2026-11-19T12:09:33.170432Z</time>
+      <p>Keep privacy docs in step — Any change to permissions, storage or dependencies updates PRIVACY*.md, docs/play/data-safety.md and docs/play/health-declaration.md in the same change.</p>
+    </article>
+    <article class="log-entry" data-entry-id="19cd9ce1-d237-4402-9891-7bb6535214f9" data-event-digest="c8f47e27139f2074abeb1e6d5cd8b7a4e47d876d7b24ebc3624225f0e047766c" data-event-key="19cd9ce1-d237-4402-9891-7bb6535214f9|2026-11-19T121734-393195Z--19cd9ce1-d237-4402-9891-7bb6535214f9.html" data-event-time="2026-11-19T12:17:34.393195Z">
+      <time datetime="2026-11-19T12:17:34.393195Z">2026-11-19T12:17:34.393195Z</time>
+      <p>Compose tests use the v2 rules — Use androidx.compose.ui.test.junit4.v2.createComposeRule and createEmptyComposeRule; v1 is deprecated in BOM 2026.09. Under Robolectric call waitForIdle() inside waitUntil for content loaded on Dispatchers.IO.</p>
+    </article>
+    <article class="log-entry" data-entry-id="252196da-2070-4b11-b68b-f0fdf95c26f6" data-event-digest="5997a41ec0fb9915f611820ab858f0e5c3fe087fcedde2633f69fe48513130d4" data-event-key="252196da-2070-4b11-b68b-f0fdf95c26f6|2026-11-19T121734-404568Z--252196da-2070-4b11-b68b-f0fdf95c26f6.html" data-event-time="2026-11-19T12:17:34.404568Z">
+      <time datetime="2026-11-19T12:17:34.404568Z">2026-11-19T12:17:34.404568Z</time>
+      <p>Checking that an intent reaches Tidemark — Use queryIntentActivities(intent.setPackage(pkg)). Aliases come back with activityInfo.name set to the alias and targetActivity set to the real activity.</p>
+    </article>
+    <article class="log-entry" data-entry-id="834735b4-a7f1-411f-9698-fd3b0c6489fa" data-event-digest="9c494c7b05bb549b597f27164dd36778e53e236fd9fe1569bc0927a9565c4660" data-event-key="834735b4-a7f1-411f-9698-fd3b0c6489fa|2026-11-19T121909-441593Z--834735b4-a7f1-411f-9698-fd3b0c6489fa.html" data-event-time="2026-11-19T12:19:09.441593Z">
+      <time datetime="2026-11-19T12:19:09.441593Z">2026-11-19T12:19:09.441593Z</time>
+      <p>TestHealthConnectClient wrapper — data tests wrap connect-testing alpha03 FakeHealthConnectClient to add feature status, permission checks, newest-first reads and lookup by id. Inserted records get ids testHCidN and their origin is the package set with fake.setPackageName, not the one in TestRecords.metadata.</p>
+    </article>
+    <article class="log-entry" data-entry-id="85393433-a482-4771-96d2-4a483f4a8be3" data-event-digest="f66da60671b713eff9c0327db9e895d376851aa8f90a45e0377f3e044233b8e1" data-event-key="85393433-a482-4771-96d2-4a483f4a8be3|2026-11-19T121909-451430Z--85393433-a482-4771-96d2-4a483f4a8be3.html" data-event-time="2026-11-19T12:19:09.451430Z">
+      <time datetime="2026-11-19T12:19:09.451430Z">2026-11-19T12:19:09.451430Z</time>
+      <p>UI opens Health Connect screens through data.HealthConnectIntents — Only the data package references HealthConnectClient; UI code calls HealthConnectIntents.manageData(context) or settings(). T-010 points the other helpers at it.</p>
+    </article>
+    <article class="log-entry" data-entry-id="15f309ef-8a04-4ecb-8f6b-0b00b8ca2013" data-event-digest="800f8067f2be936b13b90338aa382e6835be68562430b7e5e94e146b425ddfb6" data-event-key="15f309ef-8a04-4ecb-8f6b-0b00b8ca2013|2026-11-19T122354-282652Z--15f309ef-8a04-4ecb-8f6b-0b00b8ca2013.html" data-event-time="2026-11-19T12:23:54.282652Z">
+      <time datetime="2026-11-19T12:23:54.282652Z">2026-11-19T12:23:54.282652Z</time>
+      <p>No script vals named like DSL properties in Gradle KTS — Inside a receiver lambda the receiver own property wins over a script-level val with the same name. Prefix script vals (releaseKeyAlias) instead.</p>
+    </article>
+    <article class="log-entry" data-entry-id="05e17151-2a94-45b6-8974-029b8a871502" data-event-digest="c11eb1c63d1dbff28ba250c78acd7531a35f00b2eb733cb19e2e25929c1ac0c0" data-event-key="05e17151-2a94-45b6-8974-029b8a871502|2026-11-19T122402-363492Z--05e17151-2a94-45b6-8974-029b8a871502.html" data-event-time="2026-11-19T12:24:02.363492Z">
+      <time datetime="2026-11-19T12:24:02.363492Z">2026-11-19T12:24:02.363492Z</time>
+      <p>Workflow conventions — Workflows set defaults.run.shell: bash for pipefail, pin third-party actions to commit SHAs with version comments, and Dependabot keeps the pins current.</p>
+    </article>
+    <article class="log-entry" data-entry-id="215096e9-2227-489f-8769-7ba2ffb49b65" data-event-digest="821fadaa31278bfb2f9844228177cf331f108846b25ff89eb8aefdf9d71679bb" data-event-key="215096e9-2227-489f-8769-7ba2ffb49b65|2026-11-19T122932-038481Z--215096e9-2227-489f-8769-7ba2ffb49b65.html" data-event-time="2026-11-19T12:29:32.038481Z">
+      <time datetime="2026-11-19T12:29:32.038481Z">2026-11-19T12:29:32.038481Z</time>
+      <p>Normalize ICU spaces in formatted-text assertions — Map U+00A0, U+202F and U+2009 to a plain space before comparing formatted text. Robolectric defaults to en-US, which resolves SYSTEM units to imperial.</p>
+    </article>
+    <article class="log-entry" data-entry-id="cca2b0ef-ffe1-4237-b02d-c94e66dd9d01" data-event-digest="e05a9f9f36b3590a75b91830f0268fdd1d70e78fb7d28cbdf1a0193fd5fac404" data-event-key="cca2b0ef-ffe1-4237-b02d-c94e66dd9d01|2026-11-19T122932-481905Z--cca2b0ef-ffe1-4237-b02d-c94e66dd9d01.html" data-event-time="2026-11-19T12:29:32.481905Z">
+      <time datetime="2026-11-19T12:29:32.481905Z">2026-11-19T12:29:32.481905Z</time>
+      <p>Compose text-fit tests use native graphics — Use @GraphicsMode(NATIVE) for tests that measure text; check ellipsis, didOverflowHeight and screen bounds, not didOverflowWidth; use positionInRoot and size because boundsInRoot is clipped by scrolling.</p>
+    </article>
+    <article class="log-entry" data-entry-id="e3f7b1c4-56a7-4ae4-ac37-63af4c9be346" data-event-digest="5866901e94f92d0a1c677e4b837934b834166a7692af64c4cf54c3920ed13d68" data-event-key="e3f7b1c4-56a7-4ae4-ac37-63af4c9be346|2026-11-19T122932-488584Z--e3f7b1c4-56a7-4ae4-ac37-63af4c9be346.html" data-event-time="2026-11-19T12:29:32.488584Z">
+      <time datetime="2026-11-19T12:29:32.488584Z">2026-11-19T12:29:32.488584Z</time>
+      <p>Tiles read as one TalkBack element — clearAndSetSemantics with title, value and unit, when, and source; tiles containing buttons use mergeDescendants so the button stays reachable.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b640f11a-a9ce-4008-8961-8dba159e2246" data-event-digest="78d11c9eb8731a41f53792536180ad5834386c5b1f33c52a21f217dd33fca799" data-event-key="b640f11a-a9ce-4008-8961-8dba159e2246|2026-11-19T122932-964399Z--b640f11a-a9ce-4008-8961-8dba159e2246.html" data-event-time="2026-11-19T12:29:32.964399Z">
+      <time datetime="2026-11-19T12:29:32.964399Z">2026-11-19T12:29:32.964399Z</time>
+      <p>Field coverage and paging laziness by test — Reflect over record classes public getters and check the extractor emits each; subclass FakeHealthRepository to record page tokens and assert calls[READ_PAGE] counts.</p>
+    </article>
+    <article class="log-entry" data-entry-id="3cfc17dc-08b8-454c-aa77-a7b5e2f70e08" data-event-digest="29217f70c284bec9fd23270934d6c08aaf93d76e915b38f8fbe52398d574ad4d" data-event-key="3cfc17dc-08b8-454c-aa77-a7b5e2f70e08|2026-11-19T123157-209438Z--3cfc17dc-08b8-454c-aa77-a7b5e2f70e08.html" data-event-time="2026-11-19T12:31:57.209438Z">
+      <time datetime="2026-11-19T12:31:57.209438Z">2026-11-19T12:31:57.209438Z</time>
+      <p>Render screens to PNG without an emulator — Robolectric @GraphicsMode(NATIVE) with captureToImage() renders Compose and Vico screens for visual checks. Read the Vico API with javap -l on the cached jar.</p>
+    </article>
+    <article class="log-entry" data-entry-id="af319183-3252-4b34-9fc2-cce84ca1505e" data-event-digest="4c8e02a227fed34335f3a6c20da592bf8a3deac974860a7beb3657c42e25edc6" data-event-key="af319183-3252-4b34-9fc2-cce84ca1505e|2026-11-19T132211-157200Z--af319183-3252-4b34-9fc2-cce84ca1505e.html" data-event-time="2026-11-19T13:22:11.157200Z">
+      <time datetime="2026-11-19T13:22:11.157200Z">2026-11-19T13:22:11.157200Z</time>
+      <p>Robolectric startActivity resolution — Call shadowOf(app).checkActivities(true) so unresolved intents throw ActivityNotFoundException, and give test intent filters CATEGORY_DEFAULT so startActivity resolves them.</p>
+    </article>
+    <article class="log-entry" data-entry-id="e25fb378-a348-4f3f-acc0-4b2026e3ea7f" data-event-digest="e661eb8961f8f4c93ca3483309fb4e99ecc5fb069e41a0b66c2a9b0398a864e5" data-event-key="e25fb378-a348-4f3f-acc0-4b2026e3ea7f|2026-11-19T135020-462354Z--e25fb378-a348-4f3f-acc0-4b2026e3ea7f.html" data-event-time="2026-11-19T13:50:20.462354Z">
+      <time datetime="2026-11-19T13:50:20.462354Z">2026-11-19T13:50:20.462354Z</time>
+      <p>Device test data with a throwaway seeder — A seeder app kept outside the repo, built in two flavors (Seeder Watch, Seeder Phone) with WRITE permissions granted through adb install -g, writes a year of all eight types plus overlapping steps and stage-less sleep, so two origins exist. Health Connect Toolbox only inserts one record at a time.</p>
+    </article>
+    <article class="log-entry" data-entry-id="4fa8c48f-261a-443d-a69f-c0d16188d851" data-event-digest="cbf727efe2baffc86349a63c2cb54c5845abd4875c058fa65adaa6e2afe1aa58" data-event-key="4fa8c48f-261a-443d-a69f-c0d16188d851|2026-11-19T141323-492461Z--4fa8c48f-261a-443d-a69f-c0d16188d851.html" data-event-time="2026-11-19T14:13:23.492461Z">
+      <time datetime="2026-11-19T14:13:23.492461Z">2026-11-19T14:13:23.492461Z</time>
+      <p>Driving Health Connect on emulators — On API 34+ adb install -g grants health permissions; on API 28 they must be granted in Health Connect UI. Health Connect on API 28 has no launcher icon: start it with am start -a androidx.health.ACTION_HEALTH_CONNECT_SETTINGS -p com.google.android.apps.healthdata. Per-app language (cmd locale set-app-locales) only works on Android 13+; on API 28 change the system language. Health Connect activities opened from Tidemark run in Tidemark task, so force-stopping Tidemark closes them.</p>
+    </article>
   </body>
 </html>

@@ -1,6 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-class="testing" data-entry-id="0e79f3ce-97c9-4b46-b46d-1a5aa6a2eebe" data-kind="pattern" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="systemPatterns">
-  <time datetime="2026-11-19T10:54:35.762705Z">2026-11-19T10:54:35.762705Z</time>
-  <h3>Building Health Connect records in tests</h3>
-  <div class="details"><strong>Details</strong>The public Metadata constructor can't set an id or dataOrigin, and IntervalRecord/InstantaneousRecord are Kotlin-internal. Use TestRecords.metadata(id, packageName), which wraps connect-testing Metadata.populatedWithTestValues, and FakeHealthRepository.timeOf(record). FakeHealthConnectClient doesn't compute aggregates: stub overrides.aggregate / aggregateGroupByPeriod / aggregateGroupByDuration with connect-testing's AggregationResult(dataOrigins, metrics).</div>
-</article>

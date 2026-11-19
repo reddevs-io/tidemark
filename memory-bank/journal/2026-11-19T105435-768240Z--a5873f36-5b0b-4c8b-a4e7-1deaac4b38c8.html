@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T10:54:35.768240Z">2026-11-19T10:54:35.768240Z</time>
-  <h3>Allowed non-Health permission from androidx</h3>
-  <div class="rationale"><strong>Rationale</strong>It grants no access to anything outside the app and can't be removed without breaking androidx.core.</div>
-  <div class="details"><strong>Details</strong>The APK requests io.reddevs.tidemark.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION, an app-private signature permission that androidx.core adds for non-exported dynamic receivers. ManifestContractTest allows it, and the T-008 CI permission check must allow it too.</div>
-</article>

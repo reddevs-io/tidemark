@@ -13,16 +13,480 @@
     <header class="page-head">
       <p class="eyebrow">Memory Bank / Decisions</p>
       <h1>Decision Log</h1>
-      <p class="meta">Choices made &amp; why they stuck · newest at the bottom · Updated 2026-11-19T09:49:48.488763Z</p>
+      <p class="meta">Choices made &amp; why they stuck · newest at the bottom · Updated 2026-11-19T12:31:57.203500Z</p>
     </header>
     <div class="timeline">
-      <article class="decision-entry placeholder">
-        <time>—</time>
-        <h3>—</h3>
-        <div class="rationale"><strong>Rationale</strong>—</div>
-        <div class="details"><strong>Implementation Details</strong>—</div>
+      <article class="decision-entry" data-entry-id="4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1" data-event-digest="914b891b46a6cb9227da65270e59c8c0baacc757d177d04adbe319002c0fdbf0" data-event-key="4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1|2026-11-19T095148-387204Z--4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1.html" data-event-time="2026-11-19T09:51:48.387204Z">
+        <time datetime="2026-11-19T09:51:48.387204Z">2026-11-19T09:51:48.387204Z</time>
+        <h3>Build Tidemark instead of contributing to an existing app</h3>
+        <div class="rationale"><strong>Rationale</strong>Heartwood lacks a range switcher, sleep stages, a raw explorer with data origin and a Play listing. Both projects are GPL-3.0, so code borrowed from Heartwood is allowed with attribution.</div>
+        <div class="details"><strong>Implementation Details</strong>The user chose to build their own app. Heartwood (github.com/GuyOnWifi/heartwood, GPL-3.0, Kotlin/Compose, connect-client 1.1.0, Canvas charts, Robolectric + connect-testing tests, minSdk 28) is the reference for the history-permission flow, paged reads and tests. Health Disconnect (github.com/Monkopedia/health-disconnect, Apache-2.0) is the closest existing explorer.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="8970a45b-8b81-4c05-9788-7b59385debb2" data-event-digest="8607790821d6839ceb2e3b93e39955b244b9b5f67e51ba60bdb1fbca0cac5ecc" data-event-key="8970a45b-8b81-4c05-9788-7b59385debb2|2026-11-19T095148-390017Z--8970a45b-8b81-4c05-9788-7b59385debb2.html" data-event-time="2026-11-19T09:51:48.390017Z">
+        <time datetime="2026-11-19T09:51:48.390017Z">2026-11-19T09:51:48.390017Z</time>
+        <h3>License GPL-3.0</h3>
+        <div class="rationale"><strong>Rationale</strong>Matches Heartwood so its code can be reused with attribution. Whether source headers say GPL-3.0-only or GPL-3.0-or-later is still open.</div>
+        <div class="details"><strong>Implementation Details</strong>Tidemark is licensed GPL-3.0 (LICENSE already in repo).</div>
+      </article>
+      <article class="decision-entry" data-entry-id="6ac84ae9-779d-4940-be4f-2597c47ad125" data-event-digest="0a3cdaacf26ef6a1e52bfc50419f430b68f7fa9ed70375095c026f5aaccd64a4" data-event-key="6ac84ae9-779d-4940-be4f-2597c47ad125|2026-11-19T095148-392772Z--6ac84ae9-779d-4940-be4f-2597c47ad125.html" data-event-time="2026-11-19T09:51:48.392772Z">
+        <time datetime="2026-11-19T09:51:48.392772Z">2026-11-19T09:51:48.392772Z</time>
+        <h3>No network, on-device only</h3>
+        <div class="rationale"><strong>Rationale</strong>Privacy is the product's core promise and it keeps the Play Data safety form trivial: nothing collected, nothing shared.</div>
+        <div class="details"><strong>Implementation Details</strong>The manifest declares no INTERNET permission. No backend, no sync, no analytics, no crash reporting service. Export to CSV/JSON is a later nice-to-have.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b7d39205-5dad-4825-b395-04885ff67511" data-event-digest="f88256cded19946cc6dd4f7e7df82e00e8d4467b8f89ce5c0349503deb3d8e24" data-event-key="b7d39205-5dad-4825-b395-04885ff67511|2026-11-19T095148-395462Z--b7d39205-5dad-4825-b395-04885ff67511.html" data-event-time="2026-11-19T09:51:48.395462Z">
+        <time datetime="2026-11-19T09:51:48.395462Z">2026-11-19T09:51:48.395462Z</time>
+        <h3>Same eight record types in every build, no flavor split</h3>
+        <div class="rationale"><strong>Rationale</strong>Play denies bulk permission lists that aren't tied to a visible feature, and any change to the type set means re-declaring. One type set keeps one manifest, one declaration and one signing story.</div>
+        <div class="details"><strong>Implementation Details</strong>Explorer coverage equals the v1 types. An explorer covering all ~40 Health Connect types and a Play/GitHub flavor split were both rejected.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="852c3122-6d55-4db6-82ad-70b75212951c" data-event-digest="9318bd586024290d19f9f0be99276340cb92bbef16f0ee0ed7d8f32d4a91380e" data-event-key="852c3122-6d55-4db6-82ad-70b75212951c|2026-11-19T095148-398079Z--852c3122-6d55-4db6-82ad-70b75212951c.html" data-event-time="2026-11-19T09:51:48.398079Z">
+        <time datetime="2026-11-19T09:51:48.398079Z">2026-11-19T09:51:48.398079Z</time>
+        <h3>History permission with 30-day fallback</h3>
+        <div class="rationale"><strong>Rationale</strong>Without the history permission Health Connect silently omits older data from results, so the UI must tell the user why older data is missing. Play justification: view your past records.</div>
+        <div class="details"><strong>Implementation Details</strong>Request PERMISSION_READ_HEALTH_DATA_HISTORY only when getFeatureStatus(FEATURE_READ_HEALTH_DATA_HISTORY) returns available. Where it is unavailable or denied, show a banner and fall back to the default window, which is 30 days before the first permission grant.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="0cc9d32d-52cc-49b0-9029-3d60c2a640c9" data-event-digest="ae43bc8b4ccde82ffbd679720f680b2f3c609f232459b0a60fb33f1095d74c55" data-event-key="0cc9d32d-52cc-49b0-9029-3d60c2a640c9|2026-11-19T095148-401226Z--0cc9d32d-52cc-49b0-9029-3d60c2a640c9.html" data-event-time="2026-11-19T09:51:48.401226Z">
+        <time datetime="2026-11-19T09:51:48.401226Z">2026-11-19T09:51:48.401226Z</time>
+        <h3>Aggregates for charts, no source picker</h3>
+        <div class="rationale"><strong>Rationale</strong>Aggregates deduplicate by the data-source priority the user already set in Health Connect settings, so the dashboard avoids double counting when several apps write the same metric. A per-metric picker would duplicate that setting.</div>
+        <div class="details"><strong>Implementation Details</strong>Dashboard charts use aggregate, aggregateGroupByPeriod and aggregateGroupByDuration. The explorer shows per-record dataOrigin with a filter by source.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="1ae9581f-672f-4300-bb43-20d289ddce00" data-event-digest="80fdd9ef991086635472a646444f846cf341a01547ccb724a60e0e3abf42435c" data-event-key="1ae9581f-672f-4300-bb43-20d289ddce00|2026-11-19T095148-405011Z--1ae9581f-672f-4300-bb43-20d289ddce00.html" data-event-time="2026-11-19T09:51:48.405011Z">
+        <time datetime="2026-11-19T09:51:48.405011Z">2026-11-19T09:51:48.405011Z</time>
+        <h3>Live queries, no local cache</h3>
+        <div class="rationale"><strong>Rationale</strong>Less code and no second copy of health data on disk. Revisit only if year charts prove slow on a real device.</div>
+        <div class="details"><strong>Implementation Details</strong>Every screen reads Health Connect directly. No Room database or cache in v1.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="018db5dc-1bb3-43cc-8bc2-6cb239c5cf97" data-event-digest="084aa1030c4de9a4e2e99367bdf2447b25e911d9e8f828d8b2e7825982330062" data-event-key="018db5dc-1bb3-43cc-8bc2-6cb239c5cf97|2026-11-19T095148-408646Z--018db5dc-1bb3-43cc-8bc2-6cb239c5cf97.html" data-event-time="2026-11-19T09:51:48.408646Z">
+        <time datetime="2026-11-19T09:51:48.408646Z">2026-11-19T09:51:48.408646Z</time>
+        <h3>Vico for charts</h3>
+        <div class="rationale"><strong>Rationale</strong>Vico is a maintained Compose-native chart library, which avoids hand-drawing axes, scrolling and markers. A hypnogram is a stepped range chart that may not map to Vico's model.</div>
+        <div class="details"><strong>Implementation Details</strong>Use Vico (compose-m3) for sparklines and detail charts. Fall back to a custom Compose Canvas only for the sleep-stage hypnogram if Vico doesn't fit.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="c3a383f4-af59-4263-9dc4-22fcb6884668" data-event-digest="9863ad4481a8573792604bd5ea1d3f7461206dc3877ecab4226707d1460dd279" data-event-key="c3a383f4-af59-4263-9dc4-22fcb6884668|2026-11-19T095148-412848Z--c3a383f4-af59-4263-9dc4-22fcb6884668.html" data-event-time="2026-11-19T09:51:48.412848Z">
+        <time datetime="2026-11-19T09:51:48.412848Z">2026-11-19T09:51:48.412848Z</time>
+        <h3>Manual DI, single module</h3>
+        <div class="rationale"><strong>Rationale</strong>The app is small. Manual DI keeps the build fast and the wiring readable for contributors.</div>
+        <div class="details"><strong>Implementation Details</strong>One app module and an AppContainer created in the Application class. No Hilt, no multi-module split.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="875e8bc1-9401-4968-addf-48c12028d59e" data-event-digest="90d4b911ad699605da88128a3c79298b3483667459c9178a80a3fbd99321ddbc" data-event-key="875e8bc1-9401-4968-addf-48c12028d59e|2026-11-19T095148-416456Z--875e8bc1-9401-4968-addf-48c12028d59e.html" data-event-time="2026-11-19T09:51:48.416456Z">
+        <time datetime="2026-11-19T09:51:48.416456Z">2026-11-19T09:51:48.416456Z</time>
+        <h3>Distribution order and signing</h3>
+        <div class="rationale"><strong>Rationale</strong>An Organization account sidesteps the 12-tester / 14-day closed-test rule for personal accounts. A shared key lets users update across channels.</div>
+        <div class="details"><strong>Implementation Details</strong>GitHub Releases first, Google Play later once the permission set is stable, under the reddevs Organization developer account. F-Droid and IzzyOnDroid are possible later but not chosen. One key and one applicationId across channels; our own key uploaded to Play App Signing.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="9ddeb092-1176-445f-966e-e445f9674111" data-event-digest="3fe6b5720a0e273af249499b63b3037408cfe1dc9d06769a3ac993c163d7a91d" data-event-key="9ddeb092-1176-445f-966e-e445f9674111|2026-11-19T095148-419713Z--9ddeb092-1176-445f-966e-e445f9674111.html" data-event-time="2026-11-19T09:51:48.419713Z">
+        <time datetime="2026-11-19T09:51:48.419713Z">2026-11-19T09:51:48.419713Z</time>
+        <h3>Privacy policy as PRIVACY.md in EN and FR</h3>
+        <div class="rationale"><strong>Rationale</strong>Play requires a privacy policy URL that matches what the in-app rationale shows. One source file for both keeps them in sync.</div>
+        <div class="details"><strong>Implementation Details</strong>PRIVACY.md and its French version live at the repo root, are published via GitHub Pages, and are bundled into the app for the rationale screen. Short and honest: no collection, no network, on-device only.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b052d478-0610-4395-aff5-14592b4e2ca3" data-event-digest="297e77abb5864168c1ef8842c97d36d8ecc3c24d1b7f714d30a223b451d65d2a" data-event-key="b052d478-0610-4395-aff5-14592b4e2ca3|2026-11-19T095758-542875Z--b052d478-0610-4395-aff5-14592b4e2ca3.html" data-event-time="2026-11-19T09:57:58.542875Z">
+        <time datetime="2026-11-19T09:57:58.542875Z">2026-11-19T09:57:58.542875Z</time>
+        <h3>Frozen contracts and compiling stubs from T-001</h3>
+        <div class="rationale"><strong>Rationale</strong>A single-module app has many shared files. Freezing them up front lets eight agents work in parallel without merge conflicts.</div>
+        <div class="details"><strong>Implementation Details</strong>T-001 writes HealthRepository, domain models, MeasurementFormatter, UserPreferences, Routes, AppContainer and a compiling stub for every Wave 1 class. Wave 1 agents may not change those signatures; changes go through the plan's blocker process.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="1f7a92ad-c683-4365-ba60-b9f718b4b5eb" data-event-digest="8c38e4bfc9fe41010eb0dc272906c58f5e5ab7f31173e2e27af340b474ec533b" data-event-key="1f7a92ad-c683-4365-ba60-b9f718b4b5eb|2026-11-19T095758-545661Z--1f7a92ad-c683-4365-ba60-b9f718b4b5eb.html" data-event-time="2026-11-19T09:57:58.545661Z">
+        <time datetime="2026-11-19T09:57:58.545661Z">2026-11-19T09:57:58.545661Z</time>
+        <h3>One strings file per feature</h3>
+        <div class="rationale"><strong>Rationale</strong>Android merges every file in values/, so parallel workstreams never edit the same XML.</div>
+        <div class="details"><strong>Implementation Details</strong>Each feature owns values/strings_&lt;feature&gt;.xml and values-fr/strings_&lt;feature&gt;.xml; T-001 owns strings_common.xml.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="56312895-ee9b-4627-a683-3e7d3c3c8544" data-event-digest="0e4fcf533ebc0b0ec8b8e9a6cf998c0f4efcf201900eb5c510a874f726c5f97a" data-event-key="56312895-ee9b-4627-a683-3e7d3c3c8544|2026-11-19T095758-548236Z--56312895-ee9b-4627-a683-3e7d3c3c8544.html" data-event-time="2026-11-19T09:57:58.548236Z">
+        <time datetime="2026-11-19T09:57:58.548236Z">2026-11-19T09:57:58.548236Z</time>
+        <h3>Wave 1 agents run in separate worktrees</h3>
+        <div class="rationale"><strong>Rationale</strong>With one module, a half-written file in one stream breaks every other stream's compile, and parallel Gradle runs contend for the same build locks.</div>
+        <div class="details"><strong>Implementation Details</strong>Each Wave 1 child uses isolation worktree from the committed Wave 0 base. Children never commit; the primary session copies each workstream's owned paths back and verifies the merged tree.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="90742ee7-6636-4c92-9174-91460b6639f9" data-event-digest="a90c0628e04ae022e8f6fa0c3ade0dfb3274546cf732bfb37bfc18fbdea139cc" data-event-key="90742ee7-6636-4c92-9174-91460b6639f9|2026-11-19T095758-553148Z--90742ee7-6636-4c92-9174-91460b6639f9.html" data-event-time="2026-11-19T09:57:58.553148Z">
+        <time datetime="2026-11-19T09:57:58.553148Z">2026-11-19T09:57:58.553148Z</time>
+        <h3>Unit system resolution</h3>
+        <div class="rationale"><strong>Rationale</strong>Matches what people in those regions expect without a per-unit settings matrix.</div>
+        <div class="details"><strong>Implementation Details</strong>LocaleData.getMeasurementSystem picks the default: US gets miles and pounds, UK miles and kilograms, everyone else metric. The override switches metric or imperial as a whole. Energy is always kcal. No stones in v1.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d" data-event-digest="4098950f8224f36b1c6290c768ce8bce80dff30a7956787d1b74634568816eee" data-event-key="dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d|2026-11-19T095758-556540Z--dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d.html" data-event-time="2026-11-19T09:57:58.556540Z">
+        <time datetime="2026-11-19T09:57:58.556540Z">2026-11-19T09:57:58.556540Z</time>
+        <h3>Chart bucket rules</h3>
+        <div class="rationale"><strong>Rationale</strong>Keeps each chart to one aggregate call and attributes overnight sleep to a single morning.</div>
+        <div class="details"><strong>Implementation Details</strong>Day range: hourly buckets via aggregateGroupByDuration. Week and month: daily buckets; year: monthly buckets via aggregateGroupByPeriod. Year view of cumulative metrics shows the daily average per month over days with data. Weeks start per WeekFields.of(locale). Sleep buckets run noon to noon.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b3c1dbde-621e-44ef-8505-9374fb23d00f" data-event-digest="69f10b2ec318c89215dc29dbce3e7b0ad540fc761f781fcdb151baf1fab6139f" data-event-key="b3c1dbde-621e-44ef-8505-9374fb23d00f|2026-11-19T095758-559369Z--b3c1dbde-621e-44ef-8505-9374fb23d00f.html" data-event-time="2026-11-19T09:57:58.559369Z">
+        <time datetime="2026-11-19T09:57:58.559369Z">2026-11-19T09:57:58.559369Z</time>
+        <h3>Last-night sleep selection</h3>
+        <div class="rationale"><strong>Rationale</strong>readRecords does not apply the Health Connect priority order, so the app needs a deterministic rule.</div>
+        <div class="details"><strong>Implementation Details</strong>Last night is the longest SleepSession ending between 12:00 yesterday and now. With overlapping sessions from several apps, the tile shows the longest and names its source.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="cd59b705-1925-4b2a-8433-fc56e66bd102" data-event-digest="3c1627fff3fb7d850bd123815047d8f3ec1506109f3e02ca3a7613628fa279b8" data-event-key="cd59b705-1925-4b2a-8433-fc56e66bd102|2026-11-19T095758-562587Z--cd59b705-1925-4b2a-8433-fc56e66bd102.html" data-event-time="2026-11-19T09:57:58.562587Z">
+        <time datetime="2026-11-19T09:57:58.562587Z">2026-11-19T09:57:58.562587Z</time>
+        <h3>HeartRate visible in the resting HR day view</h3>
+        <div class="rationale"><strong>Rationale</strong>Play requires every requested type to back a visible feature. This ties HeartRate to the dashboard as well as the explorer.</div>
+        <div class="details"><strong>Implementation Details</strong>The resting heart rate detail day view plots that day's HeartRate samples with the resting value as a reference line. ExerciseSession is visible through the explorer.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="51116289-d042-456c-b51b-f6131554099a" data-event-digest="0efdef5d1d67a1e4c8e22bd5a3d05fa90307c52db829567a0f039881c176ae5c" data-event-key="51116289-d042-456c-b51b-f6131554099a|2026-11-19T095758-566153Z--51116289-d042-456c-b51b-f6131554099a.html" data-event-time="2026-11-19T09:57:58.566153Z">
+        <time datetime="2026-11-19T09:57:58.566153Z">2026-11-19T09:57:58.566153Z</time>
+        <h3>Explorer source list and app labels</h3>
+        <div class="rationale"><strong>Rationale</strong>Aggregates may omit lower-priority sources. Every Health Connect client declares the rationale intent, so this gives package visibility without QUERY_ALL_PACKAGES.</div>
+        <div class="details"><strong>Implementation Details</strong>Source chips are the union of AggregationResult.dataOrigins and the origins seen in loaded pages. App labels resolve through PackageManager using a &lt;queries&gt; intent entry for androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE, falling back to the package name.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="a2b4cd4f-590e-49df-85bf-e2960ceb8789" data-event-digest="1ba3709e021e7d6da0c8fc802776bbca00980d2709d09e98b75aede2a764a8c7" data-event-key="a2b4cd4f-590e-49df-85bf-e2960ceb8789|2026-11-19T095758-569270Z--a2b4cd4f-590e-49df-85bf-e2960ceb8789.html" data-event-time="2026-11-19T09:57:58.569270Z">
+        <time datetime="2026-11-19T09:57:58.569270Z">2026-11-19T09:57:58.569270Z</time>
+        <h3>Local preferences in DataStore</h3>
+        <div class="rationale"><strong>Rationale</strong>The first-grant time dates the 30-day history banner. Manual paging avoids a dependency for a simple load-more list.</div>
+        <div class="details"><strong>Implementation Details</strong>DataStore Preferences holds only the unit override and the first time a permission was seen granted. Explorer paging is manual (100 per page), no Paging 3.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="f64c30fc-d4ef-499b-b6e5-1c7e038eec3c" data-event-digest="c6f5adfebfe84574c4cfc5090791162c5896be2e698bf6f6b69563d15a6068db" data-event-key="f64c30fc-d4ef-499b-b6e5-1c7e038eec3c|2026-11-19T095758-572430Z--f64c30fc-d4ef-499b-b6e5-1c7e038eec3c.html" data-event-time="2026-11-19T09:57:58.572430Z">
+        <time datetime="2026-11-19T09:57:58.572430Z">2026-11-19T09:57:58.572430Z</time>
+        <h3>Privacy policy single source and bundling</h3>
+        <div class="rationale"><strong>Rationale</strong>Play requires the policy URL to match the in-app rationale; one source file keeps them identical.</div>
+        <div class="details"><strong>Implementation Details</strong>PRIVACY.md and PRIVACY.fr.md at the repo root are copied into app assets by a Gradle task and published by a Pages workflow at /privacy/ and /fr/privacy/. The app renders them with a small built-in Markdown renderer.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="9ac33394-b7a5-4031-9a44-30dd88e47550" data-event-digest="192f934eaf80847451c07b9906216f600e8cba43d8aa3d3f6efb15065d54ec47" data-event-key="9ac33394-b7a5-4031-9a44-30dd88e47550|2026-11-19T095758-575302Z--9ac33394-b7a5-4031-9a44-30dd88e47550.html" data-event-time="2026-11-19T09:57:58.575302Z">
+        <time datetime="2026-11-19T09:57:58.575302Z">2026-11-19T09:57:58.575302Z</time>
+        <h3>Versioning and release checks</h3>
+        <div class="rationale"><strong>Rationale</strong>Users moving between channels need monotonic versionCodes under the same key.</div>
+        <div class="details"><strong>Implementation Details</strong>gradle.properties holds tidemark.versionName and tidemark.versionCode, bumped by hand. The release workflow fails if the tag is not v+versionName or the versionCode did not increase. One integer sequence covers GitHub and Play.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="319cab0b-b6ec-4f8c-95b7-e5173644adf0" data-event-digest="e93cff37cccf6b193ccf0b9aa608a6d5d22139e22e143f31acad3f1feed7a90e" data-event-key="319cab0b-b6ec-4f8c-95b7-e5173644adf0|2026-11-19T095758-578000Z--319cab0b-b6ec-4f8c-95b7-e5173644adf0.html" data-event-time="2026-11-19T09:57:58.578000Z">
+        <time datetime="2026-11-19T09:57:58.578000Z">2026-11-19T09:57:58.578000Z</time>
+        <h3>Network removal enforced in CI</h3>
+        <div class="rationale"><strong>Rationale</strong>A dependency could add a network permission through manifest merging and silently break the privacy promise.</div>
+        <div class="details"><strong>Implementation Details</strong>The manifest removes INTERNET and ACCESS_NETWORK_STATE with tools:node=remove, and CI fails if the release APK requests any permission outside the nine Health Connect read permissions. allowBackup is false.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="1ea9347b-a126-4452-a5e0-2e27d9a72a80" data-event-digest="e2673d5c5477ece750be2ebc2cfa6cb05e5a505d362e817c2fad10b3e53d3807" data-event-key="1ea9347b-a126-4452-a5e0-2e27d9a72a80|2026-11-19T095758-580520Z--1ea9347b-a126-4452-a5e0-2e27d9a72a80.html" data-event-time="2026-11-19T09:57:58.580520Z">
+        <time datetime="2026-11-19T09:57:58.580520Z">2026-11-19T09:57:58.580520Z</time>
+        <h3>Store text in fastlane metadata layout</h3>
+        <div class="rationale"><strong>Rationale</strong>Obtainium, F-Droid and IzzyOnDroid read this layout, and it doubles as the source for the Play listing.</div>
+        <div class="details"><strong>Implementation Details</strong>Store text lives in fastlane/metadata/android/en-US and fr-FR.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="bf6018be-67ac-4180-a319-0cd6d9444c33" data-event-digest="181b1e4cd9bf8c380f7cb385c4635fe382a7af4cfc9ce4fab1b75de413297d5c" data-event-key="bf6018be-67ac-4180-a319-0cd6d9444c33|2026-11-19T103350-109474Z--bf6018be-67ac-4180-a319-0cd6d9444c33.html" data-event-time="2026-11-19T10:33:50.109474Z">
+        <time datetime="2026-11-19T10:33:50.109474Z">2026-11-19T10:33:50.109474Z</time>
+        <h3>License GPL-3.0-or-later with SPDX headers</h3>
+        <div class="rationale"><strong>Rationale</strong>Heartwood states GPL-3.0-or-later in its README, so borrowed code keeps identical terms. Apache-2.0 code from Health Disconnect is compatible with GPLv3. or-later is the FSF default and suits F-Droid.</div>
+        <div class="details"><strong>Implementation Details</strong>Tidemark is GPL-3.0-or-later. Every Kotlin, Gradle and workflow file starts with SPDX-License-Identifier: GPL-3.0-or-later. Files borrowed from Heartwood or Health Disconnect keep their original copyright line next to ours. The user deferred to this recommendation on 2026-11-19.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="764b803f-68d2-4eb2-8ac3-737f5dab98a2" data-event-digest="1775b78ca86222d1fc178251705b9fa14b3f724787b82a9c256a59dbb67f924f" data-event-key="764b803f-68d2-4eb2-8ac3-737f5dab98a2|2026-11-19T103350-113218Z--764b803f-68d2-4eb2-8ac3-737f5dab98a2.html" data-event-time="2026-11-19T10:33:50.113218Z">
+        <time datetime="2026-11-19T10:33:50.113218Z">2026-11-19T10:33:50.113218Z</time>
+        <h3>Privacy policy on tidemark.reddevs.io</h3>
+        <div class="rationale"><strong>Rationale</strong>The user chose the custom domain over the default github.io address. Verifying the domain at the organization level prevents takeover.</div>
+        <div class="details"><strong>Implementation Details</strong>GitHub Pages serves the privacy policy at https://tidemark.reddevs.io/privacy/ and /fr/privacy/, with HTTPS enforced. One-time setup: DNS CNAME tidemark -&gt; reddevs-io.github.io, verify reddevs.io in the GitHub organization Pages settings, set the custom domain on the repo. This URL goes to Play and into PRIVACY.md.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b8521704-4a6f-4938-81d8-77a18adf157b" data-event-digest="23c1594c33d71448517e38ba61cb90549d4bf32097ea6c90de588ec2ae789e94" data-event-key="b8521704-4a6f-4938-81d8-77a18adf157b|2026-11-19T103350-116866Z--b8521704-4a6f-4938-81d8-77a18adf157b.html" data-event-time="2026-11-19T10:33:50.116866Z">
+        <time datetime="2026-11-19T10:33:50.116866Z">2026-11-19T10:33:50.116866Z</time>
+        <h3>Commit and push authorization</h3>
+        <div class="rationale"><strong>Rationale</strong>User instruction.</div>
+        <div class="details"><strong>Implementation Details</strong>On 2026-11-19 the user authorized the primary session to commit and push whenever it judges the work ready. Release tags still need the user's go-ahead because a tag publishes a release. Explicit-path staging and no AI attribution still apply.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="0679591f-7811-4240-a51e-60b8884cfa61" data-event-digest="f80968091d0d4acddb84c6c7c1722713f99bb1f6aa3741caf59ea94fd33fac8b" data-event-key="0679591f-7811-4240-a51e-60b8884cfa61|2026-11-19T105435-753099Z--0679591f-7811-4240-a51e-60b8884cfa61.html" data-event-time="2026-11-19T10:54:35.753099Z">
+        <time datetime="2026-11-19T10:54:35.753099Z">2026-11-19T10:54:35.753099Z</time>
+        <h3>compileSdk 37, targetSdk 36</h3>
+        <div class="rationale"><strong>Rationale</strong>Compose 1.12 (BOM 2026.09.00), Navigation 2.10 and Vico 3.3 fail checkAarMetadata below compileSdk 37. compileSdk changes only the build, not runtime behaviour, and connect-client 1.1.0 needs at least 36.</div>
+        <div class="details"><strong>Implementation Details</strong>app/build.gradle.kts compiles against SDK 37 and targets 36. Supersedes the design's compileSdk 36.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="64d45fd3-f64f-4874-b110-c7fa370406de" data-event-digest="f0c04b1da7578a9b3f1628dda92027b1280b196b69b43c524ce04365ce213276" data-event-key="64d45fd3-f64f-4874-b110-c7fa370406de|2026-11-19T105435-756592Z--64d45fd3-f64f-4874-b110-c7fa370406de.html" data-event-time="2026-11-19T10:54:35.756592Z">
+        <time datetime="2026-11-19T10:54:35.756592Z">2026-11-19T10:54:35.756592Z</time>
+        <h3>Toolchain pinned by T-001</h3>
+        <div class="rationale"><strong>Rationale</strong>Latest stable versions on 2026-11-19. connect-testing alpha04 pins connect-client 1.2.0-alpha05, so alpha03 (pinning 1.1.0-beta02, upgraded to 1.1.0 by Gradle) is the matching release, as in Heartwood.</div>
+        <div class="details"><strong>Implementation Details</strong>AGP 9.5.1 with built-in Kotlin (no kotlin-android plugin), Kotlin 2.4.21, Gradle 9.9.1 with a wrapper checksum, Compose BOM 2026.09.00, Navigation 2.10.2, Vico 3.3.1, DataStore 1.3.0, connect-client 1.1.0, connect-testing 1.0.0-alpha03, Robolectric 4.18.1.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b18836a9-6461-4c05-9bc3-56ca3b2f5e81" data-event-digest="05d46e55fa768f9b8960173d4470dcedccf64bb212f20cbf74f8679dcee6ae2a" data-event-key="b18836a9-6461-4c05-9bc3-56ca3b2f5e81|2026-11-19T105435-759649Z--b18836a9-6461-4c05-9bc3-56ca3b2f5e81.html" data-event-time="2026-11-19T10:54:35.759649Z">
+        <time datetime="2026-11-19T10:54:35.759649Z">2026-11-19T10:54:35.759649Z</time>
+        <h3>Robolectric at SDK 34 on JDK 17</h3>
+        <div class="rationale"><strong>Rationale</strong>Robolectric needs JDK 21 to emulate SDK 35 and above; this machine has only JDK 17. Raise it once local and CI builds use JDK 21.</div>
+        <div class="details"><strong>Implementation Details</strong>app/src/test/resources/robolectric.properties sets sdk=34. Tests must not use @Config(sdk = 35+).</div>
+      </article>
+      <article class="decision-entry" data-entry-id="a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8" data-event-digest="065c47bb289681065d281749906c99efc9ef874d424eb80ac1ea4f44fc961570" data-event-key="a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8|2026-11-19T105435-768240Z--a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8.html" data-event-time="2026-11-19T10:54:35.768240Z">
+        <time datetime="2026-11-19T10:54:35.768240Z">2026-11-19T10:54:35.768240Z</time>
+        <h3>Allowed non-Health permission from androidx</h3>
+        <div class="rationale"><strong>Rationale</strong>It grants no access to anything outside the app and can't be removed without breaking androidx.core.</div>
+        <div class="details"><strong>Implementation Details</strong>The APK requests io.reddevs.tidemark.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION, an app-private signature permission that androidx.core adds for non-exported dynamic receivers. ManifestContractTest allows it, and the T-008 CI permission check must allow it too.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="b0e9126a-98fb-43e8-bfb4-f62ca2dab914" data-event-digest="44293e2f51c2e9c6bae21478f3848420672a727d252bbe8ba884527dc0a781f5" data-event-key="b0e9126a-98fb-43e8-bfb4-f62ca2dab914|2026-11-19T120933-151711Z--b0e9126a-98fb-43e8-bfb4-f62ca2dab914.html" data-event-time="2026-11-19T12:09:33.151711Z">
+        <time datetime="2026-11-19T12:09:33.151711Z">2026-11-19T12:09:33.151711Z</time>
+        <h3>Markdown without hard wraps</h3>
+        <div class="rationale"><strong>Rationale</strong>Avoids a renderer edge case; T-010 adds a repo markdownlint config with MD013 off.</div>
+        <div class="details"><strong>Implementation Details</strong>Every Markdown file keeps one paragraph per line, so the in-app privacy renderer never has to join wrapped lines.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="2ff407bb-3368-44a4-bb87-65de7c7b723f" data-event-digest="d8a13b6c467795bf0a18fe40d770d5f6630a914decc9a85c53eeb70b12183b86" data-event-key="2ff407bb-3368-44a4-bb87-65de7c7b723f|2026-11-19T121734-376167Z--2ff407bb-3368-44a4-bb87-65de7c7b723f.html" data-event-time="2026-11-19T12:17:34.376167Z">
+        <time datetime="2026-11-19T12:17:34.376167Z">2026-11-19T12:17:34.376167Z</time>
+        <h3>Privacy Markdown subset</h3>
+        <div class="rationale"><strong>Rationale</strong>Keeps the renderer small; T-009 docs stay within this subset.</div>
+        <div class="details"><strong>Implementation Details</strong>The in-app renderer supports headings, paragraphs, bullet lists, bold and links (inline, &lt;url&gt;, bare http(s)). Other link schemes render as plain text and unsupported blocks show as plain lines.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="190ad4f6-c700-43c0-a2f6-ef97597c4070" data-event-digest="5edf2cdb604c8348071062205f6e976e84bbd9d2d8b20304c467cdf757c07c38" data-event-key="190ad4f6-c700-43c0-a2f6-ef97597c4070|2026-11-19T121909-405603Z--190ad4f6-c700-43c0-a2f6-ef97597c4070.html" data-event-time="2026-11-19T12:19:09.405603Z">
+        <time datetime="2026-11-19T12:19:09.405603Z">2026-11-19T12:19:09.405603Z</time>
+        <h3>Sleep series points labelled by morning</h3>
+        <div class="rationale"><strong>Rationale</strong>Drill-down and labels use one rule for all metrics.</div>
+        <div class="details"><strong>Implementation Details</strong>Sleep queries run noon to noon, but each point start is the morning calendar day at 00:00, so start.toLocalDate() is the day for every metric. The sleep day view is one noon-to-noon bucket.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="30b1b90a-7d19-4548-b2d5-a02f96beda9c" data-event-digest="f34ea4f8b0a049c5f909a47b36498074dbd0dfce3ae8c36c801f2f99e937bd65" data-event-key="30b1b90a-7d19-4548-b2d5-a02f96beda9c|2026-11-19T121909-417417Z--30b1b90a-7d19-4548-b2d5-a02f96beda9c.html" data-event-time="2026-11-19T12:19:09.417417Z">
+        <time datetime="2026-11-19T12:19:09.417417Z">2026-11-19T12:19:09.417417Z</time>
+        <h3>Series summary statistics</h3>
+        <div class="rationale"><strong>Rationale</strong>Averaging over days with data needs daily buckets.</div>
+        <div class="details"><strong>Implementation Details</strong>Cumulative metrics: total is the window sum, average is per bucket with data (hour in day view, day otherwise), min and max over displayed points. Weight and resting HR: total null, average is the mean of bucket averages, min and max from bucket extremes. The year view of cumulative metrics makes one daily-bucket call and folds it into months; weight and resting HR use monthly buckets.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="94743053-2c91-4914-9965-238f12907758" data-event-digest="fca2c0803965e7b9580b39c5e9bd0bddfd579e12ec81d6db0e975a467fad2b65" data-event-key="94743053-2c91-4914-9965-238f12907758|2026-11-19T121909-426669Z--94743053-2c91-4914-9965-238f12907758.html" data-event-time="2026-11-19T12:19:09.426669Z">
+        <time datetime="2026-11-19T12:19:09.426669Z">2026-11-19T12:19:09.426669Z</time>
+        <h3>Health Connect error mapping</h3>
+        <div class="rationale"><strong>Rationale</strong>One failed metric must not break the others.</div>
+        <div class="details"><strong>Implementation Details</strong>Rate limits map to RateLimited (platform error code on API 34+, message match on 28 to 33); RemoteException and IOException to Unavailable; SecurityException to PermissionMissing(type); everything else to Unexpected. readRecord treats IllegalArgumentException (unknown id) as null. Sleep tie-break: longest, then later end, then package name, then id.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="e237ce6b-90c6-4b73-ab82-10af64fd86ee" data-event-digest="61ed15700529d5d69160de8a93a9b2600468b8a39d6f37f58de161b6c1294fa0" data-event-key="e237ce6b-90c6-4b73-ab82-10af64fd86ee|2026-11-19T122402-328500Z--e237ce6b-90c6-4b73-ab82-10af64fd86ee.html" data-event-time="2026-11-19T12:24:02.328500Z">
+        <time datetime="2026-11-19T12:24:02.328500Z">2026-11-19T12:24:02.328500Z</time>
+        <h3>Permission check is an exact match</h3>
+        <div class="rationale"><strong>Rationale</strong>Play declaration and privacy promise depend on the exact set.</div>
+        <div class="details"><strong>Implementation Details</strong>scripts/check-permissions.sh fails on any extra permission and on any missing allowed one (9 Health Connect reads plus the androidx private permission). The allow-list changes together with docs/play/health-declaration.md.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="7ec4b07b-373f-4947-83fe-95c1c8cc5a8a" data-event-digest="9f878059ef37e6410a723c171719cf76b71385c9faa8c2a651873ddfbd9dfe8a" data-event-key="7ec4b07b-373f-4947-83fe-95c1c8cc5a8a|2026-11-19T122402-338741Z--7ec4b07b-373f-4947-83fe-95c1c8cc5a8a.html" data-event-time="2026-11-19T12:24:02.338741Z">
+        <time datetime="2026-11-19T12:24:02.338741Z">2026-11-19T12:24:02.338741Z</time>
+        <h3>versionCode gate uses a versionCode asset on every release</h3>
+        <div class="rationale"><strong>Rationale</strong>Monotonic codes across GitHub and Play.</div>
+        <div class="details"><strong>Implementation Details</strong>Each GitHub Release carries a versionCode file; a new tag must exceed the highest published code, pre-releases included, and needs fastlane changelogs/&lt;code&gt;.txt.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="22574565-13a8-4206-b281-37528ba5e0ad" data-event-digest="cd0ad57aa5ec265aa0815e421899295d0ffb3eb85f084e30a0edb08d74105692" data-event-key="22574565-13a8-4206-b281-37528ba5e0ad|2026-11-19T122402-352755Z--22574565-13a8-4206-b281-37528ba5e0ad.html" data-event-time="2026-11-19T12:24:02.352755Z">
+        <time datetime="2026-11-19T12:24:02.352755Z">2026-11-19T12:24:02.352755Z</time>
+        <h3>Release job hardening</h3>
+        <div class="rationale"><strong>Rationale</strong>Protects the signing key and catches a wrong key before publishing.</div>
+        <div class="details"><strong>Implementation Details</strong>release environment scoped to v* tags, no Gradle caches or configuration cache in the release job, optional TIDEMARK_CERT_SHA256 pin, AAB certificate must match the APK, keystore deleted with if: always(). Use an alias like tidemark-release so log masking does not hide file names.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055" data-event-digest="3031350bc8463933091b25c735d550dbca1532d596c89d3b57e2f88e7f6c73c2" data-event-key="d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055|2026-11-19T122932-014525Z--d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055.html" data-event-time="2026-11-19T12:29:32.014525Z">
+        <time datetime="2026-11-19T12:29:32.014525Z">2026-11-19T12:29:32.014525Z</time>
+        <h3>Formatter output conventions</h3>
+        <div class="rationale"><strong>Rationale</strong>Matches the plan examples and locale rules.</div>
+        <div class="details"><strong>Implementation Details</strong>steps() returns the bare number; bpm and durations come from string resources (7 h 32 min); times follow the device 12/24-hour setting; ICU for times and day/month labels, java.time for SHORT/MEDIUM/LONG dates; distance 2 decimals below 1, 1 below 100, else 0; mass 1 decimal; energy and heart rate 0. Output contains non-breaking and narrow spaces.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="71045b4c-bef3-4c20-968d-12f7e996298a" data-event-digest="11a5b0c5b206ce5baf3ab10456f8b89b674cf82be0478967a840bbbf7cb03a0e" data-event-key="71045b4c-bef3-4c20-968d-12f7e996298a|2026-11-19T122932-029188Z--71045b4c-bef3-4c20-968d-12f7e996298a.html" data-event-time="2026-11-19T12:29:32.029188Z">
+        <time datetime="2026-11-19T12:29:32.029188Z">2026-11-19T12:29:32.029188Z</time>
+        <h3>One DataStore per preferences file</h3>
+        <div class="rationale"><strong>Rationale</strong>DataStore throws when two instances open the same file.</div>
+        <div class="details"><strong>Implementation Details</strong>The context constructor shares one store per process; SYSTEM clears the stored key; the first grant is stored as epoch milliseconds.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="26d0171f-b7e8-49a7-aa77-75e9ee0827be" data-event-digest="f446119bbf8b1aab532c09f32ab9f107d76108816572378bacc673d4408620f5" data-event-key="26d0171f-b7e8-49a7-aa77-75e9ee0827be|2026-11-19T122932-465220Z--26d0171f-b7e8-49a7-aa77-75e9ee0827be.html" data-event-time="2026-11-19T12:29:32.465220Z">
+        <time datetime="2026-11-19T12:29:32.465220Z">2026-11-19T12:29:32.465220Z</time>
+        <h3>Dashboard sparklines use rolling month windows</h3>
+        <div class="rationale"><strong>Rationale</strong>A WEEK window follows the calendar week, not the last 7 days.</div>
+        <div class="details"><strong>Implementation Details</strong>The dashboard reads MONTH series covering today-6 (today-29 for weight) to today and keeps the rolling days. A bucket day is the day of its midpoint.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="383db21a-70aa-43eb-b3cb-409fdee3e375" data-event-digest="8b5469db71c5e5c31a53b40940393212a1f0cf4acbc1d190bf9204341ef24360" data-event-key="383db21a-70aa-43eb-b3cb-409fdee3e375|2026-11-19T122932-470910Z--383db21a-70aa-43eb-b3cb-409fdee3e375.html" data-event-time="2026-11-19T12:29:32.470910Z">
+        <time datetime="2026-11-19T12:29:32.470910Z">2026-11-19T12:29:32.470910Z</time>
+        <h3>Dashboard loads on resume and pull to refresh only</h3>
+        <div class="rationale"><strong>Rationale</strong>Health Connect foreground rate limits.</div>
+        <div class="details"><strong>Implementation Details</strong>A resume during a load is ignored; pull to refresh restarts it; a failed sparkline keeps the tile value.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="d695cd28-a383-45c8-8d65-0aa52e828160" data-event-digest="611338d15c8e1f31c8c9699bc041b1bd39aaf8ceeb3dea41c9a22c3892d32bbe" data-event-key="d695cd28-a383-45c8-8d65-0aa52e828160|2026-11-19T122932-947697Z--d695cd28-a383-45c8-8d65-0aa52e828160.html" data-event-time="2026-11-19T12:29:32.947697Z">
+        <time datetime="2026-11-19T12:29:32.947697Z">2026-11-19T12:29:32.947697Z</time>
+        <h3>Explorer type selection inside the route</h3>
+        <div class="rationale"><strong>Rationale</strong>Routes and NavHost are frozen.</div>
+        <div class="details"><strong>Implementation Details</strong>The chosen type lives in saved screen state; back returns to the type list only when the explorer opened without a type.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="8cece46b-10de-4016-a28a-a2bc085049d4" data-event-digest="067be99f7465cba1f551aa6be581aec951127b86c95ff3ac05d672eab08a2cd3" data-event-key="8cece46b-10de-4016-a28a-a2bc085049d4|2026-11-19T122932-956760Z--8cece46b-10de-4016-a28a-a2bc085049d4.html" data-event-time="2026-11-19T12:29:32.956760Z">
+        <time datetime="2026-11-19T12:29:32.956760Z">2026-11-19T12:29:32.956760Z</time>
+        <h3>Own constant tables for Health Connect enum values</h3>
+        <div class="rationale"><strong>Rationale</strong>Lint RestrictedApi rejects the SDK built-in name maps.</div>
+        <div class="details"><strong>Implementation Details</strong>Readable EN/FR names for every SDK constant, checked by a reflection test; unknown values show Unknown value (n).</div>
+      </article>
+      <article class="decision-entry" data-entry-id="dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9" data-event-digest="5f343eac08b9ca14e3fc7e109a5d0ca1d1f10feac2fdc69cec018fe0ffc6b60c" data-event-key="dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9|2026-11-19T123157-200662Z--dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9.html" data-event-time="2026-11-19T12:31:57.200662Z">
+        <time datetime="2026-11-19T12:31:57.200662Z">2026-11-19T12:31:57.200662Z</time>
+        <h3>Sleep-stage chart drawn on Canvas</h3>
+        <div class="rationale"><strong>Rationale</strong>Vico 3.3.1 has no step mode or horizontal span layer.</div>
+        <div class="details"><strong>Implementation Details</strong>The hypnogram is a Compose Canvas with one row per stage present, connectors between stages and blank gaps.</div>
+      </article>
+      <article class="decision-entry" data-entry-id="80a1006e-50e2-4e2a-b6a5-3c44f8c031a1" data-event-digest="1902104168b92246ec58b3eb87ab331ee6f2d866c67137bf264b36afbb306aa2" data-event-key="80a1006e-50e2-4e2a-b6a5-3c44f8c031a1|2026-11-19T123157-203500Z--80a1006e-50e2-4e2a-b6a5-3c44f8c031a1.html" data-event-time="2026-11-19T12:31:57.203500Z">
+        <time datetime="2026-11-19T12:31:57.203500Z">2026-11-19T12:31:57.203500Z</time>
+        <h3>Accessible chart drill-down</h3>
+        <div class="rationale"><strong>Rationale</strong>Vico bars are not reachable by TalkBack.</div>
+        <div class="details"><strong>Implementation Details</strong>Vico taps go through a custom marker controller with an invisible marker; a clickable breakdown list under each chart makes drill-down reachable with TalkBack. Daily buckets belong to the date at their midpoint. Sleep plots in hours.</div>
       </article>
     </div>
     <p class="log-section-header">Activity Log</p>
+    <article class="log-entry" data-entry-id="4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1" data-event-digest="914b891b46a6cb9227da65270e59c8c0baacc757d177d04adbe319002c0fdbf0" data-event-key="4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1|2026-11-19T095148-387204Z--4bcd8e7e-a1a5-4d23-9a88-f80d907ad5c1.html" data-event-time="2026-11-19T09:51:48.387204Z">
+      <time datetime="2026-11-19T09:51:48.387204Z">2026-11-19T09:51:48.387204Z</time>
+      <p>Build Tidemark instead of contributing to an existing app — The user chose to build their own app. Heartwood (github.com/GuyOnWifi/heartwood, GPL-3.0, Kotlin/Compose, connect-client 1.1.0, Canvas charts, Robolectric + connect-testing tests, minSdk 28) is the reference for the history-permission flow, paged reads and tests. Health Disconnect (github.com/Monkopedia/health-disconnect, Apache-2.0) is the closest existing explorer.</p>
+    </article>
+    <article class="log-entry" data-entry-id="8970a45b-8b81-4c05-9788-7b59385debb2" data-event-digest="8607790821d6839ceb2e3b93e39955b244b9b5f67e51ba60bdb1fbca0cac5ecc" data-event-key="8970a45b-8b81-4c05-9788-7b59385debb2|2026-11-19T095148-390017Z--8970a45b-8b81-4c05-9788-7b59385debb2.html" data-event-time="2026-11-19T09:51:48.390017Z">
+      <time datetime="2026-11-19T09:51:48.390017Z">2026-11-19T09:51:48.390017Z</time>
+      <p>License GPL-3.0 — Tidemark is licensed GPL-3.0 (LICENSE already in repo).</p>
+    </article>
+    <article class="log-entry" data-entry-id="6ac84ae9-779d-4940-be4f-2597c47ad125" data-event-digest="0a3cdaacf26ef6a1e52bfc50419f430b68f7fa9ed70375095c026f5aaccd64a4" data-event-key="6ac84ae9-779d-4940-be4f-2597c47ad125|2026-11-19T095148-392772Z--6ac84ae9-779d-4940-be4f-2597c47ad125.html" data-event-time="2026-11-19T09:51:48.392772Z">
+      <time datetime="2026-11-19T09:51:48.392772Z">2026-11-19T09:51:48.392772Z</time>
+      <p>No network, on-device only — The manifest declares no INTERNET permission. No backend, no sync, no analytics, no crash reporting service. Export to CSV/JSON is a later nice-to-have.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b7d39205-5dad-4825-b395-04885ff67511" data-event-digest="f88256cded19946cc6dd4f7e7df82e00e8d4467b8f89ce5c0349503deb3d8e24" data-event-key="b7d39205-5dad-4825-b395-04885ff67511|2026-11-19T095148-395462Z--b7d39205-5dad-4825-b395-04885ff67511.html" data-event-time="2026-11-19T09:51:48.395462Z">
+      <time datetime="2026-11-19T09:51:48.395462Z">2026-11-19T09:51:48.395462Z</time>
+      <p>Same eight record types in every build, no flavor split — Explorer coverage equals the v1 types. An explorer covering all ~40 Health Connect types and a Play/GitHub flavor split were both rejected.</p>
+    </article>
+    <article class="log-entry" data-entry-id="852c3122-6d55-4db6-82ad-70b75212951c" data-event-digest="9318bd586024290d19f9f0be99276340cb92bbef16f0ee0ed7d8f32d4a91380e" data-event-key="852c3122-6d55-4db6-82ad-70b75212951c|2026-11-19T095148-398079Z--852c3122-6d55-4db6-82ad-70b75212951c.html" data-event-time="2026-11-19T09:51:48.398079Z">
+      <time datetime="2026-11-19T09:51:48.398079Z">2026-11-19T09:51:48.398079Z</time>
+      <p>History permission with 30-day fallback — Request PERMISSION_READ_HEALTH_DATA_HISTORY only when getFeatureStatus(FEATURE_READ_HEALTH_DATA_HISTORY) returns available. Where it is unavailable or denied, show a banner and fall back to the default window, which is 30 days before the first permission grant.</p>
+    </article>
+    <article class="log-entry" data-entry-id="0cc9d32d-52cc-49b0-9029-3d60c2a640c9" data-event-digest="ae43bc8b4ccde82ffbd679720f680b2f3c609f232459b0a60fb33f1095d74c55" data-event-key="0cc9d32d-52cc-49b0-9029-3d60c2a640c9|2026-11-19T095148-401226Z--0cc9d32d-52cc-49b0-9029-3d60c2a640c9.html" data-event-time="2026-11-19T09:51:48.401226Z">
+      <time datetime="2026-11-19T09:51:48.401226Z">2026-11-19T09:51:48.401226Z</time>
+      <p>Aggregates for charts, no source picker — Dashboard charts use aggregate, aggregateGroupByPeriod and aggregateGroupByDuration. The explorer shows per-record dataOrigin with a filter by source.</p>
+    </article>
+    <article class="log-entry" data-entry-id="1ae9581f-672f-4300-bb43-20d289ddce00" data-event-digest="80fdd9ef991086635472a646444f846cf341a01547ccb724a60e0e3abf42435c" data-event-key="1ae9581f-672f-4300-bb43-20d289ddce00|2026-11-19T095148-405011Z--1ae9581f-672f-4300-bb43-20d289ddce00.html" data-event-time="2026-11-19T09:51:48.405011Z">
+      <time datetime="2026-11-19T09:51:48.405011Z">2026-11-19T09:51:48.405011Z</time>
+      <p>Live queries, no local cache — Every screen reads Health Connect directly. No Room database or cache in v1.</p>
+    </article>
+    <article class="log-entry" data-entry-id="018db5dc-1bb3-43cc-8bc2-6cb239c5cf97" data-event-digest="084aa1030c4de9a4e2e99367bdf2447b25e911d9e8f828d8b2e7825982330062" data-event-key="018db5dc-1bb3-43cc-8bc2-6cb239c5cf97|2026-11-19T095148-408646Z--018db5dc-1bb3-43cc-8bc2-6cb239c5cf97.html" data-event-time="2026-11-19T09:51:48.408646Z">
+      <time datetime="2026-11-19T09:51:48.408646Z">2026-11-19T09:51:48.408646Z</time>
+      <p>Vico for charts — Use Vico (compose-m3) for sparklines and detail charts. Fall back to a custom Compose Canvas only for the sleep-stage hypnogram if Vico doesn't fit.</p>
+    </article>
+    <article class="log-entry" data-entry-id="c3a383f4-af59-4263-9dc4-22fcb6884668" data-event-digest="9863ad4481a8573792604bd5ea1d3f7461206dc3877ecab4226707d1460dd279" data-event-key="c3a383f4-af59-4263-9dc4-22fcb6884668|2026-11-19T095148-412848Z--c3a383f4-af59-4263-9dc4-22fcb6884668.html" data-event-time="2026-11-19T09:51:48.412848Z">
+      <time datetime="2026-11-19T09:51:48.412848Z">2026-11-19T09:51:48.412848Z</time>
+      <p>Manual DI, single module — One app module and an AppContainer created in the Application class. No Hilt, no multi-module split.</p>
+    </article>
+    <article class="log-entry" data-entry-id="875e8bc1-9401-4968-addf-48c12028d59e" data-event-digest="90d4b911ad699605da88128a3c79298b3483667459c9178a80a3fbd99321ddbc" data-event-key="875e8bc1-9401-4968-addf-48c12028d59e|2026-11-19T095148-416456Z--875e8bc1-9401-4968-addf-48c12028d59e.html" data-event-time="2026-11-19T09:51:48.416456Z">
+      <time datetime="2026-11-19T09:51:48.416456Z">2026-11-19T09:51:48.416456Z</time>
+      <p>Distribution order and signing — GitHub Releases first, Google Play later once the permission set is stable, under the reddevs Organization developer account. F-Droid and IzzyOnDroid are possible later but not chosen. One key and one applicationId across channels; our own key uploaded to Play App Signing.</p>
+    </article>
+    <article class="log-entry" data-entry-id="9ddeb092-1176-445f-966e-e445f9674111" data-event-digest="3fe6b5720a0e273af249499b63b3037408cfe1dc9d06769a3ac993c163d7a91d" data-event-key="9ddeb092-1176-445f-966e-e445f9674111|2026-11-19T095148-419713Z--9ddeb092-1176-445f-966e-e445f9674111.html" data-event-time="2026-11-19T09:51:48.419713Z">
+      <time datetime="2026-11-19T09:51:48.419713Z">2026-11-19T09:51:48.419713Z</time>
+      <p>Privacy policy as PRIVACY.md in EN and FR — PRIVACY.md and its French version live at the repo root, are published via GitHub Pages, and are bundled into the app for the rationale screen. Short and honest: no collection, no network, on-device only.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b052d478-0610-4395-aff5-14592b4e2ca3" data-event-digest="297e77abb5864168c1ef8842c97d36d8ecc3c24d1b7f714d30a223b451d65d2a" data-event-key="b052d478-0610-4395-aff5-14592b4e2ca3|2026-11-19T095758-542875Z--b052d478-0610-4395-aff5-14592b4e2ca3.html" data-event-time="2026-11-19T09:57:58.542875Z">
+      <time datetime="2026-11-19T09:57:58.542875Z">2026-11-19T09:57:58.542875Z</time>
+      <p>Frozen contracts and compiling stubs from T-001 — T-001 writes HealthRepository, domain models, MeasurementFormatter, UserPreferences, Routes, AppContainer and a compiling stub for every Wave 1 class. Wave 1 agents may not change those signatures; changes go through the plan's blocker process.</p>
+    </article>
+    <article class="log-entry" data-entry-id="1f7a92ad-c683-4365-ba60-b9f718b4b5eb" data-event-digest="8c38e4bfc9fe41010eb0dc272906c58f5e5ab7f31173e2e27af340b474ec533b" data-event-key="1f7a92ad-c683-4365-ba60-b9f718b4b5eb|2026-11-19T095758-545661Z--1f7a92ad-c683-4365-ba60-b9f718b4b5eb.html" data-event-time="2026-11-19T09:57:58.545661Z">
+      <time datetime="2026-11-19T09:57:58.545661Z">2026-11-19T09:57:58.545661Z</time>
+      <p>One strings file per feature — Each feature owns values/strings_&lt;feature&gt;.xml and values-fr/strings_&lt;feature&gt;.xml; T-001 owns strings_common.xml.</p>
+    </article>
+    <article class="log-entry" data-entry-id="56312895-ee9b-4627-a683-3e7d3c3c8544" data-event-digest="0e4fcf533ebc0b0ec8b8e9a6cf998c0f4efcf201900eb5c510a874f726c5f97a" data-event-key="56312895-ee9b-4627-a683-3e7d3c3c8544|2026-11-19T095758-548236Z--56312895-ee9b-4627-a683-3e7d3c3c8544.html" data-event-time="2026-11-19T09:57:58.548236Z">
+      <time datetime="2026-11-19T09:57:58.548236Z">2026-11-19T09:57:58.548236Z</time>
+      <p>Wave 1 agents run in separate worktrees — Each Wave 1 child uses isolation worktree from the committed Wave 0 base. Children never commit; the primary session copies each workstream's owned paths back and verifies the merged tree.</p>
+    </article>
+    <article class="log-entry" data-entry-id="90742ee7-6636-4c92-9174-91460b6639f9" data-event-digest="a90c0628e04ae022e8f6fa0c3ade0dfb3274546cf732bfb37bfc18fbdea139cc" data-event-key="90742ee7-6636-4c92-9174-91460b6639f9|2026-11-19T095758-553148Z--90742ee7-6636-4c92-9174-91460b6639f9.html" data-event-time="2026-11-19T09:57:58.553148Z">
+      <time datetime="2026-11-19T09:57:58.553148Z">2026-11-19T09:57:58.553148Z</time>
+      <p>Unit system resolution — LocaleData.getMeasurementSystem picks the default: US gets miles and pounds, UK miles and kilograms, everyone else metric. The override switches metric or imperial as a whole. Energy is always kcal. No stones in v1.</p>
+    </article>
+    <article class="log-entry" data-entry-id="dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d" data-event-digest="4098950f8224f36b1c6290c768ce8bce80dff30a7956787d1b74634568816eee" data-event-key="dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d|2026-11-19T095758-556540Z--dbcd2c7f-dbd4-4bdb-9dd5-ebdb7c23466d.html" data-event-time="2026-11-19T09:57:58.556540Z">
+      <time datetime="2026-11-19T09:57:58.556540Z">2026-11-19T09:57:58.556540Z</time>
+      <p>Chart bucket rules — Day range: hourly buckets via aggregateGroupByDuration. Week and month: daily buckets; year: monthly buckets via aggregateGroupByPeriod. Year view of cumulative metrics shows the daily average per month over days with data. Weeks start per WeekFields.of(locale). Sleep buckets run noon to noon.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b3c1dbde-621e-44ef-8505-9374fb23d00f" data-event-digest="69f10b2ec318c89215dc29dbce3e7b0ad540fc761f781fcdb151baf1fab6139f" data-event-key="b3c1dbde-621e-44ef-8505-9374fb23d00f|2026-11-19T095758-559369Z--b3c1dbde-621e-44ef-8505-9374fb23d00f.html" data-event-time="2026-11-19T09:57:58.559369Z">
+      <time datetime="2026-11-19T09:57:58.559369Z">2026-11-19T09:57:58.559369Z</time>
+      <p>Last-night sleep selection — Last night is the longest SleepSession ending between 12:00 yesterday and now. With overlapping sessions from several apps, the tile shows the longest and names its source.</p>
+    </article>
+    <article class="log-entry" data-entry-id="cd59b705-1925-4b2a-8433-fc56e66bd102" data-event-digest="3c1627fff3fb7d850bd123815047d8f3ec1506109f3e02ca3a7613628fa279b8" data-event-key="cd59b705-1925-4b2a-8433-fc56e66bd102|2026-11-19T095758-562587Z--cd59b705-1925-4b2a-8433-fc56e66bd102.html" data-event-time="2026-11-19T09:57:58.562587Z">
+      <time datetime="2026-11-19T09:57:58.562587Z">2026-11-19T09:57:58.562587Z</time>
+      <p>HeartRate visible in the resting HR day view — The resting heart rate detail day view plots that day's HeartRate samples with the resting value as a reference line. ExerciseSession is visible through the explorer.</p>
+    </article>
+    <article class="log-entry" data-entry-id="51116289-d042-456c-b51b-f6131554099a" data-event-digest="0efdef5d1d67a1e4c8e22bd5a3d05fa90307c52db829567a0f039881c176ae5c" data-event-key="51116289-d042-456c-b51b-f6131554099a|2026-11-19T095758-566153Z--51116289-d042-456c-b51b-f6131554099a.html" data-event-time="2026-11-19T09:57:58.566153Z">
+      <time datetime="2026-11-19T09:57:58.566153Z">2026-11-19T09:57:58.566153Z</time>
+      <p>Explorer source list and app labels — Source chips are the union of AggregationResult.dataOrigins and the origins seen in loaded pages. App labels resolve through PackageManager using a &lt;queries&gt; intent entry for androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE, falling back to the package name.</p>
+    </article>
+    <article class="log-entry" data-entry-id="a2b4cd4f-590e-49df-85bf-e2960ceb8789" data-event-digest="1ba3709e021e7d6da0c8fc802776bbca00980d2709d09e98b75aede2a764a8c7" data-event-key="a2b4cd4f-590e-49df-85bf-e2960ceb8789|2026-11-19T095758-569270Z--a2b4cd4f-590e-49df-85bf-e2960ceb8789.html" data-event-time="2026-11-19T09:57:58.569270Z">
+      <time datetime="2026-11-19T09:57:58.569270Z">2026-11-19T09:57:58.569270Z</time>
+      <p>Local preferences in DataStore — DataStore Preferences holds only the unit override and the first time a permission was seen granted. Explorer paging is manual (100 per page), no Paging 3.</p>
+    </article>
+    <article class="log-entry" data-entry-id="f64c30fc-d4ef-499b-b6e5-1c7e038eec3c" data-event-digest="c6f5adfebfe84574c4cfc5090791162c5896be2e698bf6f6b69563d15a6068db" data-event-key="f64c30fc-d4ef-499b-b6e5-1c7e038eec3c|2026-11-19T095758-572430Z--f64c30fc-d4ef-499b-b6e5-1c7e038eec3c.html" data-event-time="2026-11-19T09:57:58.572430Z">
+      <time datetime="2026-11-19T09:57:58.572430Z">2026-11-19T09:57:58.572430Z</time>
+      <p>Privacy policy single source and bundling — PRIVACY.md and PRIVACY.fr.md at the repo root are copied into app assets by a Gradle task and published by a Pages workflow at /privacy/ and /fr/privacy/. The app renders them with a small built-in Markdown renderer.</p>
+    </article>
+    <article class="log-entry" data-entry-id="9ac33394-b7a5-4031-9a44-30dd88e47550" data-event-digest="192f934eaf80847451c07b9906216f600e8cba43d8aa3d3f6efb15065d54ec47" data-event-key="9ac33394-b7a5-4031-9a44-30dd88e47550|2026-11-19T095758-575302Z--9ac33394-b7a5-4031-9a44-30dd88e47550.html" data-event-time="2026-11-19T09:57:58.575302Z">
+      <time datetime="2026-11-19T09:57:58.575302Z">2026-11-19T09:57:58.575302Z</time>
+      <p>Versioning and release checks — gradle.properties holds tidemark.versionName and tidemark.versionCode, bumped by hand. The release workflow fails if the tag is not v+versionName or the versionCode did not increase. One integer sequence covers GitHub and Play.</p>
+    </article>
+    <article class="log-entry" data-entry-id="319cab0b-b6ec-4f8c-95b7-e5173644adf0" data-event-digest="e93cff37cccf6b193ccf0b9aa608a6d5d22139e22e143f31acad3f1feed7a90e" data-event-key="319cab0b-b6ec-4f8c-95b7-e5173644adf0|2026-11-19T095758-578000Z--319cab0b-b6ec-4f8c-95b7-e5173644adf0.html" data-event-time="2026-11-19T09:57:58.578000Z">
+      <time datetime="2026-11-19T09:57:58.578000Z">2026-11-19T09:57:58.578000Z</time>
+      <p>Network removal enforced in CI — The manifest removes INTERNET and ACCESS_NETWORK_STATE with tools:node=remove, and CI fails if the release APK requests any permission outside the nine Health Connect read permissions. allowBackup is false.</p>
+    </article>
+    <article class="log-entry" data-entry-id="1ea9347b-a126-4452-a5e0-2e27d9a72a80" data-event-digest="e2673d5c5477ece750be2ebc2cfa6cb05e5a505d362e817c2fad10b3e53d3807" data-event-key="1ea9347b-a126-4452-a5e0-2e27d9a72a80|2026-11-19T095758-580520Z--1ea9347b-a126-4452-a5e0-2e27d9a72a80.html" data-event-time="2026-11-19T09:57:58.580520Z">
+      <time datetime="2026-11-19T09:57:58.580520Z">2026-11-19T09:57:58.580520Z</time>
+      <p>Store text in fastlane metadata layout — Store text lives in fastlane/metadata/android/en-US and fr-FR.</p>
+    </article>
+    <article class="log-entry" data-entry-id="bf6018be-67ac-4180-a319-0cd6d9444c33" data-event-digest="181b1e4cd9bf8c380f7cb385c4635fe382a7af4cfc9ce4fab1b75de413297d5c" data-event-key="bf6018be-67ac-4180-a319-0cd6d9444c33|2026-11-19T103350-109474Z--bf6018be-67ac-4180-a319-0cd6d9444c33.html" data-event-time="2026-11-19T10:33:50.109474Z">
+      <time datetime="2026-11-19T10:33:50.109474Z">2026-11-19T10:33:50.109474Z</time>
+      <p>License GPL-3.0-or-later with SPDX headers — Tidemark is GPL-3.0-or-later. Every Kotlin, Gradle and workflow file starts with SPDX-License-Identifier: GPL-3.0-or-later. Files borrowed from Heartwood or Health Disconnect keep their original copyright line next to ours. The user deferred to this recommendation on 2026-11-19.</p>
+    </article>
+    <article class="log-entry" data-entry-id="764b803f-68d2-4eb2-8ac3-737f5dab98a2" data-event-digest="1775b78ca86222d1fc178251705b9fa14b3f724787b82a9c256a59dbb67f924f" data-event-key="764b803f-68d2-4eb2-8ac3-737f5dab98a2|2026-11-19T103350-113218Z--764b803f-68d2-4eb2-8ac3-737f5dab98a2.html" data-event-time="2026-11-19T10:33:50.113218Z">
+      <time datetime="2026-11-19T10:33:50.113218Z">2026-11-19T10:33:50.113218Z</time>
+      <p>Privacy policy on tidemark.reddevs.io — GitHub Pages serves the privacy policy at https://tidemark.reddevs.io/privacy/ and /fr/privacy/, with HTTPS enforced. One-time setup: DNS CNAME tidemark -&gt; reddevs-io.github.io, verify reddevs.io in the GitHub organization Pages settings, set the custom domain on the repo. This URL goes to Play and into PRIVACY.md.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b8521704-4a6f-4938-81d8-77a18adf157b" data-event-digest="23c1594c33d71448517e38ba61cb90549d4bf32097ea6c90de588ec2ae789e94" data-event-key="b8521704-4a6f-4938-81d8-77a18adf157b|2026-11-19T103350-116866Z--b8521704-4a6f-4938-81d8-77a18adf157b.html" data-event-time="2026-11-19T10:33:50.116866Z">
+      <time datetime="2026-11-19T10:33:50.116866Z">2026-11-19T10:33:50.116866Z</time>
+      <p>Commit and push authorization — On 2026-11-19 the user authorized the primary session to commit and push whenever it judges the work ready. Release tags still need the user's go-ahead because a tag publishes a release. Explicit-path staging and no AI attribution still apply.</p>
+    </article>
+    <article class="log-entry" data-entry-id="0679591f-7811-4240-a51e-60b8884cfa61" data-event-digest="f80968091d0d4acddb84c6c7c1722713f99bb1f6aa3741caf59ea94fd33fac8b" data-event-key="0679591f-7811-4240-a51e-60b8884cfa61|2026-11-19T105435-753099Z--0679591f-7811-4240-a51e-60b8884cfa61.html" data-event-time="2026-11-19T10:54:35.753099Z">
+      <time datetime="2026-11-19T10:54:35.753099Z">2026-11-19T10:54:35.753099Z</time>
+      <p>compileSdk 37, targetSdk 36 — app/build.gradle.kts compiles against SDK 37 and targets 36. Supersedes the design's compileSdk 36.</p>
+    </article>
+    <article class="log-entry" data-entry-id="64d45fd3-f64f-4874-b110-c7fa370406de" data-event-digest="f0c04b1da7578a9b3f1628dda92027b1280b196b69b43c524ce04365ce213276" data-event-key="64d45fd3-f64f-4874-b110-c7fa370406de|2026-11-19T105435-756592Z--64d45fd3-f64f-4874-b110-c7fa370406de.html" data-event-time="2026-11-19T10:54:35.756592Z">
+      <time datetime="2026-11-19T10:54:35.756592Z">2026-11-19T10:54:35.756592Z</time>
+      <p>Toolchain pinned by T-001 — AGP 9.5.1 with built-in Kotlin (no kotlin-android plugin), Kotlin 2.4.21, Gradle 9.9.1 with a wrapper checksum, Compose BOM 2026.09.00, Navigation 2.10.2, Vico 3.3.1, DataStore 1.3.0, connect-client 1.1.0, connect-testing 1.0.0-alpha03, Robolectric 4.18.1.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b18836a9-6461-4c05-9bc3-56ca3b2f5e81" data-event-digest="05d46e55fa768f9b8960173d4470dcedccf64bb212f20cbf74f8679dcee6ae2a" data-event-key="b18836a9-6461-4c05-9bc3-56ca3b2f5e81|2026-11-19T105435-759649Z--b18836a9-6461-4c05-9bc3-56ca3b2f5e81.html" data-event-time="2026-11-19T10:54:35.759649Z">
+      <time datetime="2026-11-19T10:54:35.759649Z">2026-11-19T10:54:35.759649Z</time>
+      <p>Robolectric at SDK 34 on JDK 17 — app/src/test/resources/robolectric.properties sets sdk=34. Tests must not use @Config(sdk = 35+).</p>
+    </article>
+    <article class="log-entry" data-entry-id="a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8" data-event-digest="065c47bb289681065d281749906c99efc9ef874d424eb80ac1ea4f44fc961570" data-event-key="a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8|2026-11-19T105435-768240Z--a5873f36-5b0b-4c8b-a4e7-1deaac4b38c8.html" data-event-time="2026-11-19T10:54:35.768240Z">
+      <time datetime="2026-11-19T10:54:35.768240Z">2026-11-19T10:54:35.768240Z</time>
+      <p>Allowed non-Health permission from androidx — The APK requests io.reddevs.tidemark.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION, an app-private signature permission that androidx.core adds for non-exported dynamic receivers. ManifestContractTest allows it, and the T-008 CI permission check must allow it too.</p>
+    </article>
+    <article class="log-entry" data-entry-id="b0e9126a-98fb-43e8-bfb4-f62ca2dab914" data-event-digest="44293e2f51c2e9c6bae21478f3848420672a727d252bbe8ba884527dc0a781f5" data-event-key="b0e9126a-98fb-43e8-bfb4-f62ca2dab914|2026-11-19T120933-151711Z--b0e9126a-98fb-43e8-bfb4-f62ca2dab914.html" data-event-time="2026-11-19T12:09:33.151711Z">
+      <time datetime="2026-11-19T12:09:33.151711Z">2026-11-19T12:09:33.151711Z</time>
+      <p>Markdown without hard wraps — Every Markdown file keeps one paragraph per line, so the in-app privacy renderer never has to join wrapped lines.</p>
+    </article>
+    <article class="log-entry" data-entry-id="2ff407bb-3368-44a4-bb87-65de7c7b723f" data-event-digest="d8a13b6c467795bf0a18fe40d770d5f6630a914decc9a85c53eeb70b12183b86" data-event-key="2ff407bb-3368-44a4-bb87-65de7c7b723f|2026-11-19T121734-376167Z--2ff407bb-3368-44a4-bb87-65de7c7b723f.html" data-event-time="2026-11-19T12:17:34.376167Z">
+      <time datetime="2026-11-19T12:17:34.376167Z">2026-11-19T12:17:34.376167Z</time>
+      <p>Privacy Markdown subset — The in-app renderer supports headings, paragraphs, bullet lists, bold and links (inline, &lt;url&gt;, bare http(s)). Other link schemes render as plain text and unsupported blocks show as plain lines.</p>
+    </article>
+    <article class="log-entry" data-entry-id="190ad4f6-c700-43c0-a2f6-ef97597c4070" data-event-digest="5edf2cdb604c8348071062205f6e976e84bbd9d2d8b20304c467cdf757c07c38" data-event-key="190ad4f6-c700-43c0-a2f6-ef97597c4070|2026-11-19T121909-405603Z--190ad4f6-c700-43c0-a2f6-ef97597c4070.html" data-event-time="2026-11-19T12:19:09.405603Z">
+      <time datetime="2026-11-19T12:19:09.405603Z">2026-11-19T12:19:09.405603Z</time>
+      <p>Sleep series points labelled by morning — Sleep queries run noon to noon, but each point start is the morning calendar day at 00:00, so start.toLocalDate() is the day for every metric. The sleep day view is one noon-to-noon bucket.</p>
+    </article>
+    <article class="log-entry" data-entry-id="30b1b90a-7d19-4548-b2d5-a02f96beda9c" data-event-digest="f34ea4f8b0a049c5f909a47b36498074dbd0dfce3ae8c36c801f2f99e937bd65" data-event-key="30b1b90a-7d19-4548-b2d5-a02f96beda9c|2026-11-19T121909-417417Z--30b1b90a-7d19-4548-b2d5-a02f96beda9c.html" data-event-time="2026-11-19T12:19:09.417417Z">
+      <time datetime="2026-11-19T12:19:09.417417Z">2026-11-19T12:19:09.417417Z</time>
+      <p>Series summary statistics — Cumulative metrics: total is the window sum, average is per bucket with data (hour in day view, day otherwise), min and max over displayed points. Weight and resting HR: total null, average is the mean of bucket averages, min and max from bucket extremes. The year view of cumulative metrics makes one daily-bucket call and folds it into months; weight and resting HR use monthly buckets.</p>
+    </article>
+    <article class="log-entry" data-entry-id="94743053-2c91-4914-9965-238f12907758" data-event-digest="fca2c0803965e7b9580b39c5e9bd0bddfd579e12ec81d6db0e975a467fad2b65" data-event-key="94743053-2c91-4914-9965-238f12907758|2026-11-19T121909-426669Z--94743053-2c91-4914-9965-238f12907758.html" data-event-time="2026-11-19T12:19:09.426669Z">
+      <time datetime="2026-11-19T12:19:09.426669Z">2026-11-19T12:19:09.426669Z</time>
+      <p>Health Connect error mapping — Rate limits map to RateLimited (platform error code on API 34+, message match on 28 to 33); RemoteException and IOException to Unavailable; SecurityException to PermissionMissing(type); everything else to Unexpected. readRecord treats IllegalArgumentException (unknown id) as null. Sleep tie-break: longest, then later end, then package name, then id.</p>
+    </article>
+    <article class="log-entry" data-entry-id="e237ce6b-90c6-4b73-ab82-10af64fd86ee" data-event-digest="61ed15700529d5d69160de8a93a9b2600468b8a39d6f37f58de161b6c1294fa0" data-event-key="e237ce6b-90c6-4b73-ab82-10af64fd86ee|2026-11-19T122402-328500Z--e237ce6b-90c6-4b73-ab82-10af64fd86ee.html" data-event-time="2026-11-19T12:24:02.328500Z">
+      <time datetime="2026-11-19T12:24:02.328500Z">2026-11-19T12:24:02.328500Z</time>
+      <p>Permission check is an exact match — scripts/check-permissions.sh fails on any extra permission and on any missing allowed one (9 Health Connect reads plus the androidx private permission). The allow-list changes together with docs/play/health-declaration.md.</p>
+    </article>
+    <article class="log-entry" data-entry-id="7ec4b07b-373f-4947-83fe-95c1c8cc5a8a" data-event-digest="9f878059ef37e6410a723c171719cf76b71385c9faa8c2a651873ddfbd9dfe8a" data-event-key="7ec4b07b-373f-4947-83fe-95c1c8cc5a8a|2026-11-19T122402-338741Z--7ec4b07b-373f-4947-83fe-95c1c8cc5a8a.html" data-event-time="2026-11-19T12:24:02.338741Z">
+      <time datetime="2026-11-19T12:24:02.338741Z">2026-11-19T12:24:02.338741Z</time>
+      <p>versionCode gate uses a versionCode asset on every release — Each GitHub Release carries a versionCode file; a new tag must exceed the highest published code, pre-releases included, and needs fastlane changelogs/&lt;code&gt;.txt.</p>
+    </article>
+    <article class="log-entry" data-entry-id="22574565-13a8-4206-b281-37528ba5e0ad" data-event-digest="cd0ad57aa5ec265aa0815e421899295d0ffb3eb85f084e30a0edb08d74105692" data-event-key="22574565-13a8-4206-b281-37528ba5e0ad|2026-11-19T122402-352755Z--22574565-13a8-4206-b281-37528ba5e0ad.html" data-event-time="2026-11-19T12:24:02.352755Z">
+      <time datetime="2026-11-19T12:24:02.352755Z">2026-11-19T12:24:02.352755Z</time>
+      <p>Release job hardening — release environment scoped to v* tags, no Gradle caches or configuration cache in the release job, optional TIDEMARK_CERT_SHA256 pin, AAB certificate must match the APK, keystore deleted with if: always(). Use an alias like tidemark-release so log masking does not hide file names.</p>
+    </article>
+    <article class="log-entry" data-entry-id="d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055" data-event-digest="3031350bc8463933091b25c735d550dbca1532d596c89d3b57e2f88e7f6c73c2" data-event-key="d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055|2026-11-19T122932-014525Z--d7c641bc-8eb8-42ca-b1c3-3c7c7fc2b055.html" data-event-time="2026-11-19T12:29:32.014525Z">
+      <time datetime="2026-11-19T12:29:32.014525Z">2026-11-19T12:29:32.014525Z</time>
+      <p>Formatter output conventions — steps() returns the bare number; bpm and durations come from string resources (7 h 32 min); times follow the device 12/24-hour setting; ICU for times and day/month labels, java.time for SHORT/MEDIUM/LONG dates; distance 2 decimals below 1, 1 below 100, else 0; mass 1 decimal; energy and heart rate 0. Output contains non-breaking and narrow spaces.</p>
+    </article>
+    <article class="log-entry" data-entry-id="71045b4c-bef3-4c20-968d-12f7e996298a" data-event-digest="11a5b0c5b206ce5baf3ab10456f8b89b674cf82be0478967a840bbbf7cb03a0e" data-event-key="71045b4c-bef3-4c20-968d-12f7e996298a|2026-11-19T122932-029188Z--71045b4c-bef3-4c20-968d-12f7e996298a.html" data-event-time="2026-11-19T12:29:32.029188Z">
+      <time datetime="2026-11-19T12:29:32.029188Z">2026-11-19T12:29:32.029188Z</time>
+      <p>One DataStore per preferences file — The context constructor shares one store per process; SYSTEM clears the stored key; the first grant is stored as epoch milliseconds.</p>
+    </article>
+    <article class="log-entry" data-entry-id="26d0171f-b7e8-49a7-aa77-75e9ee0827be" data-event-digest="f446119bbf8b1aab532c09f32ab9f107d76108816572378bacc673d4408620f5" data-event-key="26d0171f-b7e8-49a7-aa77-75e9ee0827be|2026-11-19T122932-465220Z--26d0171f-b7e8-49a7-aa77-75e9ee0827be.html" data-event-time="2026-11-19T12:29:32.465220Z">
+      <time datetime="2026-11-19T12:29:32.465220Z">2026-11-19T12:29:32.465220Z</time>
+      <p>Dashboard sparklines use rolling month windows — The dashboard reads MONTH series covering today-6 (today-29 for weight) to today and keeps the rolling days. A bucket day is the day of its midpoint.</p>
+    </article>
+    <article class="log-entry" data-entry-id="383db21a-70aa-43eb-b3cb-409fdee3e375" data-event-digest="8b5469db71c5e5c31a53b40940393212a1f0cf4acbc1d190bf9204341ef24360" data-event-key="383db21a-70aa-43eb-b3cb-409fdee3e375|2026-11-19T122932-470910Z--383db21a-70aa-43eb-b3cb-409fdee3e375.html" data-event-time="2026-11-19T12:29:32.470910Z">
+      <time datetime="2026-11-19T12:29:32.470910Z">2026-11-19T12:29:32.470910Z</time>
+      <p>Dashboard loads on resume and pull to refresh only — A resume during a load is ignored; pull to refresh restarts it; a failed sparkline keeps the tile value.</p>
+    </article>
+    <article class="log-entry" data-entry-id="d695cd28-a383-45c8-8d65-0aa52e828160" data-event-digest="611338d15c8e1f31c8c9699bc041b1bd39aaf8ceeb3dea41c9a22c3892d32bbe" data-event-key="d695cd28-a383-45c8-8d65-0aa52e828160|2026-11-19T122932-947697Z--d695cd28-a383-45c8-8d65-0aa52e828160.html" data-event-time="2026-11-19T12:29:32.947697Z">
+      <time datetime="2026-11-19T12:29:32.947697Z">2026-11-19T12:29:32.947697Z</time>
+      <p>Explorer type selection inside the route — The chosen type lives in saved screen state; back returns to the type list only when the explorer opened without a type.</p>
+    </article>
+    <article class="log-entry" data-entry-id="8cece46b-10de-4016-a28a-a2bc085049d4" data-event-digest="067be99f7465cba1f551aa6be581aec951127b86c95ff3ac05d672eab08a2cd3" data-event-key="8cece46b-10de-4016-a28a-a2bc085049d4|2026-11-19T122932-956760Z--8cece46b-10de-4016-a28a-a2bc085049d4.html" data-event-time="2026-11-19T12:29:32.956760Z">
+      <time datetime="2026-11-19T12:29:32.956760Z">2026-11-19T12:29:32.956760Z</time>
+      <p>Own constant tables for Health Connect enum values — Readable EN/FR names for every SDK constant, checked by a reflection test; unknown values show Unknown value (n).</p>
+    </article>
+    <article class="log-entry" data-entry-id="dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9" data-event-digest="5f343eac08b9ca14e3fc7e109a5d0ca1d1f10feac2fdc69cec018fe0ffc6b60c" data-event-key="dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9|2026-11-19T123157-200662Z--dc7ea459-e87f-4d48-9b9d-4f72dc13b4e9.html" data-event-time="2026-11-19T12:31:57.200662Z">
+      <time datetime="2026-11-19T12:31:57.200662Z">2026-11-19T12:31:57.200662Z</time>
+      <p>Sleep-stage chart drawn on Canvas — The hypnogram is a Compose Canvas with one row per stage present, connectors between stages and blank gaps.</p>
+    </article>
+    <article class="log-entry" data-entry-id="80a1006e-50e2-4e2a-b6a5-3c44f8c031a1" data-event-digest="1902104168b92246ec58b3eb87ab331ee6f2d866c67137bf264b36afbb306aa2" data-event-key="80a1006e-50e2-4e2a-b6a5-3c44f8c031a1|2026-11-19T123157-203500Z--80a1006e-50e2-4e2a-b6a5-3c44f8c031a1.html" data-event-time="2026-11-19T12:31:57.203500Z">
+      <time datetime="2026-11-19T12:31:57.203500Z">2026-11-19T12:31:57.203500Z</time>
+      <p>Accessible chart drill-down — Vico taps go through a custom marker controller with an invisible marker; a clickable breakdown list under each chart makes drill-down reachable with TalkBack. Daily buckets belong to the date at their midpoint. Sleep plots in hours.</p>
+    </article>
   </body>
 </html>

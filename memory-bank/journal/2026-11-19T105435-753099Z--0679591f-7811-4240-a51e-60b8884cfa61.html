@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="0679591f-7811-4240-a51e-60b8884cfa61" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T10:54:35.753099Z">2026-11-19T10:54:35.753099Z</time>
-  <h3>compileSdk 37, targetSdk 36</h3>
-  <div class="rationale"><strong>Rationale</strong>Compose 1.12 (BOM 2026.09.00), Navigation 2.10 and Vico 3.3 fail checkAarMetadata below compileSdk 37. compileSdk changes only the build, not runtime behaviour, and connect-client 1.1.0 needs at least 36.</div>
-  <div class="details"><strong>Details</strong>app/build.gradle.kts compiles against SDK 37 and targets 36. Supersedes the design's compileSdk 36.</div>
-</article>

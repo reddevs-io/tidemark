@@ -1,7 +1,0 @@
-<link href="journal.css" rel="stylesheet">
-<article class="entry" data-entry-id="56312895-ee9b-4627-a683-3e7d3c3c8544" data-kind="decision" data-schema-version="2" data-session-id="1ddffc95-64fb-4951-b127-caecca016c52" data-target="decisionLog">
-  <time datetime="2026-11-19T09:57:58.548236Z">2026-11-19T09:57:58.548236Z</time>
-  <h3>Wave 1 agents run in separate worktrees</h3>
-  <div class="rationale"><strong>Rationale</strong>With one module, a half-written file in one stream breaks every other stream's compile, and parallel Gradle runs contend for the same build locks.</div>
-  <div class="details"><strong>Details</strong>Each Wave 1 child uses isolation worktree from the committed Wave 0 base. Children never commit; the primary session copies each workstream's owned paths back and verifies the merged tree.</div>
-</article>
