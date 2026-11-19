@@ -27,7 +27,6 @@ import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.CandlestickCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.CartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.absolute
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberCandlestickCartesianLayer
@@ -48,6 +47,8 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import io.reddevs.tidemark.ui.components.HighlightColumnProvider
+import io.reddevs.tidemark.ui.components.IN_PROGRESS_ALPHA
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.log10
@@ -68,6 +69,8 @@ internal data class ChartSpec(
     val yLabel: (Double) -> String,
     val referenceY: Double? = null,
     val referenceLabel: String? = null,
+    /** The x slot of the period still in progress (today, this week), drawn lighter. */
+    val inProgressX: Int? = null,
 )
 
 private val ChartHeight = 220.dp
@@ -77,13 +80,20 @@ private val ChartHeight = 220.dp
 internal fun DetailBarChart(spec: ChartSpec, description: String, onTap: (Int) -> Unit, modifier: Modifier = Modifier) {
     ChartTheme {
         val range = remember(spec) { barRange(spec) }
-        val column = rememberLineComponent(
-            fill = Fill(MaterialTheme.colorScheme.primary),
-            thickness = barThickness(spec.slots),
-            shape = RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp),
+        val primary = MaterialTheme.colorScheme.primary
+        val thickness = barThickness(spec.slots)
+        val shape = RoundedCornerShape(topStart = barRadius(thickness), topEnd = barRadius(thickness))
+        val column = rememberLineComponent(fill = Fill(primary), thickness = thickness, shape = shape)
+        val inProgress = rememberLineComponent(
+            fill = Fill(primary.copy(alpha = IN_PROGRESS_ALPHA)),
+            thickness = thickness,
+            shape = shape,
         )
+        val highlightX = spec.inProgressX?.toDouble()
         val layer = rememberColumnCartesianLayer(
-            columnProvider = ColumnCartesianLayer.ColumnProvider.series(column),
+            columnProvider = remember(column, inProgress, highlightX) {
+                HighlightColumnProvider(column, inProgress, highlightX)
+            },
             columnCollectionSpacing = 4.dp,
             rangeProvider = range,
         )
@@ -170,6 +180,8 @@ private fun DetailChartHost(
     val currentOnTap = rememberUpdatedState(onTap)
     val controller = remember { TapController { x -> currentOnTap.value(x.roundToInt()) } }
     val axisLabel = rememberTextComponent(style = MaterialTheme.typography.labelSmall.copy(color = colors.onSurfaceVariant))
+    val axisLine = rememberLineComponent(fill = Fill(colors.outlineVariant), thickness = 1.dp)
+    val gridLine = rememberLineComponent(fill = Fill(colors.outlineVariant), thickness = 1.dp)
     val referenceLine = rememberLineComponent(fill = Fill(colors.tertiary), thickness = 2.dp)
     val referenceText = rememberTextComponent(style = MaterialTheme.typography.labelSmall.copy(color = colors.tertiary))
     val decorations = remember(spec, referenceLine, referenceText) {
@@ -186,12 +198,17 @@ private fun DetailChartHost(
     val chart = rememberCartesianChart(
         *layers.toTypedArray(),
         startAxis = VerticalAxis.rememberStart(
+            line = null,
             label = axisLabel,
+            tick = null,
+            guideline = gridLine,
             valueFormatter = remember(spec) { CartesianValueFormatter { _, value, _ -> spec.yLabel(value) } },
             itemPlacer = remember(range) { VerticalAxis.ItemPlacer.step(step = { range.step }) },
         ),
         bottomAxis = HorizontalAxis.rememberBottom(
+            line = axisLine,
             label = axisLabel,
+            tick = axisLine,
             valueFormatter = remember(spec) { CartesianValueFormatter { _, value, _ -> spec.xLabel(value.roundToInt()) } },
             itemPlacer = remember(spec.labelSpacing) { HorizontalAxis.ItemPlacer.aligned(spacing = { spec.labelSpacing }) },
             guideline = null,
@@ -281,6 +298,9 @@ internal fun niceCeil(value: Double): Double {
 }
 
 private fun niceStep(raw: Double): Double = if (raw <= 0.0) 1.0 else niceCeil(raw)
+
+/** Rounded bar tops: about a third of the bar width, at most 6 dp. */
+private fun barRadius(thickness: Dp): Dp = minOf(thickness / 3, 6.dp)
 
 private fun barThickness(slots: Int): Dp = when {
     slots <= 7 -> 20.dp

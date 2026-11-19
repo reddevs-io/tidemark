@@ -5,6 +5,7 @@ import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import io.reddevs.tidemark.ui.components.AppLabels
 import io.reddevs.tidemark.data.HealthConnectIntents
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,9 +20,10 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.rounded.Apps
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDialog
@@ -31,6 +33,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
@@ -50,12 +53,14 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.Record
@@ -71,6 +76,8 @@ import io.reddevs.tidemark.format.MeasurementFormatter
 import io.reddevs.tidemark.ui.components.EmptyState
 import io.reddevs.tidemark.ui.components.ErrorState
 import io.reddevs.tidemark.ui.components.LoadingState
+import io.reddevs.tidemark.ui.components.cardSegment
+import io.reddevs.tidemark.ui.components.cardSegmentShape
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
@@ -166,6 +173,10 @@ private fun RecordList(
     onRetry: () -> Unit,
     onOpenRecord: (Record) -> Unit,
 ) {
+    // The source listed first in the chips gets the teal badge, every other source the sand one.
+    val firstSource = remember(state.sources) {
+        state.sources.minByOrNull { appLabels.label(it.packageName).lowercase() }?.packageName
+    }
     // Manual paging: report the last visible row, and the ViewModel loads the next page near the end.
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.let { (it.visibleItemsInfo.lastOrNull()?.index ?: -1) to it.totalItemsCount } }
@@ -175,38 +186,97 @@ private fun RecordList(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize().testTag(RECORD_LIST_TAG),
-        contentPadding = PaddingValues(bottom = 16.dp),
+        contentPadding = PaddingValues(top = 12.dp, bottom = 16.dp),
     ) {
-        itemsIndexed(state.records, contentType = { _, _ -> "record" }) { _, record ->
-            RecordRow(record, summaries, appLabels, onClick = { onOpenRecord(record) })
-            HorizontalDivider()
+        itemsIndexed(state.records, contentType = { _, _ -> "record" }) { index, record ->
+            RecordRow(
+                record = record,
+                summaries = summaries,
+                appLabels = appLabels,
+                firstSource = firstSource,
+                first = index == 0,
+                last = index == state.records.lastIndex,
+                onClick = { onOpenRecord(record) },
+            )
         }
         item(contentType = "footer") { ListFooter(state, onRetry) }
     }
 }
 
 @Composable
-private fun RecordRow(record: Record, summaries: RecordSummaries, appLabels: AppLabels, onClick: () -> Unit) {
+private fun RecordRow(
+    record: Record,
+    summaries: RecordSummaries,
+    appLabels: AppLabels,
+    firstSource: String?,
+    first: Boolean,
+    last: Boolean,
+    onClick: () -> Unit,
+) {
+    val colors = MaterialTheme.colorScheme
     val packageName = record.metadata.dataOrigin.packageName
     val appLabel = remember(packageName) { appLabels.label(packageName) }
-    ListItem(
-        modifier = Modifier.clickable(onClick = onClick),
-        overlineContent = { Text(summaries.time(record)) },
-        headlineContent = { Text(summaries.value(record)) },
-        supportingContent = { Text(appLabel) },
-        leadingContent = { AppIcon(packageName, appLabels) },
-    )
+    Column(
+        Modifier
+            .padding(horizontal = 16.dp)
+            .cardSegment(first, last, colors.surfaceContainer, colors.outlineVariant)
+            .clip(cardSegmentShape(first, last)),
+    ) {
+        ListItem(
+            modifier = Modifier.clickable(onClick = onClick),
+            overlineContent = { Text(summaries.time(record)) },
+            headlineContent = { Text(summaries.value(record)) },
+            supportingContent = { Text(appLabel) },
+            leadingContent = { SourceBadge(packageName, appLabel, appLabels, primary = packageName == firstSource) },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        )
+        if (!last) HorizontalDivider(Modifier.padding(horizontal = 16.dp), color = colors.outlineVariant)
+    }
+}
+
+/**
+ * A 32 dp circle with the source app's icon, or the first letter of its label on teal (the first
+ * source) or sand (any other) when the icon isn't available.
+ */
+@Composable
+private fun SourceBadge(packageName: String, label: String, appLabels: AppLabels, primary: Boolean) {
+    val size = 32.dp
+    val colors = MaterialTheme.colorScheme
+    val icon = rememberAppIcon(packageName, appLabels, size)
+    if (icon != null) {
+        Image(icon, contentDescription = null, modifier = Modifier.size(size).clip(CircleShape))
+    } else {
+        Box(
+            Modifier
+                .size(size)
+                .background(if (primary) colors.primaryContainer else colors.tertiaryContainer, CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                label.firstOrNull { it.isLetterOrDigit() }?.uppercase() ?: "?",
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                color = if (primary) colors.onPrimaryContainer else colors.onTertiaryContainer,
+                maxLines = 1,
+            )
+        }
+    }
 }
 
 @Composable
-internal fun AppIcon(packageName: String, appLabels: AppLabels, size: Dp = 40.dp) {
+private fun rememberAppIcon(packageName: String, appLabels: AppLabels, size: Dp): ImageBitmap? {
     val sizePx = with(LocalDensity.current) { size.roundToPx() }
     val bitmap by produceState<ImageBitmap?>(null, packageName, sizePx) {
         value = withContext(Dispatchers.IO) { appLabels.icon(packageName, sizePx) }
     }
+    return bitmap
+}
+
+@Composable
+internal fun AppIcon(packageName: String, appLabels: AppLabels, size: Dp = 40.dp) {
+    val bitmap = rememberAppIcon(packageName, appLabels, size)
     val modifier = Modifier.size(size).clip(RoundedCornerShape(8.dp))
     bitmap?.let { Image(it, contentDescription = null, modifier = modifier) }
-        ?: Icon(Icons.Filled.Apps, contentDescription = null, modifier = modifier.padding(6.dp))
+        ?: Icon(Icons.Rounded.Apps, contentDescription = null, modifier = modifier.padding(6.dp))
 }
 
 @Composable

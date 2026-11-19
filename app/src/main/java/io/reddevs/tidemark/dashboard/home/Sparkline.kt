@@ -15,7 +15,6 @@ import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModel
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
-import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
@@ -26,6 +25,8 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import io.reddevs.tidemark.data.model.Metric
+import io.reddevs.tidemark.ui.components.HighlightColumnProvider
+import io.reddevs.tidemark.ui.components.IN_PROGRESS_ALPHA
 
 /** Cumulative metrics (steps, calories, distance, sleep) draw columns; the others draw a line. */
 internal fun Metric.sparklineAsColumns(): Boolean = this != Metric.RESTING_HEART_RATE && this != Metric.WEIGHT
@@ -43,10 +44,15 @@ internal fun Sparkline(data: SparklineData, columns: Boolean, modifier: Modifier
 
     val layer = if (columns) {
         val max = present.maxOf { it.value!! }
+        val bar = rememberLineComponent(fill = Fill(color), thickness = 6.dp, shape = RoundedCornerShape(2.dp))
+        val today = rememberLineComponent(
+            fill = Fill(color.copy(alpha = IN_PROGRESS_ALPHA)),
+            thickness = 6.dp,
+            shape = RoundedCornerShape(2.dp),
+        )
         rememberColumnCartesianLayer(
-            columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                rememberLineComponent(fill = Fill(color), thickness = 6.dp, shape = RoundedCornerShape(2.dp)),
-            ),
+            // The last bar is today, still adding up, so it is drawn lighter.
+            columnProvider = remember(bar, today, lastIndex) { HighlightColumnProvider(bar, today, lastIndex) },
             columnCollectionSpacing = 4.dp,
             rangeProvider = CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = lastIndex, minY = 0.0, maxY = max),
         )
@@ -59,6 +65,7 @@ internal fun Sparkline(data: SparklineData, columns: Boolean, modifier: Modifier
             lineProvider = LineCartesianLayer.LineProvider.series(
                 LineCartesianLayer.rememberLine(
                     fill = LineCartesianLayer.LineFill.single(Fill(color)),
+                    stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 2.dp),
                     areaFill = null,
                 ),
             ),

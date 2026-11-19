@@ -41,9 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.metadata.Device
 import androidx.health.connect.client.records.metadata.Metadata
@@ -196,12 +199,16 @@ private fun SectionHeader(section: FieldSection, open: Boolean, onToggle: () -> 
 private fun FieldRow(field: Field, modifier: Modifier = Modifier) {
     SelectionContainer(modifier) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp)) {
-            Text(field.label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(field.value, style = MaterialTheme.typography.bodyLarge)
+            Text(
+                field.label,
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(field.value, style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.5.sp, lineHeight = 21.sp))
             field.raw?.takeIf { it != field.value }?.let { raw ->
                 Text(
                     stringResource(R.string.explorer_stored_value, raw),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+                    style = TextStyle(fontFamily = FontFamily.Monospace, fontSize = 11.sp, lineHeight = 16.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }

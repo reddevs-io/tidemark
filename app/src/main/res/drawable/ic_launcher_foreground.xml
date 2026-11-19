@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- Placeholder icon: three tide lines. Replace before the first release (open question in the plan). -->
+<!-- Shoreline launcher icon: three sand-foam waves on sea teal, centred in the 66 dp safe zone. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -8,20 +8,25 @@
     android:viewportHeight="108">
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#FFFFFFFF"
+        android:strokeColor="#FFF5EBD8"
         android:strokeWidth="5"
         android:strokeLineCap="round"
-        android:pathData="M34,46 C40,40 46,40 52,46 C58,52 64,52 70,46 C72,44 73,43 74,43" />
+        android:strokeLineJoin="round"
+        android:pathData="M29,42 Q38,35 47,42 T65,42 T79,42" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#FFFFFFFF"
+        android:strokeColor="#FFF5EBD8"
+        android:strokeAlpha="0.8"
         android:strokeWidth="5"
         android:strokeLineCap="round"
-        android:pathData="M34,58 C40,52 46,52 52,58 C58,64 64,64 70,58 C72,56 73,55 74,55" />
+        android:strokeLineJoin="round"
+        android:pathData="M29,54 Q38,47 47,54 T65,54 T79,54" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#99FFFFFF"
+        android:strokeColor="#FFF5EBD8"
+        android:strokeAlpha="0.5"
         android:strokeWidth="5"
         android:strokeLineCap="round"
-        android:pathData="M34,70 C40,64 46,64 52,70 C58,76 64,76 70,70 C72,68 73,67 74,67" />
+        android:strokeLineJoin="round"
+        android:pathData="M29,66 Q38,59 47,66 T65,66 T79,66" />
 </vector>

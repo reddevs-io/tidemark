@@ -3,26 +3,31 @@ package io.reddevs.tidemark.dashboard.detail
 
 import io.reddevs.tidemark.ui.components.scaledTopAppBarHeight
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,8 +51,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.reddevs.tidemark.R
 import io.reddevs.tidemark.data.model.ChartRange
 import io.reddevs.tidemark.data.model.HeartRateSample
@@ -56,9 +63,13 @@ import io.reddevs.tidemark.format.MeasurementFormatter
 import io.reddevs.tidemark.ui.components.EmptyState
 import io.reddevs.tidemark.ui.components.ErrorState
 import io.reddevs.tidemark.ui.components.LoadingState
+import io.reddevs.tidemark.ui.components.cardSegment
+import io.reddevs.tidemark.ui.components.cardSegmentShape
+import io.reddevs.tidemark.ui.theme.sleepColors
 import java.text.NumberFormat
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
@@ -122,8 +133,10 @@ internal fun MetricDetailScreen(
                             .semantics { heading() },
                     )
                 }
-                items(rows, key = { "bucket-${it.index}" }) { (index, point) ->
+                itemsIndexed(rows, key = { _, row -> "bucket-${row.index}" }) { position, (index, point) ->
                     BucketRow(
+                        first = position == 0,
+                        last = position == rows.lastIndex,
                         label = labels.full(point, state.window.range),
                         value = scale.value(point.value!!),
                         clickLabel = stringResource(
@@ -204,7 +217,7 @@ private fun DetailBody(
                 ErrorState(message = stringResource(errorMessage(content.error)), onRetry = actions.onRetry)
             }
         }
-        is DetailContent.Buckets -> BucketsBody(state, content, formatter, labels, scale, actions)
+        is DetailContent.Buckets -> BucketsBody(state, content, formatter, zone, labels, scale, actions)
         is DetailContent.SleepDay -> SleepDayBody(content, formatter, zone, actions, sourceLabel)
         is DetailContent.HeartRateDay -> HeartRateDayBody(state, content, formatter, zone, scale, actions)
     }
@@ -215,6 +228,7 @@ private fun BucketsBody(
     state: MetricDetailUiState,
     content: DetailContent.Buckets,
     formatter: MeasurementFormatter,
+    zone: ZoneId,
     labels: BucketLabels,
     scale: ChartScale,
     actions: DetailActions,
@@ -222,7 +236,8 @@ private fun BucketsBody(
     val range = state.window.range
     val series = content.series
     val stats = summaryStats(state.metric, range, series)
-    val spec = remember(series, scale, labels) {
+    val spec = remember(series, scale, labels, zone) {
+        val now = LocalDateTime.now(zone)
         val points = series.points.mapIndexedNotNull { i, p ->
             p.value?.let { v ->
                 ChartPoint(
@@ -239,6 +254,7 @@ private fun BucketsBody(
             xLabel = { i -> series.points.getOrNull(i)?.let { labels.axis(it, range) }.orEmpty() },
             labelSpacing = axisLabelSpacing(range),
             yLabel = scale::label,
+            inProgressX = series.points.indexOfFirst { !now.isBefore(it.start) && now.isBefore(it.end) }.takeIf { it >= 0 },
         )
     }
     val description = chartDescription(state, formatter, stats.spoken(scale))
@@ -299,7 +315,7 @@ private fun SleepDayBody(
 
 @Composable
 private fun StageLegend(model: HypnogramModel, formatter: MeasurementFormatter) {
-    val colors = MaterialTheme.colorScheme
+    val stages = sleepColors
     val total = model.inBed.toMillis().coerceAtLeast(1)
     Column(Modifier.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         model.totals.forEach { (stage, duration) ->
@@ -308,7 +324,7 @@ private fun StageLegend(model: HypnogramModel, formatter: MeasurementFormatter) 
                     Modifier
                         .size(12.dp)
                         .clip(CircleShape)
-                        .background(stageColor(stage, colors)),
+                        .background(stages.of(stage)),
                 )
                 Text(
                     stringResource(stageName(stage)),
@@ -383,53 +399,86 @@ internal fun heartRateSlots(
 internal const val SLOT_MINUTES = 5L
 internal const val HEART_RATE_SLOTS_PER_DAY = (24 * 60 / SLOT_MINUTES).toInt()
 
+/** Summary statistics as small outlined cards, two to a row. */
 @Composable
 private fun SummaryRow(stats: List<Pair<String, String>>) {
     if (stats.isEmpty()) return
-    FlowRow(
+    val colors = MaterialTheme.colorScheme
+    Column(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        stats.forEach { (label, value) ->
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                modifier = Modifier.widthIn(min = 96.dp),
+        stats.chunked(2).forEach { pair ->
+            Row(
+                Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
-                    Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(value, style = MaterialTheme.typography.titleMedium)
+                pair.forEach { (label, value) ->
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = colors.surfaceContainer,
+                        border = BorderStroke(1.dp, colors.outlineVariant),
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                    ) {
+                        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                            Text(
+                                label,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                                color = colors.onSurfaceVariant,
+                            )
+                            Text(value, style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp, lineHeight = 24.sp))
+                        }
+                    }
                 }
+                if (pair.size == 1) Spacer(Modifier.weight(1f))
             }
         }
     }
 }
 
 @Composable
-private fun BucketRow(label: String, value: String, clickLabel: String, onClick: () -> Unit) {
-    Column {
+private fun BucketRow(
+    first: Boolean,
+    last: Boolean,
+    label: String,
+    value: String,
+    clickLabel: String,
+    onClick: () -> Unit,
+) {
+    val colors = MaterialTheme.colorScheme
+    Column(
+        Modifier
+            .padding(horizontal = 16.dp)
+            .cardSegment(first, last, colors.surfaceContainer, colors.outlineVariant, BreakdownRadius)
+            .clip(cardSegmentShape(first, last, BreakdownRadius)),
+    ) {
         Row(
             Modifier
                 .fillMaxWidth()
                 .clickable(onClickLabel = clickLabel, onClick = onClick)
                 .heightIn(min = 48.dp)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-            Text(value, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(start = 12.dp))
+            Text(
+                value,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(start = 12.dp),
+            )
             Icon(
-                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = colors.onSurfaceVariant,
             )
         }
-        HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+        if (!last) HorizontalDivider(Modifier.padding(horizontal = 16.dp), color = colors.outlineVariant)
     }
 }
+
+private val BreakdownRadius = 16.dp
 
 @Composable
 private fun DayRecordsButton(onClick: () -> Unit) {
