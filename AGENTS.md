@@ -1,0 +1,105 @@
+# Tidemark for coding agents and contributors
+
+Tidemark is a read-only, offline Android viewer for Health Connect data. It has a dashboard with trends, detail charts with a sleep hypnogram, and an explorer that lists every raw record with its metadata. It reads eight record types (steps, distance, active calories, exercise sessions, sleep sessions, heart rate, resting heart rate, weight) and never writes, syncs or connects to a network. The app is in English and French and licensed under GPL-3.0-or-later.
+
+Read this file, then [docs/architecture.md](docs/architecture.md) before changing code. [CONTRIBUTING.md](CONTRIBUTING.md) has the full rules for contributors; this file is the short version plus the commands.
+
+## Stack
+
+- One Gradle module, `:app`, package and application ID `io.reddevs.tidemark`.
+- Kotlin 2.4.21 through AGP 9.5.1's built-in Kotlin support (there is no `kotlin-android` plugin). Gradle 9.9.1 from the wrapper.
+- JDK 17. The build sets Java 17 source and target compatibility, and CI uses Temurin 17.
+- `minSdk` 28, `compileSdk` 37, `targetSdk` 36. Compose 1.12 (BOM 2026.09.00), Navigation 2.10 and Vico 3.3 need `compileSdk` 37; the runtime target stays at 36.
+- Jetpack Compose with Material 3, Navigation Compose 2.10.2 with type-safe routes (kotlinx.serialization), DataStore 1.3.0, Vico 3.3.1 for charts.
+- `androidx.health.connect:connect-client` 1.1.0. Tests use `connect-testing` 1.0.0-alpha03, the release that pairs with client 1.1.0; alpha04 pulls in a 1.2.0 alpha client.
+- Tests run on the JVM with Robolectric 4.18.1 at SDK 34, JUnit 4, kotlinx-coroutines-test and Turbine.
+
+All versions live in `gradle/libs.versions.toml` and are updated by hand. Dependabot updates only the GitHub Actions pins.
+
+## Layout
+
+```text
+app/src/main/java/io/reddevs/tidemark/
+  AppContainer.kt, TidemarkApplication.kt, MainActivity.kt   manual wiring and entry point
+  navigation/      type-safe routes and the NavHost
+  data/            HealthRepository, its Health Connect implementation, aggregates, chart buckets
+  data/model/      record types, metrics, chart and value models
+  format/          MeasurementFormatter: locale-aware numbers, units, dates, durations
+  settings/        unit preference (DataStore) and the settings screen
+  onboarding/      first run, permission request, in-app privacy policy and its Markdown renderer
+  dashboard/home/  tiles, sparklines, history banner
+  dashboard/detail/ day, week, month and year charts, hypnogram
+  explorer/        record types, paged record list, generic record detail
+  ui/components/, ui/theme/   shared composables, theme, Manrope font
+app/src/main/res/values/strings_<feature>.xml   English strings, one file per feature
+app/src/main/res/values-fr/strings_<feature>.xml   French strings
+app/src/test/java/io/reddevs/tidemark/   unit tests, same packages as main; shared fakes in testing/
+PRIVACY.md, PRIVACY.fr.md   privacy policy, bundled into the app and published as a web page
+docs/   architecture, release runbook, Play declarations, device checklist
+fastlane/metadata/android/   store text in en-US and fr-FR
+scripts/   permission check, release checks, privacy site builder
+```
+
+## Commands
+
+Run them from the repository root with JDK 17 as `JAVA_HOME`. Gradle finds the Android SDK through `ANDROID_HOME` or an untracked `local.properties`. Never commit `local.properties`. If the API 37 platform is missing, AGP installs it when the SDK licences are accepted.
+
+```sh
+./gradlew assembleDebug                 # debug APK in app/build/outputs/apk/debug/
+./gradlew lintDebug                     # Android lint; any error fails the build
+./gradlew testDebugUnitTest             # every JVM unit test
+./gradlew testDebugUnitTest --tests 'io.reddevs.tidemark.data.HealthConnectHealthRepositoryTest'
+./gradlew assembleRelease               # minified release APK, unsigned without signing variables
+```
+
+Before you open a pull request, run what CI runs:
+
+```sh
+./gradlew lintDebug testDebugUnitTest assembleRelease
+scripts/check-permissions.sh app/build/outputs/apk/release/app-release-unsigned.apk
+```
+
+The permission script needs `ANDROID_HOME` (or `AAPT2`) to find `aapt2`. If you change `PRIVACY.md`, `PRIVACY.fr.md` or `scripts/build-pages.py`, also build the policy site and open `build/privacy-site/privacy/index.html`:
+
+```sh
+python3 scripts/build-pages.py build/privacy-site
+```
+
+A signed release build needs four environment variables: `TIDEMARK_KEYSTORE_PATH`, `TIDEMARK_KEYSTORE_PASSWORD`, `TIDEMARK_KEY_ALIAS` and `TIDEMARK_KEY_PASSWORD`. Only maintainers have them, and the release workflow builds signed APKs and AABs from a `v*` tag. See [docs/release.md](docs/release.md).
+
+## Rules that keep Tidemark what it is
+
+- No network. Don't add `INTERNET`, `ACCESS_NETWORK_STATE`, a network library, analytics, crash reporting or ads. The manifest strips both network permissions with `tools:node="remove"`.
+- Read-only. No write permissions, no `READ_HEALTH_DATA_IN_BACKGROUND`, no exercise routes.
+- All Health Connect calls go through the `HealthRepository` interface in `data`. Nothing outside `data` imports `HealthConnectClient`. UI code opens Health Connect or Play screens through `data.HealthConnectIntents`.
+- No health data on disk. DataStore holds only the unit choice and the time access was first granted. No caches, exports or logs of records.
+- A new permission or record type needs an issue first, because it changes the privacy policy, `docs/play/` and the store text. A change to permissions, storage or dependencies updates `PRIVACY.md`, `PRIVACY.fr.md`, `docs/play/data-safety.md` and `docs/play/health-declaration.md` in the same pull request.
+
+## Conventions
+
+- Kotlin official code style (`kotlin.code.style=official`), four-space indents. Compose with Material 3, ViewModels that expose `StateFlow`, dependencies passed in through `AppContainer`.
+- Every new Kotlin, Gradle, script and workflow file starts with the licence line, in the file's comment syntax: `// SPDX-License-Identifier: GPL-3.0-or-later` in Kotlin and Gradle, `# SPDX-License-Identifier: GPL-3.0-or-later` in shell, YAML and TOML, `<!-- SPDX-License-Identifier: GPL-3.0-or-later -->` in XML.
+- ViewModels catch `HealthAccessException` and show an error state for that piece of the screen. One denied or failing type must not blank the rest.
+- Every user-facing string exists in English and French, in the feature's own `strings_<feature>.xml` pair. No hard-coded text in Kotlin. Keep "Tidemark" untranslated. In French, Health Connect is "Connexion Santé", and French text uses a non-breaking space before `:`, `;`, `!` and `?`.
+- Format numbers, units, dates and durations through `MeasurementFormatter`, never by concatenation.
+- Tiles and charts need content descriptions that read the value and the unit.
+- Markdown keeps one paragraph per line and follows `.markdownlint.jsonc`. `PRIVACY*.md` may use only headings, paragraphs, bullet lists, bold and links, because the in-app renderer supports nothing else.
+- Workflows pin third-party actions to a commit SHA with a version comment and set `defaults.run.shell: bash`.
+
+## Commits, branches and pull requests
+
+- Commit subjects are short imperative sentences in sentence case with no prefix and no final period, for example `Fix release signing reading null key alias and password` or `Add the record explorer`.
+- Fork the repository, branch from `main` with a prefix such as `feat/`, `fix/` or `chore/` and a short topic, and open the pull request against `main`.
+- Keep one change per pull request and explain why in the description. Name the source repository, file and commit of any borrowed code so it can go in `NOTICE`.
+- Maintainers handle versions, tags and releases.
+
+## Checks a pull request must pass
+
+- CI job "Lint, test, release build, permissions" (`.github/workflows/ci.yml`). It validates the Gradle wrapper, runs `./gradlew lintDebug testDebugUnitTest assembleRelease`, then `scripts/check-permissions.sh` on the unsigned release APK. Lint and test reports are uploaded as artifacts.
+- The Pages build (`.github/workflows/pages.yml`) when a pull request touches `PRIVACY.md`, `PRIVACY.fr.md`, `scripts/build-pages.py` or that workflow.
+
+The permission rule: the merged release APK must request exactly the nine Health Connect read permissions (`READ_STEPS`, `READ_DISTANCE`, `READ_ACTIVE_CALORIES_BURNED`, `READ_EXERCISE`, `READ_SLEEP`, `READ_HEART_RATE`, `READ_RESTING_HEART_RATE`, `READ_WEIGHT`, `READ_HEALTH_DATA_HISTORY`) plus the app-private `io.reddevs.tidemark.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` that androidx.core adds. An extra permission fails the check, and so does a missing one. A library that merges in a network permission must be removed or its permission stripped, never allowed. `ManifestContractTest` checks the same set in the unit tests.
+
+## Reporting security and privacy problems
+
+Don't open a public issue for a vulnerability or for anything that exposes health data, such as a leak to logs or another app, or a path to the network. Report it privately through GitHub's private vulnerability reporting: <https://github.com/reddevs-io/tidemark/security/advisories/new>. Never paste real health data, screenshots of it or exported records into an issue or pull request; describe the shape of the data or reproduce it with Health Connect Toolbox.
