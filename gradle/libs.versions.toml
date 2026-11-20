@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Versions checked against Google Maven and Maven Central on 2026-11-19.
 # connect-testing 1.0.0-alpha03 is the release that pairs with connect-client 1.1.0
-# (alpha04 pins connect-client 1.2.0-alpha05). Change versions only through the
-# primary session (see .agent/plans/tidemark-v1-implementation.html, section 7).
+# (alpha04 pins connect-client 1.2.0-alpha05). Change the two versions together.
 
 [versions]
 agp = "9.5.1"

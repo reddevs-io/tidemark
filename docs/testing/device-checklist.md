@@ -1,12 +1,12 @@
 # Manual device checklist
 
-Run this checklist for T-010 (integration and device verification) and before every release that changes behaviour. It comes from section 6 of the v1 plan. Milestone M3 needs every scenario to pass on API 28 and API 36.
+Run this checklist before every release that changes behaviour. Every scenario must pass on API 28 and API 36.
 
 ## How to fill it in
 
 - Run each scenario on both devices. Write **Pass**, **Fail** or **N/A** in the Result column. N/A needs a reason in Notes.
 - Put the device model or emulator image, the Android version with its API level, and the Health Connect version on each row. The Health Connect version is in Health Connect's settings, or in the Play Store page on Android 9 to 13.
-- For a failure, write what happened in Notes and file it in the Memory Bank as an issue with the scenario number.
+- For a failure, write what happened in Notes and open a GitHub issue with the scenario number.
 - Commit the filled-in copy with the run date in the run details below.
 
 ## Before you start
@@ -84,7 +84,7 @@ Note which case you tested: feature unavailable or permission denied.
 
 **Expected:** Year charts show the full year. Year view loads in under 2 seconds.
 
-Record the year view load time for steps and for sleep in the notes. Over 2 seconds on a mid-range device or emulator: file an issue in the Memory Bank.
+Record the year view load time for steps and for sleep in the notes. Over 2 seconds on a mid-range device or emulator: open a GitHub issue.
 
 | Run | Device | Android version | Health Connect version | Result | Notes |
 | --- | --- | --- | --- | --- | --- |

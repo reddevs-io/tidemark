@@ -78,7 +78,7 @@ android {
         checkReleaseBuilds = true
         // Version freshness is handled by hand in gradle/libs.versions.toml.
         disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
-        // targetSdk 36 is a deliberate design choice (see the Memory Bank decision log).
+        // targetSdk 36 is a deliberate choice (see the stack notes in AGENTS.md).
         disable += "OldTargetApi"
     }
 }
