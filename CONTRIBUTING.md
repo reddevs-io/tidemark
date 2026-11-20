@@ -2,6 +2,8 @@
 
 Thanks for helping. Tidemark is a small, read-only, offline Health Connect viewer, and most of the rules below exist to keep it that way.
 
+[docs/architecture.md](docs/architecture.md) explains how the code is laid out and why. [AGENTS.md](AGENTS.md) is the short version of these rules with every build command, written for coding agents and anyone who wants the summary.
+
 Report bugs and ask questions in [GitHub issues](https://github.com/reddevs-io/tidemark/issues). Issues are public, so never paste your own health data, screenshots of it, or exported records. Describe the shape of the data instead, or reproduce it with Health Connect Toolbox.
 
 ## Ground rules
